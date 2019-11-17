@@ -15,7 +15,7 @@ class App extends React.Component {
     super(props);
     this.db = null;
   }
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
 
     var firebaseConfig = {
       apiKey: "AIzaSyDGOIDSMbZruufHctcPZqGdzVXnJwCJAg0",

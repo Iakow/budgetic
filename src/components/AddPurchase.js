@@ -17,8 +17,11 @@ class AddPurchase extends React.Component {
   }
 
   handleSubmit(event) {
+    event.preventDefault();
+
     if(this.state.value) {
-      this.props.db.collection("users").add({
+      this.props.db.collection("users")
+      .add({
         first: this.state.value
       })
       .then(function(docRef) {
@@ -28,12 +31,13 @@ class AddPurchase extends React.Component {
       .catch(function(error) {
           console.error("Error adding document: ", error);
       });
+
       this.setState({submit: true})
     } else {
       alert('Поле пустое')
     }
 
-    event.preventDefault();
+    
   }
 
   render() {
@@ -55,7 +59,7 @@ class AddPurchase extends React.Component {
             На главную
           </Link>
         </div>
-      );    
+      );
     }
   }
 }
