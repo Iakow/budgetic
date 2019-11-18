@@ -6,27 +6,36 @@ import * as ROUTES from '../constants/routes';
 class AddPurchase extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {value: '', submit: false};
+    this.state = {sumValue: '', commentValue: '', submit: false};
 
-    this.handleChange = this.handleChange.bind(this);
+    this.handleSumChange = this.handleSumChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleCommentChange = this.handleCommentChange.bind(this);
   }
 
-  handleChange(event) {
-    this.setState({value: event.target.value});
+  handleSumChange(event) {
+    this.setState({sumValue: event.target.value});
+    //а не надо ли коллбеком?
+  }
+
+  handleCommentChange(event) {
+    this.setState({commentValue: event.target.value});
+    //а не надо ли коллбеком?
   }
 
   handleSubmit(event) {
     event.preventDefault();
 
-    if(this.state.value) {
+    if(this.state.sumValue) {
       this.props.db.collection("users")
       .add({
-        first: this.state.value
+        sum: this.state.sumValue,
+        date: '',
+        comment: this.state.commentValue,
       })
       .then(function(docRef) {
           console.log("Document written with ID: ", docRef.id);
-          
+
       })
       .catch(function(error) {
           console.error("Error adding document: ", error);
@@ -34,33 +43,31 @@ class AddPurchase extends React.Component {
 
       this.setState({submit: true})
     } else {
-      alert('Поле пустое')
+      alert('Надо хотя бы сумму ввести')
     }
-
-    
   }
 
   render() {
-    if (this.state.submit) {
-      return <Redirect to="/" />
-    } else {
-      return (
-        <div>
-          <form onSubmit={this.handleSubmit}>
-            <label>
-              Сумма:
-              <input type="text" value={this.state.value} onChange={this.handleChange} />
-            </label>
+    const form = (
+      <div>
+        <form onSubmit={this.handleSubmit}>
+          <label>
+            Сумма:
+            <input type="text" value={this.state.sumValue} onChange={this.handleSumChange} />
+            Коммент:
+            <input type="text" value={this.state.commentValue} onChange={this.handleCommentChange} />
+          </label>
 
-            <input type="submit" value="Отправить" />
-          </form>
-      
-          <Link to={ROUTES.MAIN}>
-            На главную
-          </Link>
-        </div>
-      );
-    }
+          <input type="submit" value="Отправить" />
+        </form>
+    
+        <Link to={ROUTES.MAIN}>
+          На главную
+        </Link>
+      </div>
+    );
+
+    return (this.state.submit) ? <Redirect to="/" /> : form
   }
 }
 
