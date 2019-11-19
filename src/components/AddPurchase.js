@@ -30,18 +30,20 @@ class AddPurchase extends React.Component {
       this.props.db.collection("users")
       .add({
         sum: this.state.sumValue,
-        date: '',
+        date: new Date(),
         comment: this.state.commentValue,
       })
-      .then(function(docRef) {
+      .then((docRef)=> {
           console.log("Document written with ID: ", docRef.id);
-
+          console.log("Sum: ", this.state.sumValue);
+          console.log("Comment: ", this.state.commentValue);
+          this.setState({submit: true})
       })
       .catch(function(error) {
           console.error("Error adding document: ", error);
       });
 
-      this.setState({submit: true})
+      
     } else {
       alert('Надо хотя бы сумму ввести')
     }
