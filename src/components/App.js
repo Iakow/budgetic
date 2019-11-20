@@ -15,9 +15,9 @@ class App extends React.Component {
     super(props);
     this.db = null;
   }
-  UNSAFE_componentWillMount() {
 
-    var firebaseConfig = {
+  UNSAFE_componentWillMount() {
+    const firebaseConfig = {
       apiKey: "AIzaSyDGOIDSMbZruufHctcPZqGdzVXnJwCJAg0",
       authDomain: "budgetic-fcb0e.firebaseapp.com",
       databaseURL: "https://budgetic-fcb0e.firebaseio.com",
@@ -30,38 +30,26 @@ class App extends React.Component {
     firebase.initializeApp(firebaseConfig);
 
     this.db = firebase.firestore();
-
-/*     db.collection("users").add({
-      first: "Ada",
-      last: "Lovelace",
-      born: 1815
-    })
-    .then(function(docRef) {
-        console.log("Document written with ID: ", docRef.id);
-    })
-    .catch(function(error) {
-        console.error("Error adding document: ", error);
-    }); */
   }
 
 
   render() {
     return (
       <div>
-      <Switch>
-        <Route path={ROUTES.ADD}>
-          <AddPurchase db = {this.db}/>
-        </Route>
+        <Switch>
+          <Route path={ROUTES.ADD}>
+            <AddPurchase db = {this.db}/>
+          </Route>
 
-        <Route path={ROUTES.STATS}>
-          <List />
-        </Route>
+          <Route path={ROUTES.STATS}>
+            <List />
+          </Route>
 
-        <Route path={ROUTES.MAIN}>
-          <Main />
-        </Route>
-      </Switch>
-    </div>
+          <Route path={ROUTES.MAIN}>
+            <Main db = {this.db} />
+          </Route>
+        </Switch>
+      </div>
     )
   }
 }

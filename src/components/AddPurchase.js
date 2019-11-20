@@ -15,18 +15,16 @@ class AddPurchase extends React.Component {
 
   handleSumChange(event) {
     this.setState({sumValue: event.target.value});
-    //а не надо ли коллбеком?
   }
 
   handleCommentChange(event) {
     this.setState({commentValue: event.target.value});
-    //а не надо ли коллбеком?
   }
 
   handleSubmit(event) {
     event.preventDefault();
 
-    if(this.state.sumValue) {
+    if (this.state.sumValue) {
       this.props.db.collection("users")
       .add({
         sum: this.state.sumValue,
@@ -43,7 +41,6 @@ class AddPurchase extends React.Component {
           console.error("Error adding document: ", error);
       });
 
-      
     } else {
       alert('Надо хотя бы сумму ввести')
     }
