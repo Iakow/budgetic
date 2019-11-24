@@ -3,32 +3,25 @@ import { Link } from 'react-router-dom';
 
 import * as ROUTES from '../constants/routes';
 
-/* Разобраться, как отрендерить SUM, когда она уже посчитается. Наверное, сетСтейт
-
-   Если мы попадаем на страницу, нажав НАЗАД в статистике, нахуя мне обращаться к БД?
-
-*/
-
 class Main extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {SUM: null};
+    this.state = {SUM: this.props.sum};
   }
 
   UNSAFE_componentWillMount() {
-    const usersBD = this.props.db.collection("users");
+    const collectionUsers = this.props.db.collection("users");
 
-    usersBD.get()
-    .then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        //console.log(typeof doc.data().sum);
+    collectionUsers.get().then((qSnapshot) => {
+      let sumNumber = null;
 
-        let sumNumber = +doc.data().sum;
-
-        if (sumNumber) {
-          this.setState ({SUM : this.state.SUM + sumNumber});
-        }
+      qSnapshot.forEach((doc) => {
+        sumNumber += +doc.data().sum;
       });
+
+      this.setState ({SUM : sumNumber});
+
+      this.props.newSum(sumNumber);
     });
   }
 

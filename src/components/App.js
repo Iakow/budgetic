@@ -14,6 +14,9 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.db = null;
+    this.state = {sum: 0};
+
+    this.preloadingState = this.preloadingState.bind(this);
   }
 
   UNSAFE_componentWillMount() {
@@ -32,13 +35,17 @@ class App extends React.Component {
     this.db = firebase.firestore();
   }
 
+  preloadingState(newSum) {
+    this.setState({sum: newSum});
+  }
+
 
   render() {
     return (
       <div>
         <Switch>
           <Route path={ROUTES.ADD}>
-            <AddPurchase db = {this.db}/>
+            <AddPurchase db = {this.db} newSum = {this.preloadingState}/>
           </Route>
 
           <Route path={ROUTES.STATS}>
@@ -46,7 +53,7 @@ class App extends React.Component {
           </Route>
 
           <Route path={ROUTES.MAIN}>
-            <Main db = {this.db} />
+            <Main db = {this.db} sum = {this.state.sum} newSum = {this.preloadingState}/>
           </Route>
         </Switch>
       </div>

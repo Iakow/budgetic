@@ -24,6 +24,8 @@ class AddPurchase extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
 
+    //this.props.newSum(+this.state.sumValue);
+
     if (this.state.sumValue) {
       this.props.db.collection("users")
       .add({
@@ -32,9 +34,9 @@ class AddPurchase extends React.Component {
         comment: this.state.commentValue,
       })
       .then((docRef)=> {
-          console.log("Document written with ID: ", docRef.id);
-          console.log("Sum: ", this.state.sumValue);
-          console.log("Comment: ", this.state.commentValue);
+          // console.log("Document written with ID: ", docRef.id);
+          // console.log("Sum: ", this.state.sumValue);
+          // console.log("Comment: ", this.state.commentValue);
           this.setState({submit: true})
       })
       .catch(function(error) {
@@ -44,6 +46,7 @@ class AddPurchase extends React.Component {
     } else {
       alert('Надо хотя бы сумму ввести')
     }
+
   }
 
   render() {
@@ -52,7 +55,7 @@ class AddPurchase extends React.Component {
         <form onSubmit={this.handleSubmit}>
           <label>
             Сумма:
-            <input type="text" value={this.state.sumValue} onChange={this.handleSumChange} />
+            <input type="text" value={this.state.sumValue} onChange={this.handleSumChange} autoFocus />
             Коммент:
             <input type="text" value={this.state.commentValue} onChange={this.handleCommentChange} />
           </label>
