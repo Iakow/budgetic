@@ -6,7 +6,7 @@ import * as ROUTES from '../constants/routes';
 class List extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {db: []}
+    this.state = {db: this.props.preCollection}
   }
 
   UNSAFE_componentWillMount() {
@@ -22,7 +22,7 @@ class List extends React.Component {
 
       this.setState({db : dbArr});
 
-      console.log(this.state.db[0]);
+      this.props.sendPreCollection(dbArr);
     })
   }
 

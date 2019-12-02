@@ -13,9 +13,10 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.db = null;
-    this.state = {sum: 0};
+    this.state = {sum: 0, collection: []};
 
     this.getPreSum = this.getPreSum.bind(this);
+    this.getPreStatistisc = this.getPreStatistisc.bind(this);
   }
 
   UNSAFE_componentWillMount() {
@@ -38,6 +39,10 @@ class App extends React.Component {
     this.setState({sum: newSum});
   }
 
+  getPreStatistisc(newCollection) {
+    this.setState({collection: newCollection});
+  }
+
 
   render() {
     return (
@@ -48,7 +53,7 @@ class App extends React.Component {
           </Route>
 
           <Route path={ROUTES.STATS}>
-            <List db = {this.db}/> {/* просто набор данных, возможно согласно фильтрам */}
+            <List db = {this.db} preCollection = {this.state.collection} sendPreCollection = {this.getPreStatistisc}/> {/* просто набор данных, возможно согласно фильтрам */}
           </Route>
 
           <Route path={ROUTES.MAIN}>
