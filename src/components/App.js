@@ -8,13 +8,6 @@ import * as ROUTES from '../constants/routes';
 import List from './List';
 import AddPurchase from './AddPurchase';
 import Main from './Main';
-/* 
-  импортировать модуль Файрбейс, который будет возвращать данные
-  что он должен уметь?
-  -получить нужные коллекции
-  -добавить документы
-  -подписаться на изменения
- */
 
 class App extends React.Component {
   constructor(props) {

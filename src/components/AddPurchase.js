@@ -6,45 +6,35 @@ import * as ROUTES from '../constants/routes';
 class AddPurchase extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {sumValue: '', commentValue: '', tagValue: '', categoryValue: '', submit: false};
+    this.state = {sum: '', comment: '', tag: '', category: '', submit: false};
 
-    this.handleSumChange = this.handleSumChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleCommentChange = this.handleCommentChange.bind(this);
-    this.handleTagChange = this.handleTagChange.bind(this);
-    this.handleCategoryChange = this.handleCategoryChange.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
   }
 
-  handleSumChange(event) {
-    this.setState({sumValue: event.target.value});
-  }
+  handleInputChange(e) {
+    const value = e.target.value;
+    const name = e.target.name;
 
-  handleCommentChange(event) {
-    this.setState({commentValue: event.target.value});
-  }
-
-  handleTagChange(event) {
-    this.setState({tagValue: event.target.value});
-  }
-
-  handleCategoryChange(event) {
-    this.setState({categoryValue: event.target.value});
+    this.setState({
+      [name]: value
+    });
   }
 
   handleSubmit(event) {
     event.preventDefault();
 
-    if (this.state.sumValue) {
+    if (this.state.sum) {
       this.props.db.collection("users")
       .add({
-        sum: this.state.sumValue,
+        sum: +this.state.sum,
         date: new Date(),
-        comment: this.state.commentValue,
-        category: this.state.categoryValue,
-        tags: this.state.tagValue
+        comment: this.state.comment,
+        category: this.state.category,
+        tags: this.state.tag
       })
       .then(()=> {
-          this.setState({submit: true})
+          this.setState({submit: true});
       })
       .catch(function(error) {
           console.error("Error adding document: ", error);
@@ -62,19 +52,19 @@ class AddPurchase extends React.Component {
         <form onSubmit={this.handleSubmit}>
           <label>
             Сумма:
-            <input type="text" value={this.state.sumValue} onChange={this.handleSumChange} autoFocus />
+            <input type="number" name='sum' value={this.state.sumValue} onChange={this.handleInputChange} autoFocus />
             <br/>
 
             Коммент:
-            <input type="text" value={this.state.commentValue} onChange={this.handleCommentChange} />
+            <input type="text" name='comment' value={this.state.commentValue} onChange={this.handleInputChange} />
             <br/>
 
             Категория:
-            <input type="text" value={this.state.categoryValue} onChange={this.handleCategoryChange} />
+            <input type="text" name='category' value={this.state.categoryValue} onChange={this.handleInputChange} />
             <br/>
 
             Теги:
-            <input type="text" value={this.state.tagtValue} onChange={this.handleTagChange} />
+            <input type="text" name='tag' value={this.state.tagValue} onChange={this.handleInputChange} />
           </label>
 
           <input type="submit" value="Отправить" />

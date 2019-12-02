@@ -29,7 +29,7 @@ class Main extends React.Component {
       let sumNumber = null;
 
       collection.forEach((doc) => {
-        sumNumber += +doc.data().sum;
+        sumNumber += doc.data().sum;
       });
 
       // обновляем состояние с этой суммой
