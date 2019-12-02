@@ -8,7 +8,13 @@ import * as ROUTES from '../constants/routes';
 import List from './List';
 import AddPurchase from './AddPurchase';
 import Main from './Main';
-
+/* 
+  импортировать модуль Файрбейс, который будет возвращать данные
+  что он должен уметь?
+  -получить нужные коллекции
+  -добавить документы
+  -подписаться на изменения
+ */
 
 class App extends React.Component {
   constructor(props) {
@@ -16,7 +22,7 @@ class App extends React.Component {
     this.db = null;
     this.state = {sum: 0};
 
-    this.preloadingState = this.preloadingState.bind(this);
+    this.getPreSum = this.getPreSum.bind(this);
   }
 
   UNSAFE_componentWillMount() {
@@ -35,7 +41,7 @@ class App extends React.Component {
     this.db = firebase.firestore();
   }
 
-  preloadingState(newSum) {
+  getPreSum(newSum) {
     this.setState({sum: newSum});
   }
 
@@ -45,15 +51,16 @@ class App extends React.Component {
       <div>
         <Switch>
           <Route path={ROUTES.ADD}>
-            <AddPurchase db = {this.db} newSum = {this.preloadingState}/>
+            <AddPurchase db = {this.db} /> {/* категории, метод обновления состояния */}
           </Route>
 
           <Route path={ROUTES.STATS}>
-            <List />
+            <List /> {/* просто набор данных, возможно согласно фильтрам */}
           </Route>
 
           <Route path={ROUTES.MAIN}>
-            <Main db = {this.db} sum = {this.state.sum} newSum = {this.preloadingState}/>
+            {/* только голые цифры, обвнолять Арр должен AddPurchase */}
+            <Main db = {this.db} sum = {this.state.sum} upSum = {this.getPreSum}/>
           </Route>
         </Switch>
       </div>

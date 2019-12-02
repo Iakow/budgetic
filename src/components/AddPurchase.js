@@ -6,11 +6,13 @@ import * as ROUTES from '../constants/routes';
 class AddPurchase extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {sumValue: '', commentValue: '', submit: false};
+    this.state = {sumValue: '', commentValue: '', tagValue: '', categoryValue: '', submit: false};
 
     this.handleSumChange = this.handleSumChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCommentChange = this.handleCommentChange.bind(this);
+    this.handleTagChange = this.handleTagChange.bind(this);
+    this.handleCategoryChange = this.handleCategoryChange.bind(this);
   }
 
   handleSumChange(event) {
@@ -21,10 +23,16 @@ class AddPurchase extends React.Component {
     this.setState({commentValue: event.target.value});
   }
 
+  handleTagChange(event) {
+    this.setState({tagValue: event.target.value});
+  }
+
+  handleCategoryChange(event) {
+    this.setState({categoryValue: event.target.value});
+  }
+
   handleSubmit(event) {
     event.preventDefault();
-
-    //this.props.newSum(+this.state.sumValue);
 
     if (this.state.sumValue) {
       this.props.db.collection("users")
@@ -32,11 +40,10 @@ class AddPurchase extends React.Component {
         sum: this.state.sumValue,
         date: new Date(),
         comment: this.state.commentValue,
+        category: this.state.categoryValue,
+        tags: this.state.tagValue
       })
-      .then((docRef)=> {
-          // console.log("Document written with ID: ", docRef.id);
-          // console.log("Sum: ", this.state.sumValue);
-          // console.log("Comment: ", this.state.commentValue);
+      .then(()=> {
           this.setState({submit: true})
       })
       .catch(function(error) {
@@ -56,15 +63,25 @@ class AddPurchase extends React.Component {
           <label>
             Сумма:
             <input type="text" value={this.state.sumValue} onChange={this.handleSumChange} autoFocus />
+            <br/>
+
             Коммент:
             <input type="text" value={this.state.commentValue} onChange={this.handleCommentChange} />
+            <br/>
+
+            Категория:
+            <input type="text" value={this.state.categoryValue} onChange={this.handleCategoryChange} />
+            <br/>
+
+            Теги:
+            <input type="text" value={this.state.tagtValue} onChange={this.handleTagChange} />
           </label>
 
           <input type="submit" value="Отправить" />
         </form>
     
         <Link to={ROUTES.MAIN}>
-          На главную
+          {"<- На главную"}
         </Link>
       </div>
     );

@@ -3,6 +3,17 @@ import { Link } from 'react-router-dom';
 
 import * as ROUTES from '../constants/routes';
 
+/*
+Вот этот компонент будет отражать круг, кнопки и т.д.
+В идеале мы ему должны просто передать пропсы - цифры и ок.
+
+Мы получаем коллекцию, которая должна использоваться и в <Статистике>
+Только здесь и там могут быть разные фильтры...
+Короче, место этой работе с файрбейс - где-то выше. Или сбоку, хз.
+
+Короче, нужен модуль, который будет раздавать нужные данные из файрбейс в дерево.
+*/
+
 class Main extends React.Component {
   constructor(props) {
     super(props);
@@ -10,18 +21,22 @@ class Main extends React.Component {
   }
 
   UNSAFE_componentWillMount() {
-    const collectionUsers = this.props.db.collection("users");
+    //получаем коллекцию, проходимся по ней и подсчитываем сумму
+    const transactions = this.props.db.collection("users");
 
-    collectionUsers.get().then((qSnapshot) => {
+    transactions.get()
+    .then((collection) => {
       let sumNumber = null;
 
-      qSnapshot.forEach((doc) => {
+      collection.forEach((doc) => {
         sumNumber += +doc.data().sum;
       });
 
+      // обновляем состояние с этой суммой
       this.setState ({SUM : sumNumber});
 
-      this.props.newSum(sumNumber);
+      // обновляем состояние контейнера для прелоада
+      this.props.upSum(sumNumber);
     });
   }
 
