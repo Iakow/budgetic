@@ -13,25 +13,22 @@ class AddPurchase extends React.Component {
   }
 
   handleInputChange(e) {
-    const value = e.target.value;
-    const name = e.target.name;
-
     this.setState({
-      [name]: value
+      [e.target.name]: e.target.value
     });
   }
 
   handleSubmit(event) {
     event.preventDefault();
 
-    if (this.state.sum) {
+    if (+this.state.sum) {
       this.props.db.collection("users")
       .add({
         sum: +this.state.sum,
-        date: new Date(),
+        date: Date.now(),
         comment: this.state.comment,
         category: this.state.category,
-        tags: this.state.tag
+        tag: this.state.tag
       })
       .then(()=> {
           this.setState({submit: true});
@@ -41,7 +38,7 @@ class AddPurchase extends React.Component {
       });
 
     } else {
-      alert('Надо хотя бы сумму ввести')
+      alert('Надо ввести сумму')
     }
 
   }
@@ -52,19 +49,19 @@ class AddPurchase extends React.Component {
         <form onSubmit={this.handleSubmit}>
           <label>
             Сумма:
-            <input type="number" name='sum' value={this.state.sumValue} onChange={this.handleInputChange} autoFocus />
+            <input type="text" name='sum' value={this.state.sum} onChange={this.handleInputChange} autoFocus />
             <br/>
 
-            Коммент:
-            <input type="text" name='comment' value={this.state.commentValue} onChange={this.handleInputChange} />
+            Коммент: {/* значение не обязательно */}
+            <input type="text" name='comment' value={this.state.comment} onChange={this.handleInputChange} />
             <br/>
 
             Категория:
-            <input type="text" name='category' value={this.state.categoryValue} onChange={this.handleInputChange} />
+            <input type="text" name='category' value={this.state.category} onChange={this.handleInputChange} />
             <br/>
 
-            Теги:
-            <input type="text" name='tag' value={this.state.tagValue} onChange={this.handleInputChange} />
+            Теги: {/* тоже не обязательно */}
+            <input type="text" name='tag' value={this.state.tag} onChange={this.handleInputChange} />
           </label>
 
           <input type="submit" value="Отправить" />

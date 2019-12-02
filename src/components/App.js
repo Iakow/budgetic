@@ -48,7 +48,7 @@ class App extends React.Component {
           </Route>
 
           <Route path={ROUTES.STATS}>
-            <List /> {/* просто набор данных, возможно согласно фильтрам */}
+            <List db = {this.db}/> {/* просто набор данных, возможно согласно фильтрам */}
           </Route>
 
           <Route path={ROUTES.MAIN}>
