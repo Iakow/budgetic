@@ -62,7 +62,7 @@ class List extends React.Component {
         <h1>Статистика</h1>
         
         <Link to={ROUTES.MAIN}>
-          На главную
+          {"<<<<<"}
         </Link>
       </div>
     )
