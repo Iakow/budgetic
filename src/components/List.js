@@ -26,12 +26,23 @@ class List extends React.Component {
     })
   }
 
+  formatDate(date) {
+    const d = new Date(date);
+
+    const formatedStr = `${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()}
+                         ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`;
+
+    return formatedStr;
+  }
+
   render() {
+
+    
 
     const listItems = this.state.db.map((arr) =>
       (<tbody>
         <tr>
-        <td>{arr.date}</td>
+        <td>{this.formatDate(arr.date)}</td>
         <td>{arr.sum}</td>
         <td>{arr.category}</td>
         <td>{arr.tag}</td>
