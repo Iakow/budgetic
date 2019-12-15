@@ -21,11 +21,10 @@ class List extends React.Component {
       });
 
       this.setState({db : dbArr});
-
       this.props.sendPreCollection(dbArr);
     })
   }
-
+  
   formatDate(date) {
     const d = new Date(date);
 
@@ -34,25 +33,20 @@ class List extends React.Component {
 
     return formatedStr;
   }
-
+  
   render() {
-
-    
-
-    const listItems = this.state.db.map((arr) =>
-      (<tbody>
+    const listItems = this.state.db.map((arr) => (
+      <tbody>
         <tr>
-        <td>{this.formatDate(arr.date)}</td>
-        <td>{arr.sum}</td>
-        <td>{arr.category}</td>
-        <td>{arr.tag}</td>
-        <td>{arr.comment}</td>
-      </tr>
-        </tbody>)
+          <td>{this.formatDate(arr.date)}</td>
+          <td>{arr.sum}</td>
+          <td>{arr.category}</td>
+          <td>{arr.tag}</td>
+          <td>{arr.comment}</td>
+        </tr>
+      </tbody> )
     );
-
-   
-
+    
     return (
       <div>
         <table border="1">

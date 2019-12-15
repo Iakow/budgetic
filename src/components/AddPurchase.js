@@ -6,11 +6,19 @@ import * as ROUTES from '../constants/routes';
 class AddPurchase extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {sum: '', comment: '', tag: '', category: '', submit: false};
+
+    this.state = {
+      sum: '', 
+      comment: '', 
+      tag: '', 
+      category: 'placeholder', 
+      submit: false
+    };
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
   }
+
 
   handleInputChange(e) {
     this.setState({
@@ -48,27 +56,58 @@ class AddPurchase extends React.Component {
       <div>
         <form onSubmit={this.handleSubmit}>
           <label>
-            Сумма:
-            <input type="text" name='sum' value={this.state.sum} onChange={this.handleInputChange} autoFocus />
+            <input 
+              type="number" 
+              placeholder="Сумма" 
+              autoComplete="off" 
+              name='sum' 
+              value={this.state.sum} 
+              onChange={this.handleInputChange} 
+              autoFocus 
+            />
+
             <br/>
 
-            Коммент: {/* значение не обязательно */}
-            <input type="text" name='comment' value={this.state.comment} onChange={this.handleInputChange} />
+            <select name='category' value={this.state.category} onChange={this.handleInputChange} >
+              <option value='placeholder' disabled selected>
+                Категория:
+              </option>
+
+              <option value='Первая'>
+                Первая
+              </option>
+
+              <option value='Вторая'>
+                Вторая
+              </option>
+            </select>
+            
             <br/>
 
-            Категория:
-            <input type="text" name='category' value={this.state.category} onChange={this.handleInputChange} />
+            Коммент:
+            <input 
+              type="text" 
+              name='comment' 
+              value={this.state.comment} 
+              onChange={this.handleInputChange} 
+            />
+
             <br/>
 
-            Теги: {/* тоже не обязательно */}
-            <input type="text" name='tag' value={this.state.tag} onChange={this.handleInputChange} />
+            Теги:
+            <input 
+              type="text" 
+              name='tag' 
+              value={this.state.tag} 
+              onChange={this.handleInputChange} 
+            />
           </label>
 
           <input type="submit" value="Отправить" />
         </form>
     
         <Link to={ROUTES.MAIN}>
-          {"<- На главную"}
+          {"<<<"}
         </Link>
       </div>
     );
