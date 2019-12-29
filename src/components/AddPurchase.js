@@ -10,7 +10,7 @@ class AddPurchase extends React.Component {
     this.state = {
       sum: '', 
       comment: '', 
-      tag: '', 
+      tag: 'placeholder', 
       category: 'placeholder', 
       submit: false
     };
@@ -69,7 +69,7 @@ class AddPurchase extends React.Component {
             <br/>
 
             <select name='category' value={this.state.category} onChange={this.handleInputChange} >
-              <option value='placeholder' disabled selected>
+              <option value='placeholder' disabled>
                 Категория:
               </option>
 
@@ -84,23 +84,32 @@ class AddPurchase extends React.Component {
             
             <br/>
 
-            Коммент:
-            <input 
-              type="text" 
+           
+
+            <select name='tag' value={this.state.tag} onChange={this.handleInputChange} >
+              <option value='placeholder' disabled>
+                Теги
+              </option>
+
+              <option value='первый тег'>
+                первый тег
+              </option>
+
+              <option value='второй тег'>
+                второй тег
+              </option>
+
+              
+            </select>
+            <br/>
+            <textarea
+              placeholder = 'Коммент:'
               name='comment' 
               value={this.state.comment} 
               onChange={this.handleInputChange} 
             />
 
             <br/>
-
-            Теги:
-            <input 
-              type="text" 
-              name='tag' 
-              value={this.state.tag} 
-              onChange={this.handleInputChange} 
-            />
           </label>
 
           <input type="submit" value="Отправить" />

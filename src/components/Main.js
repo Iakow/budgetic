@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 import * as ROUTES from '../constants/routes';
 class Main extends React.Component {
@@ -25,26 +25,24 @@ class Main extends React.Component {
     });
   }
 
+  componentDidMount() {
+    
+  }
+
   render() {
     return (
       <div>
-        <h1>Главная</h1>
-
         <div>
           {this.state.SUM}
         </div>
         
         <ul>
           <li>
-            <Link to={ROUTES.STATS}>
-              Статистика
-            </Link>
+            <Link to={ROUTES.STATS}> Статистика </Link>
           </li>
 
           <li>
-          <Link to={ROUTES.ADD}>
-            Добавить покупку
-          </Link>
+            <Link to={ROUTES.ADD}> Добавить покупку </Link>
           </li>
         </ul>
       </div>
