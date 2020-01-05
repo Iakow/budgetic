@@ -1,30 +1,34 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
 import * as ROUTES from '../constants/routes';
+
 
 class List extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {db: this.props.preCollection}
+    this.state = {db: this.props.preCollection} // это уже массив
   }
 
-  UNSAFE_componentWillMount() {
-    const transactions = this.props.db.collection("users");
 
-    transactions.get()
-    .then((collection) => {
-      let dbArr = [];
+  UNSAFE_componentWillMount() {
+    // здесь мы просто превращаем объект в массив и раздаем его куда надо
+    // А НЕ ЛУЧШЕ ЛИ СРАЗУ В БАЗУ ДОАБАВЛЯТЬ В МАССИВ???
+
+    const userTransactions = this.props.db.collection("transactions"); // а это просто объект
+
+    userTransactions.get().then((collection) => {
+      let spendingsArr = [];
 
       collection.forEach((doc) => {
-        dbArr.push(doc.data());
+        spendingsArr.push(doc.data());
       });
 
-      this.setState({db : dbArr});
-      this.props.sendPreCollection(dbArr);
+      this.setState({db : spendingsArr});
+      this.props.sendPreCollection(spendingsArr);
     })
   }
   
+
   formatDate(date) {
     const d = new Date(date);
 
@@ -35,32 +39,28 @@ class List extends React.Component {
   }
   
   render() {
-    const listItems = this.state.db.map((arr) => (
-      <tbody>
+    const statsTable = this.state.db.map((doc, index) => (
+      <tbody key = {index}>
         <tr>
-          <td>{this.formatDate(arr.date)}</td>
-          <td>{arr.sum}</td>
-          <td>{arr.category}</td>
-          <td>{arr.tag}</td>
-          <td>{arr.comment}</td>
+          <td>{this.formatDate(doc.date)}</td>
+          <td>{doc.sum}</td>
+          <td>{doc.category}</td>
+          <td>{doc.tag}</td>
+          <td>{doc.comment}</td>
         </tr>
-      </tbody> )
-    );
+      </tbody> 
+    ));
     
     return (
       <div>
-        <table border="1">
-          {listItems}
-        </table>
+        <table border="1">{statsTable}</table>
 
-        <h1>Статистика</h1>
+        <h1> Статистика </h1>
         
-        <Link to={ROUTES.MAIN}>
-          {"<<<<<"}
-        </Link>
+        <Link to={ROUTES.MAIN}> {"<<<<<"} </Link>
       </div>
     )
   }
 }
 
-export default List;
+export default List; 

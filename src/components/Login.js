@@ -3,10 +3,17 @@ import * as firebase from 'firebase/app';
 import "firebase/auth";
 import { Redirect } from 'react-router-dom';
 
+
 class Login extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {email:'', password:'', logedIn: null};
+
+    this.state = {
+      email:'',
+      password:'',
+      logedIn: false,
+      userBaseIsCreated: false
+    };
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -18,8 +25,23 @@ class Login extends React.Component {
     });
   }
 
-  handleSubmit(event) {
-    event.preventDefault();
+  handleSubmit(e) {
+    e.preventDefault();
+
+    const userDB = this.props.db.collection("users").doc(this.state.email);
+    
+    /*Выходит, я содаю док для юзера даже если регистрация не прошла???*/
+
+    userDB.set({
+      categories: ['first_cat', 'second_cat'],
+      tags: ['frist_tag', 'second_tag']
+    })
+      .then(()=> {
+          this.setState({userBaseIsCreated: true});
+      })
+      .catch(function(error) {
+          console.error("Error adding document: ", error);
+    });
 
     firebase.auth()
       .createUserWithEmailAndPassword(this.state.email, this.state.password)
@@ -32,34 +54,33 @@ class Login extends React.Component {
         console.log(error.code);
     });
   }
-  
+
   render() {
-    return (this.state.logedIn) ? <Redirect to="/" /> :
-    (
+    return (this.state.logedIn) ? <Redirect to="/" /> : (
       <form onSubmit={this.handleSubmit}>
-          <label>
-            <input
-              placeholder="Email" 
-              name='email' 
-              value={this.state.email} 
-              onChange={this.handleInputChange} 
-              autoFocus 
-            />
+        <label>
+          <input
+            placeholder="Email" 
+            name='email' 
+            value={this.state.email} 
+            onChange={this.handleInputChange} 
+            autoFocus 
+          />
 
-            <br/>
+          <br/>
 
-            <input
-              placeholder="Password" 
-              name='password'
-              value={this.state.password}
-              onChange={this.handleInputChange}
-            />
+          <input
+            placeholder="Password"
+            name='password'
+            value={this.state.password}
+            onChange={this.handleInputChange}
+          />
 
-            <br/>
-          </label>
+          <br/>
+        </label>
 
-          <input type="submit" value="Отправить" />
-        </form>
+        <input type="submit" value="Отправить" />
+      </form>
     )
   }
 }

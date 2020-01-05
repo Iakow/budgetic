@@ -10,8 +10,8 @@ class AddPurchase extends React.Component {
     this.state = {
       sum: '', 
       comment: '', 
-      tag: 'placeholder', 
-      category: 'placeholder', 
+      tag: '', 
+      category: '', 
       submit: false
     };
 
@@ -30,7 +30,7 @@ class AddPurchase extends React.Component {
     event.preventDefault();
 
     if (+this.state.sum) {
-      this.props.db.collection("users")
+      this.props.db.collection("transactions")
       .add({
         sum: +this.state.sum,
         date: Date.now(),
@@ -38,11 +38,13 @@ class AddPurchase extends React.Component {
         category: this.state.category,
         tag: this.state.tag
       })
-      .then(()=> {
-          this.setState({submit: true});
+      .then(()=> { 
+        /* тут я просто перехожу на главный роут и Арр рендерит Мейн */
+        this.props.refreshFirestore();
+        this.setState({submit: true});
       })
       .catch(function(error) {
-          console.error("Error adding document: ", error);
+        console.error("Error adding document: ", error);
       });
 
     } else {
@@ -83,9 +85,7 @@ class AddPurchase extends React.Component {
             </select>
             
             <br/>
-
-           
-
+            
             <select name='tag' value={this.state.tag} onChange={this.handleInputChange} >
               <option value='placeholder' disabled>
                 Теги

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import * as ROUTES from '../constants/routes';
 class Main extends React.Component {
@@ -9,7 +9,7 @@ class Main extends React.Component {
   }
 
   UNSAFE_componentWillMount() {
-    const transactions = this.props.db.collection("users");
+    const transactions = this.props.db.collection("transactions");
 
     transactions.get()
     .then((collection) => {

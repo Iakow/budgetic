@@ -3,9 +3,7 @@ import {Switch, Route} from "react-router-dom";
 import * as firebase from 'firebase/app';
 import "firebase/firestore";
 import "firebase/auth";
-
 import * as ROUTES from '../constants/routes';
-
 import List from './List';
 import AddPurchase from './AddPurchase';
 import Main from './Main';
@@ -21,75 +19,77 @@ const firebaseConfig = {
   appId: "1:808634940866:web:623d627c6700ea69a6aa5b"
 };
 
+/* А что, если я всем потомкам просто раздам метод, который будет обновлять образ базы?
+   Тогда не надо будет поднимать отдельно таблицу и сумму.
+    */
+
 class App extends React.Component {
   constructor(props) {
-    super(props); 
-
-    this.db = null;
+    super(props);
 
     this.state = {
-      sum: 0, 
-      collection: [], 
-      user: null, 
-      authResponse: false
+      appStore: null,
+      balance: 0, 
+      statsTable: [], 
+      user: null
     };
-
-    this.getPreSum = this.getPreSum.bind(this);
-    this.getPreStatistisc = this.getPreStatistisc.bind(this);
-  }
-
-  UNSAFE_componentWillMount() {
-    firebase.initializeApp(firebaseConfig);
-
-    this.db = firebase.firestore();
   }
 
   componentDidMount = ()=> {
+    firebase.initializeApp(firebaseConfig);
+
     firebase.auth().onAuthStateChanged((user)=> {
       if (user) {
-        console.log(user.email);
-        this.setState({user: user, authResponse: true})
+        this.setState({
+          user: user,
+          appStore: firebase.firestore()
+        })
       } else {
-        this.setState({authResponse: true})
-        console.log('user нема!!!')
+        console.log('нет авторизации')
       }
     });
   }
 
-  getPreSum(newSum) {
-    this.setState({sum: newSum});
+  saveBalaceValue = (newSum)=> {
+    this.setState({balance: newSum});
   }
 
-  getPreStatistisc(newCollection) {
-    this.setState({collection: newCollection});
+  saveStatsState = (newTable)=> {
+    this.setState({statsTable: newTable});
+  }
+
+  refreshFirestore = (newState)=> {
+    this.setState({statsTable: newState});
   }
 
   render() {
-    let email;
+    if (this.state.user) {
+      const userName = this.state.user.email;
+      const userDB = this.state.appStore.collection("users").doc(userName);
 
-    if (this.state.user) email = this.state.user.email;
-
-    return (this.state.user) ? 
-    (
-      <div>
-        <h6>{email}</h6>
-
-        <Switch>
-          <Route path={ROUTES.ADD}>
-            <AddPurchase db = {this.db} />
-          </Route>
-
-          <Route path={ROUTES.STATS}>
-            <List db = {this.db} preCollection = {this.state.collection} sendPreCollection = {this.getPreStatistisc}/>
-          </Route>
-
-          <Route path={ROUTES.MAIN}>
-            <Main db = {this.db} sum = {this.state.sum} upSum = {this.getPreSum}/>
-          </Route>
-        </Switch>
-      </div>
-    ) : <Login />
+      return (
+        <div>
+          <h6>{userName}</h6>
+          
+          <Switch>
+            <Route path={ROUTES.ADD}>
+              <AddPurchase db={userDB} refreshFirestore = {this.srefreshFirestore}/>
+            </Route>
+  
+            <Route path={ROUTES.STATS}>
+              <List db={userDB} preCollection={this.state.statsTable} sendPreCollection={this.saveStatsState}/>
+            </Route>
+  
+            <Route path={ROUTES.MAIN}>
+              <Main db={userDB} sum={this.state.balance} upSum={this.saveBalaceValue}/>
+            </Route>
+          </Switch>
+        </div>
+      )
+    } else {
+      return <Login db={this.state.appStore}/>
+    }
   }
 }
-/* Как правильно перенаправить на логин */
+
 export default App;
