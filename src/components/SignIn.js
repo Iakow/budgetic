@@ -4,15 +4,14 @@ import "firebase/auth";
 import { Redirect } from 'react-router-dom';
 
 
-class Login extends React.Component {
+class SignIn extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       email:'',
       password:'',
-      logedIn: false,
-      userBaseIsCreated: false,
+      signedIn: false,
       errorMessage: null
     };
   }
@@ -27,40 +26,24 @@ class Login extends React.Component {
     e.preventDefault();
 
     firebase.auth()
-      .createUserWithEmailAndPassword(this.state.email, this.state.password)
-      .then((res) => {
-        console.log(res);
-        
-        const userDBRef = this.props.db.collection("users").doc(this.state.email);
+    .signInWithEmailAndPassword(this.state.email, this.state.password)
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((error)=> {
+      console.log(error.message);
+      console.log(error.code);
 
-        userDBRef.set({
-          categories: ['first_cat', 'second_cat'],
-          tags: ['frist_tag', 'second_tag'],
-          transactions:[]
-        })
-        .then(()=> {
-          this.setState({
-            userBaseIsCreated: true,
-            logedIn: true
-          })
-        })
-        .catch(function(error) {
-          console.error("Error adding document: ", error)
-        });
+      this.setState({
+        errorMessage: error.message,
+        email:'',
+        password:''
       })
-      .catch((error)=> {
-        console.log(error.message);
-        console.log(error.code);
-        this.setState({
-          errorMessage: error.message,
-          email:'',
-          password:''
-        })
     });
   }
 
   render() {
-    return (this.state.logedIn) ? <Redirect to="/" /> : (
+    return (this.state.signedIn) ? <Redirect to="/" /> : (
       <form onSubmit={this.handleSubmit}>
         <p>{this.state.errorMessage}</p>
         <label>
@@ -91,4 +74,4 @@ class Login extends React.Component {
   }
 }
 
-export default Login;
+export default SignIn;

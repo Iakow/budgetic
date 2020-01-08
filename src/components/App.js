@@ -8,7 +8,7 @@ import * as ROUTES from '../constants/routes';
 import List from './List';
 import AddPurchase from './AddPurchase';
 import Main from './Main';
-import Login from './Login';
+import Auth from './Auth';
 
 
 const firebaseConfig = {
@@ -94,7 +94,7 @@ class App extends React.Component {
         </div>
       )
     } else {
-      return <Login db={this.fireStore}/>
+      return <Auth db={this.fireStore}/>
     }
   }
 }
