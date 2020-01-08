@@ -12,7 +12,8 @@ class Login extends React.Component {
       email:'',
       password:'',
       logedIn: false,
-      userBaseIsCreated: false
+      userBaseIsCreated: false,
+      errorMessage: null
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -28,36 +29,46 @@ class Login extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
 
-    const userDB = this.props.db.collection("users").doc(this.state.email);
-    
-    /*Выходит, я содаю док для юзера даже если регистрация не прошла???*/
-
-    userDB.set({
-      categories: ['first_cat', 'second_cat'],
-      tags: ['frist_tag', 'second_tag']
-    })
-      .then(()=> {
-          this.setState({userBaseIsCreated: true});
-      })
-      .catch(function(error) {
-          console.error("Error adding document: ", error);
-    });
-
     firebase.auth()
       .createUserWithEmailAndPassword(this.state.email, this.state.password)
       .then(res => {
         console.log('Успех:' + res);
+        
+        const userDB = this.props.db.collection("users").doc(this.state.email);
+        
+        /*Выходит, я создаю док для юзера даже если регистрация не прошла???
+        Даже больше, я так руиню базу юзера, мейл которого ввел!!*/
+
+        userDB.set({
+          categories: ['first_cat', 'second_cat'],
+          tags: ['frist_tag', 'second_tag'],
+          transactions:[]
+        })
+          .then(()=> {
+              this.setState({userBaseIsCreated: true});
+          })
+          .catch(function(error) {
+              console.error("Error adding document: ", error);
+        });
+        
         this.setState({logedIn: true})
       })
-      .catch(function(error) {
+      .catch((error)=> {
         console.log(error.message);
         console.log(error.code);
+        this.setState({
+          errorMessage: error.message,
+          email:'',
+          password:''
+        })
     });
   }
 
   render() {
     return (this.state.logedIn) ? <Redirect to="/" /> : (
+      
       <form onSubmit={this.handleSubmit}>
+        <p>{this.state.errorMessage}</p>
         <label>
           <input
             placeholder="Email" 
@@ -74,6 +85,7 @@ class Login extends React.Component {
             name='password'
             value={this.state.password}
             onChange={this.handleInputChange}
+            type='password'
           />
 
           <br/>

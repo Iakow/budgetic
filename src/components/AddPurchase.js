@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, Redirect } from 'react-router-dom';
+import * as firebase from 'firebase/app';
 
 import * as ROUTES from '../constants/routes';
 
@@ -30,17 +31,16 @@ class AddPurchase extends React.Component {
     event.preventDefault();
 
     if (+this.state.sum) {
-      this.props.db.collection("transactions")
-      .add({
-        sum: +this.state.sum,
-        date: Date.now(),
-        comment: this.state.comment,
-        category: this.state.category,
-        tag: this.state.tag
+      this.props.db.update({
+        transactions: firebase.firestore.FieldValue.arrayUnion({
+          sum: +this.state.sum,
+          date: Date.now(),
+          comment: this.state.comment,
+          category: this.state.category,
+          tag: this.state.tag
+        })
       })
-      .then(()=> { 
-        /* тут я просто перехожу на главный роут и Арр рендерит Мейн */
-        this.props.refreshFirestore();
+      .then(()=> {
         this.setState({submit: true});
       })
       .catch(function(error) {

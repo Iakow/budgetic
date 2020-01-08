@@ -3,11 +3,13 @@ import {Switch, Route} from "react-router-dom";
 import * as firebase from 'firebase/app';
 import "firebase/firestore";
 import "firebase/auth";
+
 import * as ROUTES from '../constants/routes';
 import List from './List';
 import AddPurchase from './AddPurchase';
 import Main from './Main';
 import Login from './Login';
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyDGOIDSMbZruufHctcPZqGdzVXnJwCJAg0",
@@ -19,75 +21,80 @@ const firebaseConfig = {
   appId: "1:808634940866:web:623d627c6700ea69a6aa5b"
 };
 
-/* А что, если я всем потомкам просто раздам метод, который будет обновлять образ базы?
-   Тогда не надо будет поднимать отдельно таблицу и сумму.
-    */
 
 class App extends React.Component {
   constructor(props) {
     super(props);
 
+    firebase.initializeApp(firebaseConfig);
+    this.fireStore = firebase.firestore();
+
     this.state = {
-      appStore: null,
-      balance: 0, 
+      balance: null,
       statsTable: [], 
-      user: null
+      user: null,
+      firstDownload: true
     };
   }
 
-  componentDidMount = ()=> {
-    firebase.initializeApp(firebaseConfig);
 
+  componentDidMount = ()=> {
     firebase.auth().onAuthStateChanged((user)=> {
       if (user) {
-        this.setState({
-          user: user,
-          appStore: firebase.firestore()
+        const userDB = this.fireStore.collection("users").doc(user.email);
+
+        userDB.onSnapshot((doc)=>{
+          const transactions = doc.data().transactions;
+          let SUM = null;
+
+          transactions.forEach((transaction)=> {
+            SUM += transaction.sum;
+          })
+
+          this.setState({
+            balance: SUM,
+            statsTable: transactions,
+            user: user,
+            firstDownload: false
+          })
         })
       } else {
-        console.log('нет авторизации')
+        this.setState({
+          user: null,
+          firstDownload: false
+        })
       }
-    });
+    })
   }
 
-  saveBalaceValue = (newSum)=> {
-    this.setState({balance: newSum});
-  }
-
-  saveStatsState = (newTable)=> {
-    this.setState({statsTable: newTable});
-  }
-
-  refreshFirestore = (newState)=> {
-    this.setState({statsTable: newState});
-  }
 
   render() {
+    if (this.state.firstDownload) return <p>Download</p>
     if (this.state.user) {
       const userName = this.state.user.email;
-      const userDB = this.state.appStore.collection("users").doc(userName);
+      const userDB = this.fireStore.collection("users").doc(userName);
 
       return (
         <div>
           <h6>{userName}</h6>
-          
           <Switch>
             <Route path={ROUTES.ADD}>
-              <AddPurchase db={userDB} refreshFirestore = {this.srefreshFirestore}/>
+              <AddPurchase db={userDB}/>
             </Route>
   
             <Route path={ROUTES.STATS}>
-              <List db={userDB} preCollection={this.state.statsTable} sendPreCollection={this.saveStatsState}/>
+              <List statsTable={this.state.statsTable}/>
             </Route>
-  
-            <Route path={ROUTES.MAIN}>
-              <Main db={userDB} sum={this.state.balance} upSum={this.saveBalaceValue}/>
-            </Route>
+
+            <Route
+              path={ROUTES.MAIN} 
+              render={()=> <Main sum={this.state.balance}/>}
+            />
           </Switch>
         </div>
       )
     } else {
-      return <Login db={this.state.appStore}/>
+      return <Login db={this.fireStore}/>
     }
   }
 }
