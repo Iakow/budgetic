@@ -48,7 +48,7 @@ class AddPurchase extends React.Component {
     if (+this.state.sum) {
       this.props.db.update({
         transactions: firebase.firestore.FieldValue.arrayUnion({
-          sum: +this.state.sum,
+          sum: this.state.isItIncome? +this.state.sum : -this.state.sum,
           date: Date.now(),
           comment: this.state.comment,
           category: this.state.category,
