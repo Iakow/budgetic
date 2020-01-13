@@ -1,3 +1,13 @@
+/* 
+
+Кнопка будет менять состояние и надо как-то подгружать соотв-е категории и теги.
+Сперва надо подготовить место и добавить дефолтные теги и категории - это в Логине.
+
+Как подгружать разные массивы в селекты?
+
+
+*/
+
 import React from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import * as firebase from 'firebase/app';
@@ -80,7 +90,7 @@ class AddPurchase extends React.Component {
             <br/>
 
             <select name='category' value={this.state.category} onChange={this.handleInputChange} >
-              <option value='placeholder' disabled>
+              <option value='' disabled>
                 Категория:
               </option>
 
@@ -90,7 +100,7 @@ class AddPurchase extends React.Component {
             <br/>
             
             <select name='tag' value={this.state.tag} onChange={this.handleInputChange} >
-              <option value='placeholder' disabled>
+              <option value='' disabled>
                 Теги
               </option>
               {tags}
@@ -112,11 +122,6 @@ class AddPurchase extends React.Component {
         <Link to={ROUTES.MAIN}>
           {"<<<"}
         </Link>
-
-        <p>Кнопка +/- будет кроме знака суммы еще переключателем тегов и категорий</p>
-        <p>Хранить ли в базе знак суммы??? Да! Надо ж складывать все для баланса</p>
-        <p>Ок, а что делать с роутом для настроек?</p>
-        <p>И с каких страниц нужен доступ к настройкам? В принципе пох, это несложно потом изнменить вроде</p>
       </div>
     );
 
