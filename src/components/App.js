@@ -9,6 +9,7 @@ import List from './List';
 import AddPurchase from './AddPurchase';
 import Main from './Main';
 import Auth from './Auth';
+import Logout from './LogOut';
 
 
 const firebaseConfig = {
@@ -21,6 +22,8 @@ const firebaseConfig = {
   appId: "1:808634940866:web:623d627c6700ea69a6aa5b"
 };
 
+/* Дело в том, что мне бы надо передавать в AddPurchase уже подготовленные списки тегов и категорий. Ну и лучше бы их подготовить один раз, а не лазить каждый раз при маунте.
+Т.е. надо хранить в стейте выше*/
 
 class App extends React.Component {
   constructor(props) {
@@ -33,7 +36,9 @@ class App extends React.Component {
       balance: null,
       statsTable: [], 
       user: null,
-      firstDownload: true
+      firstDownload: true,
+      tags: [],
+      categories: []
     };
   }
 
@@ -41,10 +46,12 @@ class App extends React.Component {
   componentDidMount = ()=> {
     firebase.auth().onAuthStateChanged((user)=> {
       if (user) {
-        const userDB = this.fireStore.collection("users").doc(user.email);
+        const userDB_ref = this.fireStore.collection("users").doc(user.email);
 
-        userDB.onSnapshot((doc)=>{
+        userDB_ref.onSnapshot((doc)=>{
           const transactions = doc.data().transactions;
+          const tags = doc.data().tags;
+          const categories = doc.data().categories;
           let SUM = null;
 
           transactions.forEach((transaction)=> {
@@ -55,7 +62,9 @@ class App extends React.Component {
             balance: SUM,
             statsTable: transactions,
             user: user,
-            firstDownload: false
+            firstDownload: false,
+            tags: tags,
+            categories: categories
           })
         })
       } else {
@@ -76,10 +85,14 @@ class App extends React.Component {
 
       return (
         <div>
-          <h6>{userName}</h6>
+          <span><small>{userName}</small> </span>
+          <Logout/>
           <Switch>
             <Route path={ROUTES.ADD}>
-              <AddPurchase db={userDB}/>
+              <AddPurchase
+                tags={this.state.tags}
+                categories={this.state.categories}
+                db={userDB}/>
             </Route>
   
             <Route path={ROUTES.STATS}>

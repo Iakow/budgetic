@@ -1,16 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import * as ROUTES from '../constants/routes';
-import Logout from './LogOut';
 
 const Main = (props)=> {
-  
+/* Когда-то здесь будет отображаться красивый круглый виджет, которому будет нужна не только сумма */
   return (
     <div>
-      <Logout/>
-      <div>
+      <h2>
         {props.sum}
-      </div>
+      </h2>
       
       <ul>
         <li><Link to={ROUTES.STATS}> Статистика </Link></li>

@@ -11,7 +11,6 @@ class Auth extends React.Component {
     this.state = {
       signin: true
     }
-      
   }
 
   handleInputChange = (e) => {
@@ -27,15 +26,29 @@ class Auth extends React.Component {
     } else {
       form = <LogIn db = {this.props.db}/>
     }
+
     return (
       <div>
       <form>
         <label>
-          <input type='radio' name='SignIn' value='SignIn' checked={this.state.signin} onChange={this.handleInputChange}/>SignIn
-          <input type='radio' name='LogIn' value='LogIn' checked={!this.state.signin} onChange={this.handleInputChange}/> LogIn
+          <input
+            type='radio'
+            name='SignIn'
+            value='SignIn'
+            checked={this.state.signin}
+            onChange={this.handleInputChange}
+          /> SignIn
+
+          <input
+            type='radio'
+            name='LogIn'
+            value='LogIn'
+            checked={!this.state.signin}
+            onChange={this.handleInputChange}
+          /> LogIn
         </label>
-        
       </form>
+      
       {form}
       </div>
     )

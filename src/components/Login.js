@@ -12,7 +12,6 @@ class Login extends React.Component {
       email:'',
       password:'',
       logedIn: false,
-      userBaseIsCreated: false,
       errorMessage: null
     };
   }
@@ -40,11 +39,10 @@ class Login extends React.Component {
         })
         .then(()=> {
           this.setState({
-            userBaseIsCreated: true,
             logedIn: true
           })
         })
-        .catch(function(error) {
+        .catch((error)=> {
           console.error("Error adding document: ", error)
         });
       })

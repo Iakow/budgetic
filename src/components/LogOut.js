@@ -1,7 +1,4 @@
-/* кнопка, по нажатию которой произойдет логаут */
-
 import React from 'react';
-//import { useHistory } from 'react-router-dom';
 import * as firebase from 'firebase/app';
 import "firebase/auth";
 

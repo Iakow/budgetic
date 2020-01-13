@@ -15,20 +15,17 @@ class AddPurchase extends React.Component {
       category: '', 
       submit: false
     };
-
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleInputChange = this.handleInputChange.bind(this);
   }
 
 
-  handleInputChange(e) {
+  handleInputChange = (e)=> {
     this.setState({
       [e.target.name]: e.target.value
     });
   }
 
-  handleSubmit(event) {
-    event.preventDefault();
+  handleSubmit = (e)=> {
+    e.preventDefault();
 
     if (+this.state.sum) {
       this.props.db.update({
@@ -54,6 +51,18 @@ class AddPurchase extends React.Component {
   }
 
   render() {
+    const tags = this.props.tags.map((value, index) => (
+      <option key = {index} value={value}>
+        {value}
+      </option> 
+    ));
+
+    const categories = this.props.categories.map((value, index) => (
+      <option key = {index} value={value}>
+        {value}
+      </option> 
+    ));
+
     const form = (
       <div>
         <form onSubmit={this.handleSubmit}>
@@ -75,13 +84,7 @@ class AddPurchase extends React.Component {
                 Категория:
               </option>
 
-              <option value='Первая'>
-                Первая
-              </option>
-
-              <option value='Вторая'>
-                Вторая
-              </option>
+              {categories}
             </select>
             
             <br/>
@@ -90,16 +93,7 @@ class AddPurchase extends React.Component {
               <option value='placeholder' disabled>
                 Теги
               </option>
-
-              <option value='первый тег'>
-                первый тег
-              </option>
-
-              <option value='второй тег'>
-                второй тег
-              </option>
-
-              
+              {tags}
             </select>
             <br/>
             <textarea
@@ -118,6 +112,11 @@ class AddPurchase extends React.Component {
         <Link to={ROUTES.MAIN}>
           {"<<<"}
         </Link>
+
+        <p>Кнопка +/- будет кроме знака суммы еще переключателем тегов и категорий</p>
+        <p>Хранить ли в базе знак суммы??? Да! Надо ж складывать все для баланса</p>
+        <p>Ок, а что делать с роутом для настроек?</p>
+        <p>И с каких страниц нужен доступ к настройкам? В принципе пох, это несложно потом изнменить вроде</p>
       </div>
     );
 
