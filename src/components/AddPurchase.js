@@ -23,10 +23,18 @@ class AddPurchase extends React.Component {
       comment: '', 
       tag: '', 
       category: '', 
-      submit: false
+      submit: false,
+      isItIncome: false
     };
   }
 
+  changeSign = (e)=> {
+    e.preventDefault();
+
+    this.setState((state)=>({
+      isItIncome: !state.isItIncome
+    }))
+  }
 
   handleInputChange = (e)=> {
     this.setState({
@@ -73,10 +81,13 @@ class AddPurchase extends React.Component {
       </option> 
     ));
 
+    const sign = this.state.isItIncome? "+" : "-";
+
     const form = (
       <div>
         <form onSubmit={this.handleSubmit}>
           <label>
+            <button onClick={this.changeSign}>{sign}</button>
             <input 
               type="number" 
               placeholder="Сумма" 
