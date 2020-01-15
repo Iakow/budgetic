@@ -5,6 +5,7 @@
 
 Как подгружать разные массивы в селекты?
 
+Настройки - это просто интерфейс к юзерской БД
 
 */
 
@@ -44,7 +45,6 @@ class AddPurchase extends React.Component {
 
   handleSubmit = (e)=> {
     e.preventDefault();
-
     if (+this.state.sum) {
       this.props.db.update({
         transactions: firebase.firestore.FieldValue.arrayUnion({
@@ -69,13 +69,15 @@ class AddPurchase extends React.Component {
   }
 
   render() {
-    const tags = this.props.tags.map((value, index) => (
+    const x = this.state.isItIncome? 'income' : 'spend';
+
+    const tags = this.props.tags[x].map((value, index) => (
       <option key = {index} value={value}>
         {value}
       </option> 
     ));
 
-    const categories = this.props.categories.map((value, index) => (
+    const categories = this.props.categories[x].map((value, index) => (
       <option key = {index} value={value}>
         {value}
       </option> 

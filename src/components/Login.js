@@ -33,8 +33,14 @@ class Login extends React.Component {
         const userDBRef = this.props.db.collection("users").doc(this.state.email);
 
         userDBRef.set({
-          categories: ['first_cat', 'second_cat'],
-          tags: ['frist_tag', 'second_tag'],
+          categories: {
+            spend:['catSpend1', 'catSpend2'],
+            income:['catIncome1', 'canIncome2']
+          },
+          tags: {
+            spend: ['tagSpend1', 'tagSpend2'],
+            income:['tagIncome1', 'tagIncome2']
+          },
           transactions:[]
         })
         .then(()=> {
