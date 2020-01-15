@@ -1,14 +1,3 @@
-/* 
-
-Кнопка будет менять состояние и надо как-то подгружать соотв-е категории и теги.
-Сперва надо подготовить место и добавить дефолтные теги и категории - это в Логине.
-
-Как подгружать разные массивы в селекты?
-
-Настройки - это просто интерфейс к юзерской БД
-
-*/
-
 import React from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import * as firebase from 'firebase/app';
@@ -69,27 +58,28 @@ class AddPurchase extends React.Component {
   }
 
   render() {
-    const x = this.state.isItIncome? 'income' : 'spend';
+    const sign = this.state.isItIncome? 'income' : 'spend';
 
-    const tags = this.props.tags[x].map((value, index) => (
+    const tags = this.props.tags[sign].map((value, index) => (
       <option key = {index} value={value}>
         {value}
       </option> 
     ));
 
-    const categories = this.props.categories[x].map((value, index) => (
+    const categories = this.props.categories[sign].map((value, index) => (
       <option key = {index} value={value}>
         {value}
       </option> 
     ));
 
-    const sign = this.state.isItIncome? "+" : "-";
+    const buttonsSign = this.state.isItIncome? "+" : "-";
+    const message = this.state.isItIncome? "Доходы" : "Расходы";
 
     const form = (
       <div>
+        <p>{message}</p>
         <form onSubmit={this.handleSubmit}>
-          <label>
-            <button onClick={this.changeSign}>{sign}</button>
+            <button onClick={this.changeSign}>{buttonsSign}</button>
             <input 
               type="number" 
               placeholder="Сумма" 
@@ -104,7 +94,7 @@ class AddPurchase extends React.Component {
 
             <select name='category' value={this.state.category} onChange={this.handleInputChange} >
               <option value='' disabled>
-                Категория:
+                Категория
               </option>
 
               {categories}
@@ -127,7 +117,6 @@ class AddPurchase extends React.Component {
             />
 
             <br/>
-          </label>
 
           <input type="submit" value="Отправить" />
         </form>

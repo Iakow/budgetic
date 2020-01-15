@@ -35,7 +35,7 @@ class Login extends React.Component {
         userDBRef.set({
           categories: {
             spend:['catSpend1', 'catSpend2'],
-            income:['catIncome1', 'canIncome2']
+            income:['catIncome1', 'catIncome2']
           },
           tags: {
             spend: ['tagSpend1', 'tagSpend2'],
