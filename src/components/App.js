@@ -10,6 +10,7 @@ import AddPurchase from './AddPurchase';
 import Main from './Main';
 import Auth from './Auth';
 import Logout from './LogOut';
+import Settings from './Settings'
 
 
 const firebaseConfig = {
@@ -90,6 +91,13 @@ class App extends React.Component {
           <Switch>
             <Route path={ROUTES.ADD}>
               <AddPurchase
+                tags={this.state.tags}
+                categories={this.state.categories}
+                db={userDB}/>
+            </Route>
+
+            <Route path={ROUTES.SETTINGS}>
+              <Settings
                 tags={this.state.tags}
                 categories={this.state.categories}
                 db={userDB}/>

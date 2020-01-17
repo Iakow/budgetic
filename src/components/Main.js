@@ -13,6 +13,7 @@ const Main = (props)=> {
       <ul>
         <li><Link to={ROUTES.STATS}> Статистика </Link></li>
         <li><Link to={ROUTES.ADD}> Добавить покупку </Link></li>
+        <li><Link to={ROUTES.SETTINGS}>Settings</Link></li>
       </ul>
     </div>
   )
