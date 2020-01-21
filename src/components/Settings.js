@@ -1,33 +1,36 @@
 import React from 'react';
-
-/* Надо на чекбоксах, т.к. надо ченутость должна отображаться*/
+import * as firebase from 'firebase/app';
 
 class Settings extends React.Component {
   constructor(props){
     super(props);
 
     this.state = {
-      transaction:'spend',
-      attribute:'categories'
+      moneyDirection:'spend',
+      transactionAtribute:'categories'
     }
   }
 
   radioHandler = (e)=> {
     this.setState({
       [e.target.name]: e.target.value
-      });
+    });
+  }
+
+  addTag = (e)=> {
+    //console.log(this.props.firestore.collection('users').doc(this.props.user));
   }
   
   render () {
-      const x = this.state.transaction;
-      const y = this.state.attribute;
+      const moneyDirection = this.state.moneyDirection;
+      const transactionAtribute = this.state.transactionAtribute;
 
     return (
       
       <div>
         <label><input
           type="radio"
-          name="transaction"
+          name="moneyDirection"
           value="spend"
           onChange={this.radioHandler}
           defaultChecked/> spend
@@ -36,17 +39,18 @@ class Settings extends React.Component {
         <label>
           <input
             type="radio"
-            name="transaction"
+            name="moneyDirection"
             value="income"
             onChange={this.radioHandler}
             /> income
         </label>
+
         <br/>
 
         <label>
           <input
             type="radio"
-            name="attribute"
+            name="transactionAtribute"
             value="tags"
             onChange={this.radioHandler}/> tags
         </label>
@@ -54,7 +58,7 @@ class Settings extends React.Component {
         <label>
           <input
             type="radio"
-            name="attribute"
+            name="transactionAtribute"
             value="categories"
             onChange={this.radioHandler}
             defaultChecked/> categories
@@ -62,11 +66,20 @@ class Settings extends React.Component {
 
         <br/>
         
-        {this.props[y][x].map((item, index) => (
+        {this.props[transactionAtribute][moneyDirection].map((item, index) => (
           <ul key = {index}>
-            <li>{item}</li>
+            <li style={{listStyleType: 'none'}}>
+              {item}
+              <button>&#65794;</button>
+            </li>
           </ul> 
         ))}
+
+        <input ></input>
+
+        <button onClick={this.addTag}>
+          Добавить
+        </button>
       </div>
     )
   }

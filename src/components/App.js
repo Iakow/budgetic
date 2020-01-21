@@ -23,8 +23,7 @@ const firebaseConfig = {
   appId: "1:808634940866:web:623d627c6700ea69a6aa5b"
 };
 
-/* Дело в том, что мне бы надо передавать в AddPurchase уже подготовленные списки тегов и категорий. Ну и лучше бы их подготовить один раз, а не лазить каждый раз при маунте.
-Т.е. надо хранить в стейте выше*/
+/* */
 
 class App extends React.Component {
   constructor(props) {
@@ -53,6 +52,7 @@ class App extends React.Component {
           const transactions = doc.data().transactions;
           const tags = doc.data().tags;
           const categories = doc.data().categories;
+
           let SUM = null;
 
           transactions.forEach((transaction)=> {
@@ -80,37 +80,40 @@ class App extends React.Component {
 
   render() {
     if (this.state.firstDownload) return <p>Download</p>
+
     if (this.state.user) {
       const userName = this.state.user.email;
-      const userDB = this.fireStore.collection("users").doc(userName);
+      const userDBref = this.fireStore.collection("users").doc(userName);
 
       return (
         <div>
           <span><small>{userName}</small> </span>
           <Logout/>
+
           <Switch>
             <Route path={ROUTES.ADD}>
               <AddPurchase
                 tags={this.state.tags}
                 categories={this.state.categories}
-                db={userDB}/>
+                db={userDBref}
+              />
             </Route>
 
             <Route path={ROUTES.SETTINGS}>
               <Settings
                 tags={this.state.tags}
                 categories={this.state.categories}
-                db={userDB}/>
+                db={userDBref}
+              />
             </Route>
   
             <Route path={ROUTES.STATS}>
               <List statsTable={this.state.statsTable}/>
             </Route>
 
-            <Route
-              path={ROUTES.MAIN} 
-              render={()=> <Main sum={this.state.balance}/>}
-            />
+            <Route path={ROUTES.MAIN} >
+              <Main sum={this.state.balance}/>
+            </Route>
           </Switch>
         </div>
       )

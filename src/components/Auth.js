@@ -21,6 +21,7 @@ class Auth extends React.Component {
 
   render() {
     let form;
+
     if(this.state.signin) {
       form = <SignIn />
     } else {

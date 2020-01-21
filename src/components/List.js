@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import * as ROUTES from '../constants/routes';
 
 const List = (props)=> {
+  
   const formatDate = (date)=> {
     const d = new Date(date);
     const formatedStr = `${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()}
