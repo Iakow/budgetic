@@ -1,6 +1,7 @@
 import React from 'react';
 import * as firebase from 'firebase/app';
 import "firebase/auth";
+import "firebase/firestore";
 import { Redirect } from 'react-router-dom';
 
 
@@ -30,27 +31,35 @@ class Login extends React.Component {
       .then((res) => {
         console.log(res);
         
-        const userDBRef = this.props.db.collection("users").doc(this.state.email);
+        const newUserDBRef = this.props.db.collection("users").doc(this.state.email);//так может тут надо полагаться не на стейт, а на ответ от сервера?
 
-        userDBRef.set({
-          categories: {
-            spend:['catSpend1', 'catSpend2'],
-            income:['catIncome1', 'catIncome2']
-          },
-          tags: {
-            spend: ['tagSpend1', 'tagSpend2'],
-            income:['tagIncome1', 'tagIncome2']
-          },
-          transactions:[]
-        })
-        .then(()=> {
-          this.setState({
-            logedIn: true
+        const initialSettings = (db)=> {
+          let batch = this.props.db.batch();
+
+          /////////////////////
+          batch.set(db, {
+            d: 'd'
           })
-        })
-        .catch((error)=> {
-          console.error("Error adding document: ", error)
-        });
+          ///////////////////
+        
+          let categoriesRef = db.collection('settings').doc('categories');
+          batch.set(categoriesRef, {
+            income:['catIncome1', 'catIncome2'],
+            spend: ['catSpend1', 'catSpend2']
+          });
+        
+          let tagsRef = db.collection('settings').doc('tags');
+          batch.set(tagsRef, {
+            income:['tagIncome1', 'tagIncome2'],
+            spend: ['tagSpend1', 'tagSpend2']
+          });
+        
+          batch.commit().then(function () {
+            console.log('стартовые теги и категории добавлены, коллекция для Транзакции появится при добавлении первой транзакции')
+          });
+        }
+
+        initialSettings (newUserDBRef);
       })
       .catch((error)=> {
         console.log(error.message);

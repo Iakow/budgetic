@@ -46,26 +46,40 @@ class App extends React.Component {
   componentDidMount = ()=> {
     firebase.auth().onAuthStateChanged((user)=> {
       if (user) {
+
         const userDB_ref = this.fireStore.collection("users").doc(user.email);
 
         userDB_ref.onSnapshot((doc)=>{
-          const transactions = doc.data().transactions;
-          const tags = doc.data().tags;
-          const categories = doc.data().categories;
-
+          let transactionsArr = [];
           let SUM = null;
 
-          transactions.forEach((transaction)=> {
-            SUM += transaction.sum;
-          })
+          userDB_ref.collection("transactions").get().then((querySnapshot)=> {
+            querySnapshot.forEach((doc)=> {
+                transactionsArr.push(doc.data());
+                SUM += doc.data().sum;
+            });
+            this.setState({
+              balance: SUM
+            })
+          });
+
+          userDB_ref.collection('settings').doc('tags').get().then((doc)=>{
+            this.setState({
+              tags: doc.data()
+            })
+          });
+
+          userDB_ref.collection('settings').doc('categories').get().then((doc)=>{
+            this.setState({
+              categories: doc.data()
+            })
+          });
+
 
           this.setState({
-            balance: SUM,
-            statsTable: transactions,
+            statsTable: transactionsArr,
             user: user,
-            firstDownload: false,
-            tags: tags,
-            categories: categories
+            firstDownload: false
           })
         })
       } else {
@@ -104,6 +118,7 @@ class App extends React.Component {
                 tags={this.state.tags}
                 categories={this.state.categories}
                 db={userDBref}
+                
               />
             </Route>
   

@@ -35,16 +35,15 @@ class AddPurchase extends React.Component {
   handleSubmit = (e)=> {
     e.preventDefault();
     if (+this.state.sum) {
-      this.props.db.update({
-        transactions: firebase.firestore.FieldValue.arrayUnion({
+      this.props.db.collection('transactions').add({
           sum: this.state.isItIncome? +this.state.sum : -this.state.sum,
           date: Date.now(),
           comment: this.state.comment,
           category: this.state.category,
           tag: this.state.tag
-        })
       })
-      .then(()=> {
+      .then((docRef)=> {
+        console.log("Document written with ID: ", docRef.id);
         this.setState({submit: true});
       })
       .catch(function(error) {
