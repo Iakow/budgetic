@@ -23,8 +23,6 @@ const firebaseConfig = {
   appId: "1:808634940866:web:623d627c6700ea69a6aa5b"
 };
 
-/* */
-
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -46,48 +44,51 @@ class App extends React.Component {
   componentDidMount = ()=> {
     firebase.auth().onAuthStateChanged((user)=> {
       if (user) {
-
-        const userDB_ref = this.fireStore.collection("users").doc(user.email);
-
-        userDB_ref.onSnapshot((doc)=>{
-          let transactionsArr = [];
-          let SUM = null;
-
-          userDB_ref.collection("transactions").get().then((querySnapshot)=> {
-            querySnapshot.forEach((doc)=> {
-                transactionsArr.push(doc.data());
-                SUM += doc.data().sum;
-            });
-            this.setState({
-              balance: SUM
-            })
-          });
-
-          userDB_ref.collection('settings').doc('tags').get().then((doc)=>{
-            this.setState({
-              tags: doc.data()
-            })
-          });
-
-          userDB_ref.collection('settings').doc('categories').get().then((doc)=>{
-            this.setState({
-              categories: doc.data()
-            })
-          });
-
-
-          this.setState({
-            statsTable: transactionsArr,
-            user: user,
-            firstDownload: false
-          })
-        })
+        this.getUserData(user);
       } else {
         this.setState({
           user: null,
           firstDownload: false
         })
       }
+    })
+  }
+
+  getUserData = (user)=> {
+    const userDB_ref = this.fireStore.collection("users").doc(user.email);
+
+    userDB_ref.onSnapshot((doc)=>{ // подписка на изменения в доке
+      userDB_ref.collection("transactions").get().then((querySnapshot)=> {  //запрашииваю все доки из транзакшн
+        let transactionsArr = [];
+        let SUM = null;
+        
+        querySnapshot.forEach((doc)=> { //строю массив для таблицы, считаю сумму
+            transactionsArr.push(doc.data());
+            SUM += doc.data().sum;
+        });
+
+        this.setState({  //таблицу и массив в стейт
+          balance: SUM,
+          statsTable: transactionsArr
+        })
+      });
+
+      userDB_ref.collection('settings').doc('tags').get().then((doc)=>{
+        this.setState({
+          tags: doc.data()
+        })
+      });
+
+      userDB_ref.collection('settings').doc('categories').get().then((doc)=>{
+        this.setState({
+          categories: doc.data()
+        })
+      });
+
+      this.setState({
+        user: user,
+        firstDownload: false
+      })
     })
   }
 

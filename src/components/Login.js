@@ -36,7 +36,7 @@ class Login extends React.Component {
         const initialSettings = (db)=> {
           let batch = this.props.db.batch();
 
-          /////////////////////
+          ///////////////////// КОСТЫЛЬ
           batch.set(db, {
             d: 'd'
           })
