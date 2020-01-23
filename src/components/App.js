@@ -45,6 +45,10 @@ class App extends React.Component {
     firebase.auth().onAuthStateChanged((user)=> {
       if (user) {
         this.getUserData(user);
+        this.setState({
+          user: user,
+          firstDownload: false
+        })
       } else {
         this.setState({
           user: null,
@@ -57,38 +61,31 @@ class App extends React.Component {
   getUserData = (user)=> {
     const userDB_ref = this.fireStore.collection("users").doc(user.email);
 
-    userDB_ref.onSnapshot((doc)=>{ // подписка на изменения в доке
-      userDB_ref.collection("transactions").get().then((querySnapshot)=> {  //запрашииваю все доки из транзакшн
-        let transactionsArr = [];
-        let SUM = null;
-        
-        querySnapshot.forEach((doc)=> { //строю массив для таблицы, считаю сумму
-            transactionsArr.push(doc.data());
-            SUM += doc.data().sum;
-        });
-
-        this.setState({  //таблицу и массив в стейт
-          balance: SUM,
-          statsTable: transactionsArr
-        })
+    userDB_ref.collection('transactions').onSnapshot((querySnapshot)=> {  //get&listenTransactions
+      let transactionsArr = [];
+      let SUM = null;
+      
+      querySnapshot.forEach((doc)=> {
+          transactionsArr.push(doc.data());
+          SUM += doc.data().sum;
       });
 
-      userDB_ref.collection('settings').doc('tags').get().then((doc)=>{
+      this.setState({
+        balance: SUM,
+        statsTable: transactionsArr
+      })
+
+      userDB_ref.collection('settings').doc('tags').get().then((doc)=>{ //getTags
         this.setState({
           tags: doc.data()
         })
       });
 
-      userDB_ref.collection('settings').doc('categories').get().then((doc)=>{
+      userDB_ref.collection('settings').doc('categories').get().then((doc)=>{ //getCategories
         this.setState({
           categories: doc.data()
         })
       });
-
-      this.setState({
-        user: user,
-        firstDownload: false
-      })
     })
   }
 
