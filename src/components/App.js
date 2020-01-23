@@ -74,19 +74,17 @@ class App extends React.Component {
         balance: SUM,
         statsTable: transactionsArr
       })
+    });
 
-      userDB_ref.collection('settings').doc('tags').get().then((doc)=>{ //getTags
+    userDB_ref.collection('settings').onSnapshot((querySnapshot)=>{
+      querySnapshot.forEach((doc)=> {
         this.setState({
-          tags: doc.data()
-        })
-      });
+          [doc.id]: doc.data()
+        });
 
-      userDB_ref.collection('settings').doc('categories').get().then((doc)=>{ //getCategories
-        this.setState({
-          categories: doc.data()
-        })
+        console.log(doc.id, '=>', doc.data());
       });
-    })
+    });
   }
 
 
@@ -116,7 +114,6 @@ class App extends React.Component {
                 tags={this.state.tags}
                 categories={this.state.categories}
                 db={userDBref}
-                
               />
             </Route>
   
