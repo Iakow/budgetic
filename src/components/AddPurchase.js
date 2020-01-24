@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, Redirect } from 'react-router-dom';
-import * as firebase from 'firebase/app';
+//import * as firebase from 'firebase/app';
 
 import * as ROUTES from '../constants/routes';
 

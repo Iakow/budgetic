@@ -34,25 +34,21 @@ class App extends React.Component {
       balance: null,
       statsTable: [], 
       user: null,
-      firstDownload: true,
       tags: [],
       categories: []
     };
   }
-
 
   componentDidMount = ()=> {
     firebase.auth().onAuthStateChanged((user)=> {
       if (user) {
         this.getUserData(user);
         this.setState({
-          user: user,
-          firstDownload: false
+          user: user
         })
       } else {
         this.setState({
-          user: null,
-          firstDownload: false
+          user: null
         })
       }
     })
@@ -62,7 +58,7 @@ class App extends React.Component {
     const userDB_ref = this.fireStore.collection("users").doc(user.email);
 
     userDB_ref.collection('transactions').onSnapshot((querySnapshot)=> {  //get&listenTransactions
-      let transactionsArr = [];
+      const transactionsArr = [];
       let SUM = null;
       
       querySnapshot.forEach((doc)=> {
@@ -81,15 +77,13 @@ class App extends React.Component {
         this.setState({
           [doc.id]: doc.data()
         });
-
-        console.log(doc.id, '=>', doc.data());
       });
     });
   }
 
 
   render() {
-    if (this.state.firstDownload) return <p>Download</p>
+    if (this.state.tags.length === 0 || this.state.statsTable.length === 0) return <p>Download</p>
 
     if (this.state.user) {
       const userName = this.state.user.email;
