@@ -57,7 +57,7 @@ class App extends React.Component {
   getUserData = (user)=> {
     const userDB_ref = this.fireStore.collection("users").doc(user.email);
 
-    userDB_ref.collection('transactions').onSnapshot((querySnapshot)=> {  //get&listenTransactions
+    userDB_ref.collection('transactions').onSnapshot((querySnapshot)=> {
       const transactionsArr = [];
       let SUM = null;
       
@@ -74,8 +74,8 @@ class App extends React.Component {
 
     userDB_ref.collection('settings').onSnapshot((querySnapshot)=>{
       querySnapshot.forEach((doc)=> {
-        this.setState({
-          [doc.id]: doc.data()
+        this.setState({ // стоит ли здесь привязываться к названию документов? И сетСтейтить в цикле?
+          [doc.id]: doc.data() // мож лучше два отдельных запроса и один сетСтейт?
         });
       });
     });
