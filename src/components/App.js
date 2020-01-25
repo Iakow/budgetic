@@ -57,7 +57,7 @@ class App extends React.Component {
   getUserData = (user)=> {
     const userDB_ref = this.fireStore.collection("users").doc(user.email);
 
-    userDB_ref.collection('transactions').onSnapshot((querySnapshot)=> {
+    userDB_ref.collection('transactions').orderBy("date", "desc").onSnapshot((querySnapshot)=> {
       const transactionsArr = [];
       let SUM = null;
       
