@@ -22,7 +22,9 @@ class AddPurchase extends React.Component {
     e.preventDefault();
 
     this.setState((state)=>({
-      isItIncome: !state.isItIncome
+      isItIncome: !state.isItIncome,
+      tag: '', 
+      category: ''
     }))
   }
 
@@ -84,7 +86,7 @@ class AddPurchase extends React.Component {
               placeholder="Сумма" 
               autoComplete="off" 
               name='sum' 
-              value={this.state.sum} 
+              value={this.state.sum}
               onChange={this.handleInputChange} 
               autoFocus 
             />

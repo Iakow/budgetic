@@ -45,7 +45,7 @@ class Settings extends React.Component {
 
       const list = (
         <div>
-          {this.props[transactionAtribute][moneyDirection].map((item, index) => (
+          {this.props[transactionAtribute][moneyDirection].map((item, index)=> (
             <ul key = {index}>
               <li style={{listStyleType: 'none'}}>
                 {item}
