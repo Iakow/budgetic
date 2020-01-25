@@ -32,6 +32,12 @@ class Settings extends React.Component {
       newTag:''
     })
   }
+
+  deleteTag = (e)=> {
+    this.props.db.collection('settings').doc(this.state.transactionAtribute).update({
+      [this.state.moneyDirection]: firebase.firestore.FieldValue.arrayRemove(e.target.name)
+    });
+  }
   
   render () {
       const moneyDirection = this.state.moneyDirection;
@@ -43,7 +49,7 @@ class Settings extends React.Component {
             <ul key = {index}>
               <li style={{listStyleType: 'none'}}>
                 {item}
-                <button>&#65794;</button>
+                <button name={item} onClick={this.deleteTag}>&#65794;</button>
               </li>
             </ul> 
           ))}
