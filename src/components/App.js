@@ -31,13 +31,14 @@ class App extends React.Component {
     this.fireStore = firebase.firestore();
 
     this.state = {
-      balance: null,
-      statsTable: [], 
       user: null,
+      balance: null,
+      transactions: [],
       tags: [],
       categories: []
     };
   }
+
 
   componentDidMount = ()=> {
     firebase.auth().onAuthStateChanged((user)=> {
@@ -54,36 +55,63 @@ class App extends React.Component {
     })
   }
 
+
   getUserData = (user)=> {
     const userDB_ref = this.fireStore.collection("users").doc(user.email);
+    const transactions_ref = userDB_ref.collection('transactions');
+    const tags_ref = userDB_ref.collection('settings').doc('tags');
+    const categories_ref = userDB_ref.collection('settings').doc('categories');
 
-    userDB_ref.collection('transactions').orderBy("date", "desc").onSnapshot((querySnapshot)=> {
+    transactions_ref.orderBy("date", "desc").onSnapshot((querySnapshot)=> {
       const transactionsArr = [];
-      let SUM = null;
+      let balanceCounter = null;
       
       querySnapshot.forEach((doc)=> {
-          transactionsArr.push(doc.data());
-          SUM += doc.data().sum;
+        transactionsArr.push(doc.data());
+        balanceCounter += doc.data().sum;
       });
 
       this.setState({
-        balance: SUM,
-        statsTable: transactionsArr
+        balance: balanceCounter,
+        transactions: transactionsArr
       })
     });
 
-    userDB_ref.collection('settings').onSnapshot((querySnapshot)=>{
+    userDB_ref.collection('settings').onSnapshot(()=>{
+      tags_ref.get().then((doc)=> {
+        this.setState({
+          tags: doc.data()
+        })
+      })
+      .catch((error)=>{
+        
+      })
+
+      categories_ref.get().then((doc)=> {
+        this.setState({
+          categories: doc.data()
+        })
+      })
+      .catch((error)=>{
+
+      })
+    });
+
+    /* userDB_ref.collection('settings').onSnapshot((querySnapshot)=>{
       querySnapshot.forEach((doc)=> {
-        this.setState({ // стоит ли здесь привязываться к названию документов? И сетСтейтить в цикле?
-          [doc.id]: doc.data() // мож лучше два отдельных запроса и один сетСтейт?
+        this.setState({
+          [doc.id]: doc.data()
         });
       });
-    });
+    }); */
   }
 
 
   render() {
-    if (this.state.tags.length === 0 || this.state.statsTable.length === 0) return <p>Download</p>
+    let noHaveTransactions = this.state.transactions.length === 0;
+    let noHaveSettings = this.state.tags.length === 0 || this.state.categories.length === 0;
+
+    if (noHaveSettings || noHaveTransactions) return <p>Download</p>
 
     if (this.state.user) {
       const userName = this.state.user.email;
@@ -112,7 +140,7 @@ class App extends React.Component {
             </Route>
   
             <Route path={ROUTES.STATS}>
-              <List statsTable={this.state.statsTable}/>
+              <List statsTable={this.state.transactions}/>
             </Route>
 
             <Route path={ROUTES.MAIN} >
