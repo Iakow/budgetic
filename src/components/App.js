@@ -57,12 +57,12 @@ class App extends React.Component {
 
 
   getUserData = (user)=> {
-    const userDB_ref = this.fireStore.collection("users").doc(user.email);
-    const transactions_ref = userDB_ref.collection('transactions');
-    const tags_ref = userDB_ref.collection('settings').doc('tags');
-    const categories_ref = userDB_ref.collection('settings').doc('categories');
+    const USER_DB = this.fireStore.collection("users").doc(user.email);
+    const TRANSACTIONS = USER_DB.collection('transactions');
+    const TAGS = USER_DB.collection('settings').doc('tags');
+    const CATEGORIES = USER_DB.collection('settings').doc('categories');
 
-    transactions_ref.orderBy("date", "desc").onSnapshot((querySnapshot)=> {
+    TRANSACTIONS.orderBy("date", "desc").onSnapshot((querySnapshot)=> {
       const transactionsArr = [];
       let balanceCounter = null;
       
@@ -77,27 +77,27 @@ class App extends React.Component {
       })
     });
 
-    userDB_ref.collection('settings').onSnapshot(()=>{
-      tags_ref.get().then((doc)=> {
+    USER_DB.collection('settings').onSnapshot(()=>{
+      TAGS.get().then((doc)=> {
         this.setState({
           tags: doc.data()
         })
       })
       .catch((error)=>{
-        
+        console.log(error.message)
       })
 
-      categories_ref.get().then((doc)=> {
+      CATEGORIES.get().then((doc)=> {
         this.setState({
           categories: doc.data()
         })
       })
       .catch((error)=>{
-
+        console.log(error.message)
       })
     });
 
-    /* userDB_ref.collection('settings').onSnapshot((querySnapshot)=>{
+    /* USER_DB.collection('settings').onSnapshot((querySnapshot)=>{
       querySnapshot.forEach((doc)=> {
         this.setState({
           [doc.id]: doc.data()
@@ -108,18 +108,18 @@ class App extends React.Component {
 
 
   render() {
-    let noHaveTransactions = this.state.transactions.length === 0;
-    let noHaveSettings = this.state.tags.length === 0 || this.state.categories.length === 0;
+    const noHaveTransactions = this.state.transactions.length === 0;
+    const noHaveSettings = this.state.tags.length === 0 || this.state.categories.length === 0;
 
     if (noHaveSettings || noHaveTransactions) return <p>Download</p>
 
     if (this.state.user) {
       const userName = this.state.user.email;
-      const userDBref = this.fireStore.collection("users").doc(userName);
+      const USER_DB = this.fireStore.collection("users").doc(userName);
 
       return (
         <div>
-          <span><small>{userName}</small> </span>
+          <span><small>{userName}</small></span>
           <Logout/>
 
           <Switch>
@@ -127,7 +127,7 @@ class App extends React.Component {
               <AddPurchase
                 tags={this.state.tags}
                 categories={this.state.categories}
-                db={userDBref}
+                db={USER_DB}
               />
             </Route>
 
@@ -135,7 +135,7 @@ class App extends React.Component {
               <Settings
                 tags={this.state.tags}
                 categories={this.state.categories}
-                db={userDBref}
+                db={USER_DB}
               />
             </Route>
   
