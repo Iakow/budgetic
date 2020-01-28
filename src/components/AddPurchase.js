@@ -18,6 +18,26 @@ class AddPurchase extends React.Component {
     };
   }
 
+  componentDidMount = ()=> {
+    if (this.props.mode === 'add') {
+      console.log ('стейт собирается из формы')
+    } 
+
+    if (this.props.mode === 'edit') {
+      const transaction = this.props.transaction;
+      
+      this.setState({
+        date: transaction.date,
+        sum: transaction.sum, 
+        comment: transaction.comment, 
+        tag: transaction.tag, 
+        category: transaction.category, 
+        submit: false,
+        isItIncome: transaction.isItIncome
+      })
+    }
+  }
+
 
   timestampToString = (timestamp)=> {
     const d = new Date(timestamp);
@@ -118,7 +138,9 @@ class AddPurchase extends React.Component {
         <p>{message}</p>
         <input 
           type='datetime-local' 
-          onChange={(e)=> {this.setState({date: this.stirngToTimestamp(e.target.value)})}}
+          onChange={(e)=> {
+            this.setState({date: this.stirngToTimestamp(e.target.value)})}
+          }
           value={this.timestampToString(this.state.date)}/>
 
         <form onSubmit={this.handleSubmit}>

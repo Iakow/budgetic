@@ -71,7 +71,9 @@ class App extends React.Component {
       let balanceCounter = null;
       
       querySnapshot.forEach((doc)=> {
-        transactionsArr.push(doc.data());
+        const obj = doc.data();
+        obj.id = doc.id;
+        transactionsArr.push(obj);
         balanceCounter += doc.data().sum;
       });
 
@@ -125,6 +127,7 @@ class App extends React.Component {
                 tags={this.state.tags}
                 categories={this.state.categories}
                 db={USER_DB}
+                mode='add'
               />
             </Route>
 
