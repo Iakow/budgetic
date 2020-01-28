@@ -9,7 +9,7 @@ class Auth extends React.Component {
     super(props);
 
     this.state = {
-      signin: true
+      signin: true // у меня уже есть аккаунт
     }
   }
 
@@ -20,37 +20,32 @@ class Auth extends React.Component {
   }
 
   render() {
-    let form;
 
-    if(this.state.signin) {
-      form = <SignIn />
-    } else {
-      form = <LogIn db = {this.props.db}/>
-    }
+    const loginForm = (this.state.signin) ? <SignIn /> : <LogIn db = {this.props.db}/>
 
     return (
       <div>
-      <form>
-        <label>
-          <input
-            type='radio'
-            name='SignIn'
-            value='SignIn'
-            checked={this.state.signin}
-            onChange={this.handleInputChange}
-          /> SignIn
+        <form>
+          <label>
+            <input
+              type='radio'
+              name='SignIn'
+              value='SignIn'
+              checked={this.state.signin}
+              onChange={this.handleInputChange}
+            /> SignIn
 
-          <input
-            type='radio'
-            name='LogIn'
-            value='LogIn'
-            checked={!this.state.signin}
-            onChange={this.handleInputChange}
-          /> LogIn
-        </label>
-      </form>
-      
-      {form}
+            <input
+              type='radio'
+              name='LogIn'
+              value='LogIn'
+              checked={!this.state.signin}
+              onChange={this.handleInputChange}
+            /> LogIn
+          </label>
+        </form>
+        
+        {loginForm}
       </div>
     )
   }

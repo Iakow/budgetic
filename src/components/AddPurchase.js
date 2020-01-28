@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link, Redirect } from 'react-router-dom';
-//import * as firebase from 'firebase/app';
 
 import * as ROUTES from '../constants/routes';
 
@@ -18,7 +17,8 @@ class AddPurchase extends React.Component {
     };
   }
 
-  changeSign = (e)=> {
+
+  toggleTransactionSign = (e)=> {
     e.preventDefault();
 
     this.setState((state)=>({
@@ -28,107 +28,117 @@ class AddPurchase extends React.Component {
     }))
   }
 
+
   handleInputChange = (e)=> {
     this.setState({
       [e.target.name]: e.target.value
     });
   }
 
+
+  addTransaction = ()=> {
+    this.props.db.collection('transactions').add({
+      sum: this.state.isItIncome? +this.state.sum : -this.state.sum,
+      date: Date.now(),
+      comment: this.state.comment,
+      category: this.state.category,
+      tag: this.state.tag
+    })
+    .then((docRef)=> {
+      console.log("Document written with ID: ", docRef.id);
+      this.setState({submit: true});
+    })
+    .catch(function(error) {
+      console.error("Error adding document: ", error);
+    });
+  }
+
+
   handleSubmit = (e)=> {
     e.preventDefault();
+    
     if (+this.state.sum) {
-      this.props.db.collection('transactions').add({
-          sum: this.state.isItIncome? +this.state.sum : -this.state.sum,
-          date: Date.now(),
-          comment: this.state.comment,
-          category: this.state.category,
-          tag: this.state.tag
-      })
-      .then((docRef)=> {
-        console.log("Document written with ID: ", docRef.id);
-        this.setState({submit: true});
-      })
-      .catch(function(error) {
-        console.error("Error adding document: ", error);
-      });
-
+      this.addTransaction()
     } else {
       alert('Надо ввести сумму')
     }
-
   }
 
+
   render() {
-    const sign = this.state.isItIncome? 'income' : 'spend';
+    const transactionDirection = this.state.isItIncome? 'income' : 'spend';
 
-    const tags = this.props.tags[sign].map((value, index) => (
-      <option key = {index} value={value}>
-        {value}
+    const tagsSelectOptions = this.props.tags[transactionDirection].map((tag, i) => (
+      <option key = {i} value={tag}>
+        {tag}
       </option> 
     ));
 
-    const categories = this.props.categories[sign].map((value, index) => (
-      <option key = {index} value={value}>
-        {value}
+    const categoriesSelectOptions = this.props.categories[transactionDirection].map((category, i) => (
+      <option key = {i} value={category}>
+        {category}
       </option> 
     ));
 
-    const buttonsSign = this.state.isItIncome? "+" : "-";
+    const signButtonText = this.state.isItIncome? "+" : "-";
     const message = this.state.isItIncome? "Доходы" : "Расходы";
 
-    const form = (
+    return (this.state.submit) ? <Redirect to="/" /> : (
       <div>
         <p>{message}</p>
+
         <form onSubmit={this.handleSubmit}>
-            <button onClick={this.changeSign}>{buttonsSign}</button>
-            <input 
-              type="number" 
-              placeholder="Сумма" 
-              autoComplete="off" 
-              name='sum' 
-              value={this.state.sum}
-              onChange={this.handleInputChange} 
-              autoFocus 
-            />
+          <button onClick={this.toggleTransactionSign}>
+            {signButtonText}
+          </button>
 
-            <br/>
+          <input 
+            type="number" 
+            placeholder="Сумма" 
+            autoComplete="off" 
+            name='sum' 
+            value={this.state.sum}
+            onChange={this.handleInputChange} 
+            autoFocus 
+          />
 
-            <select name='category' value={this.state.category} onChange={this.handleInputChange} >
-              <option value='' disabled>
-                Категория
-              </option>
+          <br/>
 
-              {categories}
-            </select>
-            
-            <br/>
-            
-            <select name='tag' value={this.state.tag} onChange={this.handleInputChange} >
-              <option value='' disabled>
-                Теги
-              </option>
-              {tags}
-            </select>
-            <br/>
-            <textarea
-              placeholder = 'Коммент:'
-              name='comment' 
-              value={this.state.comment} 
-              onChange={this.handleInputChange} 
-            />
+          <select name='category' value={this.state.category} onChange={this.handleInputChange}>
+            <option value='' disabled>
+              Категория
+            </option>
+            {categoriesSelectOptions}
+          </select>
+          
+          <br/>
+          
+          <select name='tag' value={this.state.tag} onChange={this.handleInputChange}>
+            <option value='' disabled>
+              Теги
+            </option>
+            {tagsSelectOptions}
+          </select>
 
-            <br/>
+          <br/>
 
-          <input type="submit" value="Отправить" />
+          <textarea
+            placeholder = 'Коммент:'
+            name='comment' 
+            value={this.state.comment} 
+            onChange={this.handleInputChange} 
+          />
+
+          <br/>
+
+          <input type="submit" value="Добавить" />
         </form>
     
         <Link to={ROUTES.MAIN}>
           {"<<<"}
         </Link>
-      </div>
-    );
-
-    return (this.state.submit) ? <Redirect to="/" /> : form
+      </div> 
+    )
   }
 }
 

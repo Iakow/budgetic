@@ -28,6 +28,7 @@ class Settings extends React.Component {
     this.props.db.collection('settings').doc(this.state.transactionAtribute).update({
       [this.state.moneyDirection]: firebase.firestore.FieldValue.arrayUnion(this.state.newTag)
     });
+    
     this.setState({
       newTag:''
     })

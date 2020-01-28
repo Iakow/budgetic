@@ -23,6 +23,7 @@ const firebaseConfig = {
   appId: "1:808634940866:web:623d627c6700ea69a6aa5b"
 };
 
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -35,7 +36,8 @@ class App extends React.Component {
       balance: null,
       transactions: [],
       tags: [],
-      categories: []
+      categories: [],
+      needLogin: null
     };
   }
 
@@ -45,11 +47,13 @@ class App extends React.Component {
       if (user) {
         this.getUserData(user);
         this.setState({
-          user: user
+          user: user,
+          needLogin: false
         })
       } else {
         this.setState({
-          user: null
+          user: null,
+          needLogin:true
         })
       }
     })
@@ -96,22 +100,15 @@ class App extends React.Component {
         console.log(error.message)
       })
     });
-
-    /* USER_DB.collection('settings').onSnapshot((querySnapshot)=>{
-      querySnapshot.forEach((doc)=> {
-        this.setState({
-          [doc.id]: doc.data()
-        });
-      });
-    }); */
   }
 
 
   render() {
     const noHaveTransactions = this.state.transactions.length === 0;
     const noHaveSettings = this.state.tags.length === 0 || this.state.categories.length === 0;
+    const needLogin = this.state.needLogin;
 
-    if (noHaveSettings || noHaveTransactions) return <p>Download</p>
+    if (!needLogin && (noHaveSettings || noHaveTransactions)) return <p>Download</p>
 
     if (this.state.user) {
       const userName = this.state.user.email;
