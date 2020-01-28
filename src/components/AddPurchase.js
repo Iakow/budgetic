@@ -8,6 +8,7 @@ class AddPurchase extends React.Component {
     super(props);
 
     this.state = {
+      date: Date.now(),
       sum: '', 
       comment: '', 
       tag: '', 
@@ -15,6 +16,35 @@ class AddPurchase extends React.Component {
       submit: false,
       isItIncome: false
     };
+  }
+
+
+  timestampToString = (timestamp)=> {
+    const d = new Date(timestamp);
+
+    const DD = (d.getDate()>9) ? d.getDate() : `0${d.getDate()}`;
+    const MM = ((d.getMonth()+1)>9) ? d.getMonth()+1 : `0${d.getMonth()+1}`;
+    const YYYY = d.getFullYear();
+
+    const HH = ((d.getHours()>9)) ? d.getHours() : `0${d.getHours()}`;
+    const MI = ((d.getMinutes()>9)) ? d.getMinutes() : `0${d.getMinutes()}`;
+
+    return YYYY+'-'+MM+'-'+DD+'T'+HH+':'+MI;
+  }
+
+  stirngToTimestamp = (htmlDate)=> {
+    const YYYY = +htmlDate.slice(0, 4);
+    const MM = +htmlDate.slice(6,7) - 1;
+    const DD = +htmlDate.slice(8,10);
+    const HH = +htmlDate.slice(11,13);
+    const MI = +htmlDate.slice(14);
+
+    const date = new Date();
+
+    date.setFullYear(YYYY, MM, DD);
+    date.setHours(HH, MI);
+
+    return date.getTime();
   }
 
 
@@ -39,7 +69,7 @@ class AddPurchase extends React.Component {
   addTransaction = ()=> {
     this.props.db.collection('transactions').add({
       sum: this.state.isItIncome? +this.state.sum : -this.state.sum,
-      date: Date.now(),
+      date: this.state.date,
       comment: this.state.comment,
       category: this.state.category,
       tag: this.state.tag
@@ -86,6 +116,10 @@ class AddPurchase extends React.Component {
     return (this.state.submit) ? <Redirect to="/" /> : (
       <div>
         <p>{message}</p>
+        <input 
+          type='datetime-local' 
+          onChange={(e)=> {this.setState({date: this.stirngToTimestamp(e.target.value)})}}
+          value={this.timestampToString(this.state.date)}/>
 
         <form onSubmit={this.handleSubmit}>
           <button onClick={this.toggleTransactionSign}>
@@ -96,7 +130,7 @@ class AddPurchase extends React.Component {
             type="number" 
             placeholder="Сумма" 
             autoComplete="off" 
-            name='sum' 
+            name='sum'
             value={this.state.sum}
             onChange={this.handleInputChange} 
             autoFocus 

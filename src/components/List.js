@@ -10,6 +10,14 @@ const List = (props)=> {
                          ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`;
     return formatedStr;
   }
+
+  //const editTransactions = (e)=> {
+    /* По клику должна рендериться форма из AddPurchase и в принципе все то же самое, что и при добавлении транзакции, только она должна не добавиться в коллекцию, а должен измениться соотв. документ. 
+    
+    Но для этого сперва надо в AddPurchase добавить возможность редактировать время.
+    
+    Ну и в мобильной версии это, наверное, должна быть не кнопка, а зажимание строки*/
+  //}
   
   const statsTable = props.statsTable.map((doc, index) => (
     <tbody key = {index}>
@@ -19,17 +27,20 @@ const List = (props)=> {
         <td>{doc.category}</td>
         <td>{doc.tag}</td>
         <td>{doc.comment}</td>
+        <td>
+          <button>edit</button>
+        </td>
       </tr>
     </tbody> 
   ));
 
   return (
     <div>
-      <table border="1">{statsTable}</table>
-
       <h1> Статистика </h1>
       
       <Link to={ROUTES.MAIN}> {"<<<<<"} </Link>
+
+      <table border="1">{statsTable}</table>
     </div>
   )
 }
