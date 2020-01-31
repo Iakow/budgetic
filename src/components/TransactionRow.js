@@ -13,6 +13,14 @@ const TransactionRow = (props)=> {
     props.editDoc(props.doc)
   }
 
+  const delTransaction = ()=> {
+    props.db.collection("transactions").doc(props.doc.id).delete().then(function() {
+      console.log("Document successfully deleted!");
+  }).catch(function(error) {
+      console.error("Error removing document: ", error);
+  });
+  }
+
   return (
     <tbody> 
     <tr>
@@ -27,6 +35,10 @@ const TransactionRow = (props)=> {
           onClick = {submitChanges}
         >
           edit
+        </button>
+        <button
+          onClick = {delTransaction}>
+          del
         </button>
       </td>
     </tr>

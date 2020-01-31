@@ -22,7 +22,6 @@ class List extends React.Component {
   }
 
   editDoc = (doc)=> {
-    console.log(doc);
     this.setState({
       doc: doc,
       editDoc: true
@@ -39,7 +38,7 @@ class List extends React.Component {
 
           <table border="1">
             {this.props.statsTable.map((doc)=> 
-              <TransactionRow editDoc={this.editDoc} key={doc.id} doc={doc}/>
+              <TransactionRow editDoc={this.editDoc} key={doc.id} doc={doc} db={this.props.db}/>
             )}
           </table>
         </div>
@@ -54,9 +53,7 @@ class List extends React.Component {
         done={this.done}
       />
     }
-        
   }
-
 }
 
 export default List; 

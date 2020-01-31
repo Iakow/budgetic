@@ -11,11 +11,11 @@ class AddPurchase extends React.Component {
 
     this.state = {
       date: Date.now(),
-      sum: '', 
+      sum: '', // почему строка?
       comment: '', 
       tag: '', 
       category: '', 
-      submit: false,
+      submit: false, // при редактировании и добавлении работает по-разному
       isItIncome: false
     };
   }
@@ -26,7 +26,7 @@ class AddPurchase extends React.Component {
       
       this.setState({
         date: transaction.date,
-        sum: Math.abs(transaction.sum), 
+        sum: Math.abs(transaction.sum), // поменять
         comment: transaction.comment, 
         tag: transaction.tag, 
         category: transaction.category,
@@ -72,9 +72,11 @@ class AddPurchase extends React.Component {
     this.setState({
       [e.target.name]: e.target.value
     });
-    console.log(e.target.type)
   }
 
+/* А не лучше ли менять знак state.sum сразу напрямую, а в инпуте отображать просто модуль???
+   По идее тогда мне не нужен isItIncome и это круто!
+   И не выйдет ли тогда заполнить все поля дока одной деструктуризацией или как там оно??? */
 
   addTransaction = ()=> {
     this.props.db.collection('transactions').add({
@@ -123,23 +125,13 @@ class AddPurchase extends React.Component {
     }
   }
 
-
   render() {
-    let transactionDirection = 'spend';
-    let signButtonText = "-";
-    let message = "Расходы";
-
-    if (this.state.isItIncome) {
-      transactionDirection = 'income';
-      signButtonText = "+";
-      message = "Доходы";
-    }
-    
-    const parentPath = (this.props.mode === 'edit') ? '/stats' : '/'
+    const sign = this.state.isItIncome === true;
+    const parentPath = (this.props.mode === 'edit') ? '/stats' : '/';
 
     return (this.state.submit) ? <Redirect to={parentPath} /> : (
       <div>
-        <p>{message}</p>
+        <p>{(this.state.isItIncome)? "Доходы" : "Расходы"}</p>
 
         <form onSubmit={this.handleSubmit}>
           <DateInput
@@ -150,7 +142,7 @@ class AddPurchase extends React.Component {
           <br/>
 
           <button onClick={this.toggleTransactionSign}>
-            {signButtonText}
+            {(sign)? "+" : "-"}
           </button>
 
           <input 
@@ -169,7 +161,7 @@ class AddPurchase extends React.Component {
             name='category'
             value={this.state.category}
             handler={this.handleInputChange}
-            options= {this.props.categories[transactionDirection]}/>
+            options= {this.props.categories[(sign)? "income" : "spend"]}/>
           
           <br/>
 
@@ -177,7 +169,7 @@ class AddPurchase extends React.Component {
             name='tag'
             value={this.state.tag}
             handler={this.handleInputChange}
-            options= {this.props.tags[transactionDirection]}/>
+            options= {this.props.tags[(sign)? "income" : "spend"]}/>
 
           <br/>
 

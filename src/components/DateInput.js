@@ -16,11 +16,11 @@ const DateInput = (props)=> {
 
   return (
     <input
-    name={props.name}
-    type='datetime-local' 
-    onChange={props.handler}
-    value={timestampToString(props.value)}
-  />
+      name={props.name}
+      type='datetime-local' 
+      onChange={props.handler}
+      value={timestampToString(props.value)}
+    />
   )
 }
 
