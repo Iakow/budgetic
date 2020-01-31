@@ -140,7 +140,8 @@ class App extends React.Component {
             </Route>
   
             <Route path={ROUTES.STATS}>
-              <List statsTable={this.state.transactions}/>
+              <List statsTable={this.state.transactions} tags={this.state.tags}
+                categories={this.state.categories} db={USER_DB}/>
             </Route>
 
             <Route path={ROUTES.MAIN} >

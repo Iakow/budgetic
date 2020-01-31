@@ -2,15 +2,15 @@ import React from 'react';
 
 const TransactionRow = (props)=> {
 
-  const editTransaction = ()=> {
-    console.log(props.doc)
-  }
-
   const formatDate = (date)=> {
     const d = new Date(date);
     const formatedStr = `${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()}
                          ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`;
     return formatedStr;
+  }
+
+  const submitChanges = ()=> {
+    props.editDoc(props.doc)
   }
 
   return (
@@ -24,7 +24,7 @@ const TransactionRow = (props)=> {
       <td>
         <button 
           id = {props.doc.id}
-          onClick = {editTransaction}
+          onClick = {submitChanges}
         >
           edit
         </button>

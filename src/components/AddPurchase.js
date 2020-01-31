@@ -1,7 +1,9 @@
 import React from 'react';
 import { Link, Redirect } from 'react-router-dom';
 
-import * as ROUTES from '../constants/routes';
+//import * as ROUTES from '../constants/routes';
+import Select from './Select';
+import DateInput from "./DateInput";
 
 class AddPurchase extends React.Component {
   constructor(props) {
@@ -19,40 +21,22 @@ class AddPurchase extends React.Component {
   }
 
   componentDidMount = ()=> {
-    if (this.props.mode === 'add') {
-      console.log ('стейт собирается из формы')
-    } 
-
     if (this.props.mode === 'edit') {
       const transaction = this.props.transaction;
       
       this.setState({
         date: transaction.date,
-        sum: transaction.sum, 
+        sum: Math.abs(transaction.sum), 
         comment: transaction.comment, 
         tag: transaction.tag, 
-        category: transaction.category, 
-        submit: false,
-        isItIncome: transaction.isItIncome
+        category: transaction.category,
+        isItIncome: (transaction.sum>0) ? true : false
       })
     }
   }
 
 
-  timestampToString = (timestamp)=> {
-    const d = new Date(timestamp);
-
-    const DD = (d.getDate()>9) ? d.getDate() : `0${d.getDate()}`;
-    const MM = ((d.getMonth()+1)>9) ? d.getMonth()+1 : `0${d.getMonth()+1}`;
-    const YYYY = d.getFullYear();
-
-    const HH = ((d.getHours()>9)) ? d.getHours() : `0${d.getHours()}`;
-    const MI = ((d.getMinutes()>9)) ? d.getMinutes() : `0${d.getMinutes()}`;
-
-    return YYYY+'-'+MM+'-'+DD+'T'+HH+':'+MI;
-  }
-
-  stirngToTimestamp = (htmlDate)=> {
+  htmlStirngToTimestamp = (htmlDate)=> {
     const YYYY = +htmlDate.slice(0, 4);
     const MM = +htmlDate.slice(6,7) - 1;
     const DD = +htmlDate.slice(8,10);
@@ -80,9 +64,15 @@ class AddPurchase extends React.Component {
 
 
   handleInputChange = (e)=> {
+    if(e.target.type === 'datetime-local') {
+      this.setState({
+        [e.target.name]: this.htmlStirngToTimestamp(e.target.value)
+      });
+    }
     this.setState({
       [e.target.name]: e.target.value
     });
+    console.log(e.target.type)
   }
 
 
@@ -98,8 +88,27 @@ class AddPurchase extends React.Component {
       console.log("Document written with ID: ", docRef.id);
       this.setState({submit: true});
     })
-    .catch(function(error) {
+    .catch((error)=> {
       console.error("Error adding document: ", error);
+    });
+  }
+
+  editTransaction = ()=> {
+    const transaction = this.props.transaction;
+
+    this.props.db.collection('transactions').doc(transaction.id).set({
+      sum: this.state.isItIncome? +this.state.sum : -this.state.sum,
+      date: this.state.date,
+      comment: this.state.comment,
+      category: this.state.category,
+      tag: this.state.tag
+    })
+    .then(()=> {
+      console.log("Document is updated");
+      this.props.done()
+    })
+    .catch((error)=> {
+        console.error("Error editing document: ", error);
     });
   }
 
@@ -108,7 +117,7 @@ class AddPurchase extends React.Component {
     e.preventDefault();
     
     if (+this.state.sum) {
-      this.addTransaction()
+      (this.props.mode === 'edit') ? this.editTransaction() : this.addTransaction()
     } else {
       alert('Надо ввести сумму')
     }
@@ -116,34 +125,30 @@ class AddPurchase extends React.Component {
 
 
   render() {
-    const transactionDirection = this.state.isItIncome? 'income' : 'spend';
+    let transactionDirection = 'spend';
+    let signButtonText = "-";
+    let message = "Расходы";
 
-    const tagsSelectOptions = this.props.tags[transactionDirection].map((tag, i) => (
-      <option key = {i} value={tag}>
-        {tag}
-      </option> 
-    ));
+    if (this.state.isItIncome) {
+      transactionDirection = 'income';
+      signButtonText = "+";
+      message = "Доходы";
+    }
+    
+    const parentPath = (this.props.mode === 'edit') ? '/stats' : '/'
 
-    const categoriesSelectOptions = this.props.categories[transactionDirection].map((category, i) => (
-      <option key = {i} value={category}>
-        {category}
-      </option> 
-    ));
-
-    const signButtonText = this.state.isItIncome? "+" : "-";
-    const message = this.state.isItIncome? "Доходы" : "Расходы";
-
-    return (this.state.submit) ? <Redirect to="/" /> : (
+    return (this.state.submit) ? <Redirect to={parentPath} /> : (
       <div>
         <p>{message}</p>
-        <input 
-          type='datetime-local' 
-          onChange={(e)=> {
-            this.setState({date: this.stirngToTimestamp(e.target.value)})}
-          }
-          value={this.timestampToString(this.state.date)}/>
 
         <form onSubmit={this.handleSubmit}>
+          <DateInput
+            name='date'
+            handler={this.handleInputChange}
+            value={this.state.date} />
+
+          <br/>
+
           <button onClick={this.toggleTransactionSign}>
             {signButtonText}
           </button>
@@ -160,37 +165,35 @@ class AddPurchase extends React.Component {
 
           <br/>
 
-          <select name='category' value={this.state.category} onChange={this.handleInputChange}>
-            <option value='' disabled>
-              Категория
-            </option>
-            {categoriesSelectOptions}
-          </select>
+          <Select
+            name='category'
+            value={this.state.category}
+            handler={this.handleInputChange}
+            options= {this.props.categories[transactionDirection]}/>
           
           <br/>
-          
-          <select name='tag' value={this.state.tag} onChange={this.handleInputChange}>
-            <option value='' disabled>
-              Теги
-            </option>
-            {tagsSelectOptions}
-          </select>
+
+          <Select
+            name='tag'
+            value={this.state.tag}
+            handler={this.handleInputChange}
+            options= {this.props.tags[transactionDirection]}/>
 
           <br/>
 
           <textarea
             placeholder = 'Коммент:'
             name='comment' 
-            value={this.state.comment} 
-            onChange={this.handleInputChange} 
+            value={this.state.comment}
+            onChange={this.handleInputChange}
           />
 
           <br/>
 
-          <input type="submit" value="Добавить" />
+          <input type="submit" value="OK" />
         </form>
     
-        <Link to={ROUTES.MAIN}>
+        <Link to={parentPath}>
           {"<<<"}
         </Link>
       </div> 

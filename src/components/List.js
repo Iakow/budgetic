@@ -1,22 +1,62 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link} from 'react-router-dom';
 import * as ROUTES from '../constants/routes';
 import TransactionRow from './TransactionRow';
+import AddPurchase from './AddPurchase';
 
-const List = (props)=> {
-  return (
-    <div>
-      <h1> Статистика </h1>
-      
-      <Link to={ROUTES.MAIN}> {"<<<<<"} </Link>
+class List extends React.Component {
+  constructor(props) {
+    super(props);
 
-      <table border="1">
-        {props.statsTable.map((doc) => 
-          <TransactionRow key = {doc.id} doc = {doc}/>
-        )}
-      </table>
-    </div>
-  )
+    this.state = {
+      editDoc:false,
+      doc: null
+    }
+  }
+
+  done = ()=> {
+    this.setState({
+      editDoc:false,
+      doc: null
+    })
+  }
+
+  editDoc = (doc)=> {
+    console.log(doc);
+    this.setState({
+      doc: doc,
+      editDoc: true
+    })
+  }
+  
+  render() {
+    if (!this.state.doc) {
+      return (
+        <div>
+          <h1> Статистика </h1>
+          
+          <Link to={ROUTES.MAIN}> {"<<<<<"} </Link>
+
+          <table border="1">
+            {this.props.statsTable.map((doc)=> 
+              <TransactionRow editDoc={this.editDoc} key={doc.id} doc={doc}/>
+            )}
+          </table>
+        </div>
+      )
+    } else {
+      return <AddPurchase
+        mode="edit"
+        db={this.props.db}
+        transaction={this.state.doc}
+        tags={this.props.tags}
+        categories={this.props.categories}
+        done={this.done}
+      />
+    }
+        
+  }
+
 }
 
 export default List; 
