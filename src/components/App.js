@@ -5,6 +5,7 @@ import "firebase/firestore";
 import "firebase/auth";
 
 import * as ROUTES from '../constants/routes';
+
 import List from './List';
 import AddPurchase from './AddPurchase';
 import Main from './Main';
@@ -73,6 +74,7 @@ class App extends React.Component {
       querySnapshot.forEach((doc)=> {
         const obj = doc.data();
         obj.id = doc.id;
+        
         transactionsArr.push(obj);
         balanceCounter += doc.data().sum;
       });

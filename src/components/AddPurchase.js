@@ -11,27 +11,21 @@ class AddPurchase extends React.Component {
 
     this.state = {
       date: Date.now(),
-      sum: '', // почему строка?
+      sum: '',
       comment: '', 
       tag: '', 
       category: '', 
-      submit: false, // при редактировании и добавлении работает по-разному
-      isItIncome: false
+      submit: false,
+      moneyDirection: 'spend'
     };
   }
 
   componentDidMount = ()=> {
     if (this.props.mode === 'edit') {
-      const transaction = this.props.transaction;
-      
-      this.setState({
-        date: transaction.date,
-        sum: Math.abs(transaction.sum), // поменять
-        comment: transaction.comment, 
-        tag: transaction.tag, 
-        category: transaction.category,
-        isItIncome: (transaction.sum>0) ? true : false
-      })
+      const {date, sum, comment, tag, category} = this.props.transaction;
+      const moneyDirection = (sum>0) ? 'income' : 'spend';
+
+      this.setState({date, sum, comment, tag, category, moneyDirection})
     }
   }
 
@@ -56,7 +50,8 @@ class AddPurchase extends React.Component {
     e.preventDefault();
 
     this.setState((state)=>({
-      isItIncome: !state.isItIncome,
+      moneyDirection: (this.state.moneyDirection === 'income') ? 'spend' : 'income',
+      sum: -this.state.sum,
       tag: '', 
       category: ''
     }))
@@ -69,23 +64,25 @@ class AddPurchase extends React.Component {
         [e.target.name]: this.htmlStirngToTimestamp(e.target.value)
       });
     }
+
+    /* if(e.target.type === 'number') {
+      this.setState({
+        [e.target.name]: +e.target.value
+      });
+    } */
+
     this.setState({
       [e.target.name]: e.target.value
     });
   }
 
-/* А не лучше ли менять знак state.sum сразу напрямую, а в инпуте отображать просто модуль???
-   По идее тогда мне не нужен isItIncome и это круто!
-   И не выйдет ли тогда заполнить все поля дока одной деструктуризацией или как там оно??? */
 
   addTransaction = ()=> {
-    this.props.db.collection('transactions').add({
-      sum: this.state.isItIncome? +this.state.sum : -this.state.sum,
-      date: this.state.date,
-      comment: this.state.comment,
-      category: this.state.category,
-      tag: this.state.tag
-    })
+    const {date, comment, tag, category} = this.state;
+    const sum = (this.state.moneyDirection === 'income') ? +this.state.sum : -this.state.sum;
+    const TRANSACTIONS = this.props.db.collection('transactions');
+
+    TRANSACTIONS.add({sum, date, comment, category, tag})
     .then((docRef)=> {
       console.log("Document written with ID: ", docRef.id);
       this.setState({submit: true});
@@ -96,15 +93,11 @@ class AddPurchase extends React.Component {
   }
 
   editTransaction = ()=> {
-    const transaction = this.props.transaction;
+    const TRANSACTION = this.props.db.collection('transactions').doc(this.props.transaction.id);
+    const {date, comment, tag, category} = this.state;
+    const sum = (this.state.moneyDirection === 'income') ? +this.state.sum : -this.state.sum;
 
-    this.props.db.collection('transactions').doc(transaction.id).set({
-      sum: this.state.isItIncome? +this.state.sum : -this.state.sum,
-      date: this.state.date,
-      comment: this.state.comment,
-      category: this.state.category,
-      tag: this.state.tag
-    })
+    TRANSACTION.set({sum, date, comment, category, tag})
     .then(()=> {
       console.log("Document is updated");
       this.props.done()
@@ -114,10 +107,13 @@ class AddPurchase extends React.Component {
     });
   }
 
+  /* Этот компонент должен просто собирать инфомрацию в кучу и передавать родителю, а тот уже пускай решает куда переходить в приложении
+     Как хендлер для инпутов. Это просто форма и для нее не должно быть разницы между редактированием и добавлением дока.
+     Т.е. от пропса mode можно избавляться */
 
   handleSubmit = (e)=> {
     e.preventDefault();
-    
+
     if (+this.state.sum) {
       (this.props.mode === 'edit') ? this.editTransaction() : this.addTransaction()
     } else {
@@ -126,12 +122,11 @@ class AddPurchase extends React.Component {
   }
 
   render() {
-    const sign = this.state.isItIncome === true;
     const parentPath = (this.props.mode === 'edit') ? '/stats' : '/';
 
     return (this.state.submit) ? <Redirect to={parentPath} /> : (
       <div>
-        <p>{(this.state.isItIncome)? "Доходы" : "Расходы"}</p>
+        <p>{(this.state.moneyDirection === 'income')? "Доходы" : "Расходы"}</p>
 
         <form onSubmit={this.handleSubmit}>
           <DateInput
@@ -142,7 +137,7 @@ class AddPurchase extends React.Component {
           <br/>
 
           <button onClick={this.toggleTransactionSign}>
-            {(sign)? "+" : "-"}
+            {(this.state.moneyDirection === 'income')? "+" : "-"}
           </button>
 
           <input 
@@ -150,8 +145,9 @@ class AddPurchase extends React.Component {
             placeholder="Сумма" 
             autoComplete="off" 
             name='sum'
-            value={this.state.sum}
-            onChange={this.handleInputChange} 
+            /* Ввод отрицательного числа должен менять moneyDirection */
+            value={Math.abs(this.state.sum)}
+            onChange={this.handleInputChange}
             autoFocus 
           />
 
@@ -161,7 +157,7 @@ class AddPurchase extends React.Component {
             name='category'
             value={this.state.category}
             handler={this.handleInputChange}
-            options= {this.props.categories[(sign)? "income" : "spend"]}/>
+            options= {this.props.categories[this.state.moneyDirection]} />
           
           <br/>
 
@@ -169,7 +165,7 @@ class AddPurchase extends React.Component {
             name='tag'
             value={this.state.tag}
             handler={this.handleInputChange}
-            options= {this.props.tags[(sign)? "income" : "spend"]}/>
+            options= {this.props.tags[this.state.moneyDirection]} />
 
           <br/>
 
@@ -185,7 +181,7 @@ class AddPurchase extends React.Component {
           <input type="submit" value="OK" />
         </form>
     
-        <Link to={parentPath}>
+        <Link to={parentPath}> {/* вот эта хуйня, выходит, еще должна менять состояние List */}
           {"<<<"}
         </Link>
       </div> 
