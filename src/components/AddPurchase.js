@@ -22,8 +22,9 @@ class AddPurchase extends React.Component {
 
   componentDidMount = ()=> {
     if (this.props.mode === 'edit') {
-      const {date, sum, comment, tag, category} = this.props.transaction;
-      const moneyDirection = (sum>0) ? 'income' : 'spend';
+      const {date, comment, tag, category} = this.props.transaction;
+      const moneyDirection = (this.props.sum>0) ? 'income' : 'spend';
+      const sum = (Math.abs(this.props.transaction.sum)).toString();
 
       this.setState({date, sum, comment, tag, category, moneyDirection})
     }
@@ -49,12 +50,11 @@ class AddPurchase extends React.Component {
   toggleTransactionSign = (e)=> {
     e.preventDefault();
 
-    this.setState((state)=>({
+    this.setState({
       moneyDirection: (this.state.moneyDirection === 'income') ? 'spend' : 'income',
-      sum: -this.state.sum,
       tag: '', 
       category: ''
-    }))
+    })
   }
 
 
@@ -64,12 +64,6 @@ class AddPurchase extends React.Component {
         [e.target.name]: this.htmlStirngToTimestamp(e.target.value)
       });
     }
-
-    /* if(e.target.type === 'number') {
-      this.setState({
-        [e.target.name]: +e.target.value
-      });
-    } */
 
     this.setState({
       [e.target.name]: e.target.value
@@ -141,12 +135,12 @@ class AddPurchase extends React.Component {
           </button>
 
           <input 
-            type="number" 
+            type="number"
+            min='1'
             placeholder="Сумма" 
             autoComplete="off" 
             name='sum'
-            /* Ввод отрицательного числа должен менять moneyDirection */
-            value={Math.abs(this.state.sum)}
+            value={this.state.sum}
             onChange={this.handleInputChange}
             autoFocus 
           />
