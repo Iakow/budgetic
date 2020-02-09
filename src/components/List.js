@@ -2,7 +2,7 @@ import React from 'react';
 import { Link} from 'react-router-dom';
 import * as ROUTES from '../constants/routes';
 import TransactionRow from './TransactionRow';
-import AddPurchase from './AddPurchase';
+import TransactionForm from './TransactionForm';
 
 class List extends React.Component {
   constructor(props) {
@@ -14,11 +14,22 @@ class List extends React.Component {
     }
   }
 
-  done = ()=> {
-    this.setState({
-      editDoc:false,
-      doc: null
+  editTransaction = (doc)=> {
+    const id = this.state.doc.id;
+    const TRANSACTION = this.props.db.collection('transactions').doc(id);
+
+    TRANSACTION.set(doc)
+    .then(()=> {
+      console.log("Document is updated");
+      this.setState({editDoc:false})
     })
+    .catch((error)=> {
+        console.error("Error editing document: ", error);
+    });
+  }
+
+  cancelEditing = ()=> {
+    this.setState({editDoc:false})
   }
 
   editDoc = (doc)=> {
@@ -29,7 +40,7 @@ class List extends React.Component {
   }
   
   render() {
-    if (!this.state.doc) {
+    if (!this.state.editDoc) {
       return (
         <div>
           <h1> Статистика </h1>
@@ -38,19 +49,24 @@ class List extends React.Component {
 
           <table border="1">
             {this.props.statsTable.map((doc)=> 
-              <TransactionRow editDoc={this.editDoc} key={doc.id} doc={doc} db={this.props.db}/>
+              <TransactionRow
+                editDoc={this.editDoc}
+                key={doc.id}
+                doc={doc}
+                db={this.props.db}
+              />
             )}
           </table>
         </div>
       )
     } else {
-      return <AddPurchase
+      return <TransactionForm
         mode="edit"
-        db={this.props.db}
         transaction={this.state.doc}
         tags={this.props.tags}
         categories={this.props.categories}
-        done={this.done}
+        handler={this.editTransaction}
+        cancel={this.cancelEditing}
       />
     }
   }
