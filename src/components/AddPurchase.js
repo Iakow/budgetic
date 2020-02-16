@@ -22,17 +22,17 @@ class AddPurchase extends React.Component {
   }
 
   render() {
-    return (this.state.submit) ? <Redirect to={'/'} /> : 
-      (<div><TransactionForm
-        mode="add"
-        tags={this.props.tags}
-        categories={this.props.categories}
-        handler={this.addTransaction}
-      />
-      <Link to={'/'}>
-          {"<<<"}
-        </Link>
-        </div>)
+    return (this.state.submit) ? <Redirect to={'/'} /> : (
+      <div>
+        <TransactionForm
+          mode="add"
+          tags={this.props.tags}
+          categories={this.props.categories}
+          handler={this.addTransaction} />
+
+        <Link to={'/'}> {"<<<"} </Link>
+      </div>
+    )
   }
 }
 

@@ -22,11 +22,13 @@ const TransactionRow = (props)=> {
   }
 
   const delTransaction = ()=> {
-    props.db.collection("transactions").doc(props.doc.id).delete().then(function() {
-      console.log("Document successfully deleted!");
-  }).catch(function(error) {
+    props.db.collection("transactions").doc(props.doc.id).delete()
+    .then(()=> {
+        console.log("Document successfully deleted!");
+      })
+    .catch((error)=> {
       console.error("Error removing document: ", error);
-  });
+    });
   }
 
   return (
@@ -38,15 +40,12 @@ const TransactionRow = (props)=> {
       <td>{props.doc.tag}</td>
       <td>{props.doc.comment}</td>
       <td>
-        <button 
-          id = {props.doc.id}
-          onClick = {submitChanges}
-        >
-          edit
+        <button id = {props.doc.id} onClick = {submitChanges}>
+          {'edit'}
         </button>
-        <button
-          onClick = {delTransaction}>
-          del
+
+        <button onClick = {delTransaction}>
+          {'del'}
         </button>
       </td>
     </tr>

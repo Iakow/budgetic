@@ -1,7 +1,7 @@
 import React from 'react';
 
 const DateInput = (props)=> {
-  const timestampToString = (timestamp)=> {
+  const timestampToHtmlString = (timestamp)=> {
     const d = new Date(timestamp);
 
     const DD = (d.getDate()>9) ? d.getDate() : `0${d.getDate()}`;
@@ -17,9 +17,9 @@ const DateInput = (props)=> {
   return (
     <input
       name={props.name}
-      type='datetime-local' 
+      type='datetime-local'
       onChange={props.handler}
-      value={timestampToString(props.value)}
+      value={timestampToHtmlString(props.value)}
     />
   )
 }

@@ -72,11 +72,11 @@ class App extends React.Component {
       let balanceCounter = null;
       
       querySnapshot.forEach((doc)=> {
-        const obj = doc.data();
-        obj.id = doc.id;
+        const transaction = doc.data();
+        transaction.id = doc.id;
         
-        transactionsArr.push(obj);
-        balanceCounter += doc.data().sum;
+        transactionsArr.push(transaction);
+        balanceCounter += transaction.sum;
       });
 
       this.setState({
