@@ -42,7 +42,7 @@ class SelectTags extends React.Component {
         </li>
       )})
 
-    const checked = (this.state.chekedOptions.length === 0) ? "Выберите тег" : (
+    const checked = (this.state.chekedOptions.length === 0) ? "Выберите теги" : (
       <ul className="chosenTagsList">
         {this.state.chekedOptions.map((chekedTag, i)=> (
           <li key={i}>
