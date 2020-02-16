@@ -1,6 +1,7 @@
 import React from 'react';
 import Select from './Select';
 import DateInput from "./DateInput";
+import SelectTags from './SelectTags/SelectTags'
 
 class TransactionForm extends React.Component {
   constructor(props) {
@@ -139,6 +140,9 @@ class TransactionForm extends React.Component {
           <input type="submit" value="OK" />
           <input type="button" value="Отмена" onClick={this.props.cancel}/>
         </form>
+
+        <SelectTags
+          options={this.props.tags[this.state.moneyDirection]} />
       </div> 
     )
   }

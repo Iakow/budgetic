@@ -1,0 +1,13 @@
+.checked {
+  color: gray;
+}
+
+.chosenTagsList {
+  display: flex;
+}
+
+li {
+  list-style: none;
+  border: 1px solid blue;
+  margin-left: 10px;
+}

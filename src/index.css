@@ -21,12 +21,10 @@ code {
 }
 
 .Input {
-  height: 40px;
   width: 100%;
   display: block;
   margin-bottom: 20px;
   border: 1px solid gray;
-  background-color: gray;
 }
 
 .SumInput {
