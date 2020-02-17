@@ -37,7 +37,7 @@ const TransactionRow = (props)=> {
       <td>{formatDate(props.doc.date)}</td>
       <td>{props.doc.sum}</td>
       <td>{props.doc.category}</td>
-      <td>{props.doc.tag}</td>
+      <td>{props.doc.tag.toLocaleString()}</td>
       <td>{props.doc.comment}</td>
       <td>
         <button id = {props.doc.id} onClick = {submitChanges}>

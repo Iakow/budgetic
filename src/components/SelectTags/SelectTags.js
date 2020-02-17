@@ -1,5 +1,5 @@
 import React from 'react';
-import './SelectTags.css';
+import styles from './SelectTags.module.css';
 
 class SelectTags extends React.Component {
   constructor(props) {
@@ -11,41 +11,53 @@ class SelectTags extends React.Component {
     }
   }
 
+
   checkOption = (e)=> {
     const [checkedOptionArr] = [this.state.chekedOptions];
     checkedOptionArr.push(this.props.options[e.target.dataset.index]);
 
-    this.setState({chekedOptions: checkedOptionArr, open: false})
+    this.setState({
+      chekedOptions: checkedOptionArr,
+      open: false
+    })
   }
+
 
   toogle = ()=> {
     this.setState({open: !this.state.open})
   }
 
+
   removeCheckedTag = (e)=> {
     e.stopPropagation();
+
     const [checkedOptionArr] = [this.state.chekedOptions];
     checkedOptionArr.splice(e.target.dataset.index,1);
 
     this.setState({chekedOptions: checkedOptionArr});
   }
 
+
   render () {
-    const list = (!this.state.open) ? null :
+    const tagsList = (!this.state.open) ? null :
       this.props.options.map((tag, i)=> {
-        const className = (this.state.chekedOptions.includes(tag)) ? "checked" : null;
-        const handler = (this.state.chekedOptions.includes(tag)) ? null : this.checkOption;
+        const availableТag = (
+          <li key={i} data-index={i} onClick={this.checkOption}>
+            {tag}
+          </li>)
 
-        return (
-        <li key={i} className={className} data-index={i} onClick={handler}>
-          {tag}
-        </li>
-      )})
+        const pickedTag = (
+          <li key={i} className={styles.inactive} data-index={i}>
+            {tag}
+          </li>)
 
-    const checked = (this.state.chekedOptions.length === 0) ? "Выберите теги" : (
-      <ul className="chosenTagsList">
+        return (this.state.chekedOptions.includes(tag)) ? pickedTag : availableТag
+      })
+
+    const checkedTags = (this.state.chekedOptions.length === 0) ? "Выберите теги" : (
+      <ul className={styles.chosenTagsList}>
         {this.state.chekedOptions.map((chekedTag, i)=> (
-          <li key={i}>
+          <li key={i} className={styles.chosenTag}>
             <span>{chekedTag}</span>
             <button onClick={this.removeCheckedTag} data-index={i}>
               &times;
@@ -57,9 +69,12 @@ class SelectTags extends React.Component {
      
     return (
       <div>
-        <div className='Input' onClick={this.toogle}>{checked}</div>
+        <div className='Input' onClick={this.toogle}>
+          {checkedTags}
+        </div>
+
         <ul>
-          {list}
+          {tagsList}
         </ul>
       </div>
       

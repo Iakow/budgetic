@@ -38,7 +38,7 @@ class App extends React.Component {
       transactions: [],
       tags: [],
       categories: [],
-      needLogin: null
+      needLogin: false
     };
   }
 
@@ -46,7 +46,7 @@ class App extends React.Component {
   componentDidMount = ()=> {
     firebase.auth().onAuthStateChanged((user)=> {
       if (user) {
-        this.getUserData(user);
+        this.getAndListenUserData(user);
         this.setState({
           user: user,
           needLogin: false
@@ -61,11 +61,11 @@ class App extends React.Component {
   }
 
 
-  getUserData = (user)=> {
+  getAndListenUserData = (user)=> {
     const USER_DB = this.fireStore.collection("users").doc(user.email);
     const TRANSACTIONS = USER_DB.collection('transactions');
-    const TAGS = USER_DB.collection('settings').doc('tags');
-    const CATEGORIES = USER_DB.collection('settings').doc('categories');
+    const TAGS_OPTIONS = USER_DB.collection('settings').doc('tags');
+    const CATEGORIES_OPTIONS = USER_DB.collection('settings').doc('categories');
 
     TRANSACTIONS.orderBy("date", "desc").onSnapshot((querySnapshot)=> {
       const transactionsArr = [];
@@ -86,7 +86,7 @@ class App extends React.Component {
     });
 
     USER_DB.collection('settings').onSnapshot(()=>{
-      TAGS.get().then((doc)=> {
+      TAGS_OPTIONS.get().then((doc)=> {
         this.setState({
           tags: doc.data()
         })
@@ -95,7 +95,7 @@ class App extends React.Component {
         console.log(error.message)
       })
 
-      CATEGORIES.get().then((doc)=> {
+      CATEGORIES_OPTIONS.get().then((doc)=> {
         this.setState({
           categories: doc.data()
         })

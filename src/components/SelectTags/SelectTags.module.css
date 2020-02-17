@@ -1,4 +1,4 @@
-.checked {
+.inactive {
   color: gray;
 }
 
@@ -6,8 +6,12 @@
   display: flex;
 }
 
+.chosenTag {
+  border: 1px solid blue;
+}
+
 li {
   list-style: none;
-  border: 1px solid blue;
+  
   margin-left: 10px;
 }

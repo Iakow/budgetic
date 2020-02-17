@@ -1,7 +1,6 @@
 import React from 'react';
 import Select from './Select';
 import DateInput from "./DateInput";
-import SelectTags from './SelectTags/SelectTags'
 
 class TransactionForm extends React.Component {
   constructor(props) {
@@ -11,7 +10,7 @@ class TransactionForm extends React.Component {
       date: Date.now(),
       sum: '',
       comment: '', 
-      tag: '', 
+      tag: [],
       category: '', 
       submit: false,
       moneyDirection: 'spend'
@@ -51,7 +50,7 @@ class TransactionForm extends React.Component {
 
     this.setState({
       moneyDirection: (this.state.moneyDirection === 'income') ? 'spend' : 'income',
-      tag: '', 
+      tag: '', // надо сделать массивом
       category: ''
     })
   }
@@ -63,9 +62,28 @@ class TransactionForm extends React.Component {
       });
     }
 
-    this.setState({
-      [e.target.name]: e.target.value
-    });
+    if(e.target.type === 'select-multiple') {
+      const options = e.target.options;
+      const value = [];
+      
+      for (var i = 0, l = options.length; i < l; i++) {
+        if (options[i].selected) {
+          value.push(options[i].value);
+        }
+      }
+
+      this.setState({
+        [e.target.name]: value
+      });
+    } else {
+      this.setState({
+        [e.target.name]: e.target.value
+      });
+    }
+
+    
+
+    
   }
 
   handleSubmit = (e)=> {
@@ -73,6 +91,7 @@ class TransactionForm extends React.Component {
 
     const {date, comment, tag, category} = this.state;
     const sum = (this.state.moneyDirection === 'income') ? +this.state.sum : -this.state.sum;
+
     const doc = {sum, date, comment, category, tag};
 
     if (+this.state.sum) {
@@ -124,7 +143,8 @@ class TransactionForm extends React.Component {
             name='tag'
             value={this.state.tag}
             handler={this.handleInputChange}
-            options= {this.props.tags[this.state.moneyDirection]} />
+            options= {this.props.tags[this.state.moneyDirection]}
+            multiple={true} />
 
           <br/>
 
@@ -140,9 +160,6 @@ class TransactionForm extends React.Component {
           <input type="submit" value="OK" />
           <input type="button" value="Отмена" onClick={this.props.cancel}/>
         </form>
-
-        <SelectTags
-          options={this.props.tags[this.state.moneyDirection]} />
       </div> 
     )
   }
