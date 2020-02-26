@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './form.module.css';
 
 const Select = (props)=> {
   const options = props.options.map((category, i) => (
@@ -10,6 +11,7 @@ const Select = (props)=> {
 
   return (
     <select
+      className={styles.field}
       name={props.name}
       value={props.value}
       onChange={props.handler}

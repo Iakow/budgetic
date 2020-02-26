@@ -1,6 +1,7 @@
 import React from 'react';
 import Select from './Select';
 import DateInput from "./DateInput";
+import styles from './form.module.css';
 
 class TransactionForm extends React.Component {
   constructor(props) {
@@ -13,7 +14,7 @@ class TransactionForm extends React.Component {
       tag: [],
       category: '', 
       submit: false,
-      moneyDirection: 'spend'
+      moneyDirection: 'income'
     };
   }
 
@@ -50,7 +51,7 @@ class TransactionForm extends React.Component {
 
     this.setState({
       moneyDirection: (this.state.moneyDirection === 'income') ? 'spend' : 'income',
-      tag: '', // надо сделать массивом
+      tag: [],
       category: ''
     })
   }
@@ -65,7 +66,7 @@ class TransactionForm extends React.Component {
     if(e.target.type === 'select-multiple') {
       const options = e.target.options;
       const value = [];
-      
+
       for (var i = 0, l = options.length; i < l; i++) {
         if (options[i].selected) {
           value.push(options[i].value);
@@ -80,10 +81,6 @@ class TransactionForm extends React.Component {
         [e.target.name]: e.target.value
       });
     }
-
-    
-
-    
   }
 
   handleSubmit = (e)=> {
@@ -102,32 +99,41 @@ class TransactionForm extends React.Component {
   }
 
   render() {
-    return (
-      <div className="transactionForm">
-        <p>{(this.state.moneyDirection === 'income')? "Доходы" : "Расходы"}</p>
+    const title = (this.state.moneyDirection === 'income')? 
+                  (<p className={styles.income}> Доходы</p>) : 
+                  (<p className={styles.spend}> Расходы</p>);
+    
 
-        <form onSubmit={this.handleSubmit}>
+    return (
+      <div className={styles.transactionForm}>
+        {title}
+
+        <form onSubmit={this.handleSubmit} className={styles.formContainer}>
           <DateInput
             name='date'
             handler={this.handleInputChange}
             value={this.state.date} />
-
           <br/>
 
-          <button onClick={this.toggleTransactionSign}>
-            {(this.state.moneyDirection === 'income')? "+" : "-"}
-          </button>
+          <div className={`${styles.field} ${styles.flex}`}>
+            <button onClick={this.toggleTransactionSign} className={styles.plus}>
+              {(this.state.moneyDirection === 'income')? "+" : "-"}
+            </button>
 
-          <input 
-            type="number"
-            min='1'
-            placeholder="Сумма" 
-            autoComplete="off" 
-            name='sum'
-            value={this.state.sum}
-            onChange={this.handleInputChange}
-            autoFocus 
-          />
+            <input 
+              className={styles.sum}
+              type="number"
+              min='1'
+              placeholder="Сумма" 
+              autoComplete="off" 
+              name='sum'
+              value={this.state.sum}
+              onChange={this.handleInputChange}
+              /* autoFocus  */
+            />
+
+          </div>
+
 
           <br/>
 
@@ -149,6 +155,7 @@ class TransactionForm extends React.Component {
           <br/>
 
           <textarea
+            className={styles.field}
             placeholder = 'Коммент:'
             name='comment' 
             value={this.state.comment}
@@ -157,8 +164,11 @@ class TransactionForm extends React.Component {
 
           <br/>
 
-          <input type="submit" value="OK" />
-          <input type="button" value="Отмена" onClick={this.props.cancel}/>
+          <div className={styles.buttons_block}>
+            <input className={styles.button} type="submit" value="OK" />
+            <input className={styles.button} type="button" value="Отмена" onClick={this.props.cancel}/>
+          </div>
+          
         </form>
       </div> 
     )

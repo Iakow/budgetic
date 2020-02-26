@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import TransactionForm from './TransactionForm';
 
 class AddPurchase extends React.Component {
@@ -21,17 +21,18 @@ class AddPurchase extends React.Component {
     });
   }
 
+  cancel = ()=> {
+    this.setState({submit: true})
+  }
+
   render() {
     return (this.state.submit) ? <Redirect to={'/'} /> : (
-      <div>
-        <TransactionForm
-          mode="add"
-          tags={this.props.tags}
-          categories={this.props.categories}
-          handler={this.addTransaction} />
-
-        <Link to={'/'}> {"<<<"} </Link>
-      </div>
+      <TransactionForm
+        mode="add"
+        tags={this.props.tags}
+        categories={this.props.categories}
+        handler={this.addTransaction}
+        cancel={this.cancel} />
     )
   }
 }

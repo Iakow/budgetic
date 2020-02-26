@@ -32,7 +32,6 @@ const TransactionRow = (props)=> {
   }
 
   return (
-    <tbody> 
     <tr>
       <td>{formatDate(props.doc.date)}</td>
       <td>{props.doc.sum}</td>
@@ -49,7 +48,6 @@ const TransactionRow = (props)=> {
         </button>
       </td>
     </tr>
-  </tbody>
   )
 }
 

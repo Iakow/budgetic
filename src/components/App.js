@@ -10,7 +10,7 @@ import List from './List';
 import AddPurchase from './AddPurchase';
 import Main from './Main';
 import Auth from './Auth';
-import Logout from './LogOut';
+/* import Logout from './LogOut'; */
 import Settings from './Settings'
 
 
@@ -112,16 +112,16 @@ class App extends React.Component {
     const noHaveSettings = this.state.tags.length === 0 || this.state.categories.length === 0;
     const needLogin = this.state.needLogin;
 
-    if (!needLogin && (noHaveSettings || noHaveTransactions)) return <p>Download</p>
+    if (!needLogin && (noHaveSettings || noHaveTransactions)) return <div className="async-spinner"></div>
 
     if (this.state.user) {
       const userName = this.state.user.email;
       const USER_DB = this.fireStore.collection("users").doc(userName);
 
       return (
-        <div>
-          <span><small>{userName}</small></span>
-          <Logout/>
+        <div className='appContainer'>
+          {/* <span><small>{userName}</small></span>
+          <Logout/> */}
 
           <Switch>
             <Route path={ROUTES.ADD}>

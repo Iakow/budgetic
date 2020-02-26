@@ -47,8 +47,9 @@ class List extends React.Component {
           
           <Link to={ROUTES.MAIN}> {"<<<<<"} </Link>
 
-          <table border="1">
-            {this.props.statsTable.map((doc)=> 
+          <table>
+            <tbody>
+              {this.props.statsTable.map((doc)=> 
               <TransactionRow
                 editDoc={this.editDoc}
                 key={doc.id}
@@ -56,6 +57,7 @@ class List extends React.Component {
                 db={this.props.db}
               />
             )}
+            </tbody>
           </table>
         </div>
       )

@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './form.module.css';
 
 const DateInput = (props)=> {
   const timestampToHtmlString = (timestamp)=> {
@@ -16,6 +17,7 @@ const DateInput = (props)=> {
 
   return (
     <input
+      className={`${styles.field} ${styles.date}`}
       name={props.name}
       type='datetime-local'
       onChange={props.handler}
