@@ -31,19 +31,22 @@ const TransactionRow = (props)=> {
     });
   }
 
+  const tags = props.doc.tag.map((tag, i)=>
+(<span key={i} className="tag">{tag}</span>)
+  )
   return (
-    <tr>
+    <tr className = {(props.doc.sum > 0) ? 'incomeRow' : 'spendRow'}>
       <td>{formatDate(props.doc.date)}</td>
       <td>{props.doc.sum}</td>
       <td>{props.doc.category}</td>
-      <td>{props.doc.tag.toLocaleString()}</td>
+      <td>{tags}</td>
       <td>{props.doc.comment}</td>
       <td>
-        <button id = {props.doc.id} onClick = {submitChanges}>
+        <button id = {props.doc.id} onClick = {submitChanges} className="rowButton">
           {'edit'}
         </button>
 
-        <button onClick = {delTransaction}>
+        <button onClick = {delTransaction} className="rowButton redButton">
           {'del'}
         </button>
       </td>

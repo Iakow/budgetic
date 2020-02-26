@@ -1,6 +1,6 @@
 import React from 'react';
-import { Link} from 'react-router-dom';
-import * as ROUTES from '../constants/routes';
+/* import { Link} from 'react-router-dom';
+import * as ROUTES from '../constants/routes'; */
 import TransactionRow from './TransactionRow';
 import TransactionForm from './TransactionForm';
 
@@ -43,9 +43,9 @@ class List extends React.Component {
     if (!this.state.editDoc) {
       return (
         <div>
-          <h1> Статистика </h1>
+         {/*  <h1> Статистика </h1>
           
-          <Link to={ROUTES.MAIN}> {"<<<<<"} </Link>
+          <Link to={ROUTES.MAIN}> {"<<<<<"} </Link> */}
 
           <table>
             <tbody>
