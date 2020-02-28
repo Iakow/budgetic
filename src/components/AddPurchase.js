@@ -1,6 +1,6 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import TransactionForm from './TransactionForm';
+import TransactionForm from './Form/TransactionForm';
 
 class AddPurchase extends React.Component {
   constructor(props) {

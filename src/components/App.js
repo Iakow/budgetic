@@ -6,10 +6,10 @@ import "firebase/auth";
 
 import * as ROUTES from '../constants/routes';
 
-import List from './List';
+import Stats from './Stats/Stats';
 import AddPurchase from './AddPurchase';
 import Main from './Main';
-import Auth from './Auth';
+import Auth from './Auth/Auth';
 /* import Logout from './LogOut'; */
 import Settings from './Settings'
 
@@ -128,25 +128,22 @@ class App extends React.Component {
               <AddPurchase
                 tags={this.state.tags}
                 categories={this.state.categories}
-                db={USER_DB}
-              />
+                db={USER_DB} />
             </Route>
 
             <Route path={ROUTES.SETTINGS}>
               <Settings
                 tags={this.state.tags}
                 categories={this.state.categories}
-                db={USER_DB}
-              />
+                db={USER_DB} />
             </Route>
   
             <Route path={ROUTES.STATS}>
-              <List
+              <Stats
                 statsTable={this.state.transactions}
                 tags={this.state.tags}
                 categories={this.state.categories}
-                db={USER_DB}
-              />
+                db={USER_DB} />
             </Route>
 
             <Route path={ROUTES.MAIN} >

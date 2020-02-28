@@ -42,11 +42,18 @@ const TransactionRow = (props)=> {
       <td>{tags}</td>
       <td>{props.doc.comment}</td>
       <td>
-        <button id = {props.doc.id} onClick = {submitChanges} className="rowButton">
+        <button 
+          id = {props.doc.id} 
+          onClick = {submitChanges} 
+          className="rowButton" 
+        >
           {'edit'}
         </button>
 
-        <button onClick = {delTransaction} className="rowButton redButton">
+        <button 
+          onClick = {delTransaction} 
+          className="rowButton redButton"
+        >
           {'del'}
         </button>
       </td>
