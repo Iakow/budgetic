@@ -31,9 +31,8 @@ const TransactionRow = (props)=> {
     });
   }
 
-  const tags = props.doc.tag.map((tag, i)=>
-(<span key={i} className="tag">{tag}</span>)
-  )
+  const tags = props.doc.tag.map((tag, i)=> (<span key={i} className="tag">{tag}</span>))
+
   return (
     <tr className = {(props.doc.sum > 0) ? 'incomeRow' : 'spendRow'}>
       <td>{formatDate(props.doc.date)}</td>
@@ -49,7 +48,6 @@ const TransactionRow = (props)=> {
         >
           {'edit'}
         </button>
-
         <button 
           onClick = {delTransaction} 
           className="rowButton redButton"

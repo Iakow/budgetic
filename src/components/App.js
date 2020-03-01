@@ -108,6 +108,11 @@ class App extends React.Component {
 
 
   render() {
+    // при таком подходе, кажется, при регистрации все зависнет с пустыми transactions
+    // надо опираться на ответ при чтении, наверное
+
+    // и вынести все условия в один стейт, чтобы разгрузить render
+    
     const noHaveTransactions = this.state.transactions.length === 0;
     const noHaveSettings = this.state.tags.length === 0 || this.state.categories.length === 0;
     const needLogin = this.state.needLogin;
