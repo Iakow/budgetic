@@ -80,7 +80,7 @@ class Table extends React.Component { /* editDoc, db, transactions*/
           </thead>
 
           <tbody>
-            {this.state.sortedTransactions.map((doc)=> // сюда надо просто подсовывать сортированный массив
+            {this.state.sortedTransactions.map((doc)=> 
               <TransactionRow 
                 editDoc={this.startEditing}
                 key={doc.id}
@@ -88,6 +88,14 @@ class Table extends React.Component { /* editDoc, db, transactions*/
                 db={this.props.db} />
             )}
           </tbody>
+          <tfoot>
+            <tr>
+              <td>time</td>
+              <td>category</td>
+              <td>tags</td>
+              <td>sum</td>
+            </tr>
+          </tfoot>
         </table>
       )
     } else {

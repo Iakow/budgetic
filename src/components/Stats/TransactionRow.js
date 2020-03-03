@@ -1,7 +1,6 @@
 import React from 'react';
 
 const TransactionRow = (props)=> {
-
   const formatDate = (date)=> {
     const d = new Date(date);
 

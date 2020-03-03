@@ -132,3 +132,14 @@ td {
 .table-header {
   height: 8vw;
 }
+
+.tabs {
+  display: flex;
+  justify-content: space-around;
+  cursor: pointer;
+}
+
+.tab {
+  list-style-type: none;
+  color: gray;
+}
