@@ -46,7 +46,10 @@ class Table extends React.Component { /* editDoc, db, transactions*/
     TRANSACTION_REF.set(doc)
     .then(()=> {
       console.log("Document is updated");
-      this.setState({editMode:false})
+      this.setState({
+        editMode:false,
+        sortedTransactions: this.props.transactions
+      })
     })
     .catch((error)=> {
         console.error("Error editing document: ", error);

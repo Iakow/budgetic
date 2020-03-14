@@ -30,10 +30,7 @@ const DateInput = (props)=> {
   }
 
   const upState = (e) => {
-    let name = props.name;
-    let value = htmlStirngToTimestamp(e.target.value);
-
-    props.handler(name, value);
+    props.handler(props.name, htmlStirngToTimestamp(e.target.value));
   }
 
   return (
@@ -49,8 +46,5 @@ const DateInput = (props)=> {
 export default DateInput;
 
 /* 
-  Ведь логично, что на входе должно быть то же, что и на выходе - таймстамп. А все преобразования должны совершаться внутри.
-
   Для фильтра этот компонент должен быть без времени, только дата.
-
 */
