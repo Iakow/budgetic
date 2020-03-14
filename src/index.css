@@ -143,3 +143,10 @@ td {
   list-style-type: none;
   color: gray;
 }
+
+.diagram, .filter {
+  color: white;
+  /* text-align: center; */
+  padding: 20px;
+  font-size: 14px;
+}

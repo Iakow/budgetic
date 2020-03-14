@@ -23,28 +23,11 @@ class TransactionForm extends React.Component {
       const {date, comment, tag, category} = this.props.transaction;
 
       const moneyDirection = (this.props.transaction.sum>0) ? 'income' : 'spend';
-      const sum = (Math.abs(this.props.transaction.sum)).toString();
+      const sum = (Math.abs(this.props.transaction.sum)).toString(); // мож не надо приводить тут?
 
       this.setState({date, sum, comment, tag, category, moneyDirection})
     }
   }
-
-
-  htmlStirngToTimestamp = (htmlDate)=> {
-    const YYYY = +htmlDate.slice(0, 4);
-    const MM = +htmlDate.slice(6,7) - 1;
-    const DD = +htmlDate.slice(8,10);
-    const HH = +htmlDate.slice(11,13);
-    const MI = +htmlDate.slice(14);
-
-    const date = new Date();
-
-    date.setFullYear(YYYY, MM, DD);
-    date.setHours(HH, MI);
-
-    return date.getTime();
-  }
-
 
   toggleTransactionSign = (e)=> {
     e.preventDefault();
@@ -56,30 +39,23 @@ class TransactionForm extends React.Component {
     })
   }
 
+  /* переделать все инпуты под этот метод */
+  handler = (name, value)=> this.setState({[name]: value})
+
   handleInputChange = (e)=> {
-    if(e.target.type === 'datetime-local') {
-      this.setState({
-        [e.target.name]: this.htmlStirngToTimestamp(e.target.value)
-      });
-    }
-
     if(e.target.type === 'select-multiple') {
-      const options = e.target.options;
-      const value = [];
+        const options = e.target.options;
+        const value = [];
 
-      for (var i = 0, l = options.length; i < l; i++) {
-        if (options[i].selected) {
-          value.push(options[i].value);
+        for (var i = 0, l = options.length; i < l; i++) {
+          if (options[i].selected) {
+            value.push(options[i].value);
+          }
         }
-      }
 
-      this.setState({
-        [e.target.name]: value
-      });
+        this.setState({ [e.target.name]: value });
     } else {
-      this.setState({
-        [e.target.name]: e.target.value
-      });
+      this.setState({ [e.target.name]: e.target.value });
     }
   }
 
@@ -110,8 +86,9 @@ class TransactionForm extends React.Component {
 
         <form onSubmit={this.handleSubmit} className={styles.formContainer}>
           <DateInput
+            className={`${styles.field} ${styles.date}`}
             name='date'
-            handler={this.handleInputChange}
+            handler={this.handler}
             value={this.state.date} />
           <br/>
 

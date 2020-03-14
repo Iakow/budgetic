@@ -1,5 +1,4 @@
 import React from 'react';
-import styles from './form.module.css';
 
 const DateInput = (props)=> {
   const timestampToHtmlString = (timestamp)=> {
@@ -15,15 +14,43 @@ const DateInput = (props)=> {
     return YYYY+'-'+MM+'-'+DD+'T'+HH+':'+MI;
   }
 
+  const htmlStirngToTimestamp = (htmlDate)=> {
+    const YYYY = +htmlDate.slice(0, 4);
+    const MM = +htmlDate.slice(6,7) - 1;
+    const DD = +htmlDate.slice(8,10);
+    const HH = +htmlDate.slice(11,13);
+    const MI = +htmlDate.slice(14);
+
+    const date = new Date();
+
+    date.setFullYear(YYYY, MM, DD);
+    date.setHours(HH, MI);
+
+    return date.getTime();
+  }
+
+  const upState = (e) => {
+    let name = props.name;
+    let value = htmlStirngToTimestamp(e.target.value);
+
+    props.handler(name, value);
+  }
+
   return (
     <input
-      className={`${styles.field} ${styles.date}`}
-      name={props.name}
+      className={props.className}
       type='datetime-local'
-      onChange={props.handler}
+      onChange={upState}
       value={timestampToHtmlString(props.value)}
     />
   )
 }
 
 export default DateInput;
+
+/* 
+  Ведь логично, что на входе должно быть то же, что и на выходе - таймстамп. А все преобразования должны совершаться внутри.
+
+  Для фильтра этот компонент должен быть без времени, только дата.
+
+*/

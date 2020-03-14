@@ -75,7 +75,7 @@ class Table extends React.Component { /* editDoc, db, transactions*/
               <th>Категория</th>
               <th>Теги</th>
               <th>Коммент</th>
-              <th>&#128293;</th>
+              <th>...</th>
             </tr>
           </thead>
 
@@ -88,14 +88,6 @@ class Table extends React.Component { /* editDoc, db, transactions*/
                 db={this.props.db} />
             )}
           </tbody>
-          <tfoot>
-            <tr>
-              <td>time</td>
-              <td>category</td>
-              <td>tags</td>
-              <td>sum</td>
-            </tr>
-          </tfoot>
         </table>
       )
     } else {
