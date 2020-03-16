@@ -1,8 +1,8 @@
 import React from 'react';
 
 const TransactionRow = (props)=> {
-  const formatDate = (date)=> {
-    const d = new Date(date);
+  const formatDate = (timestamp)=> {
+    const d = new Date(timestamp);
 
     const DD = (d.getDate()>9) ? d.getDate() : `0${d.getDate()}`;
     const MM = ((d.getMonth()+1)>9) ? d.getMonth()+1 : `0${d.getMonth()+1}`;
@@ -10,10 +10,9 @@ const TransactionRow = (props)=> {
 
     const HH = ((d.getHours()>9)) ? d.getHours() : `0${d.getHours()}`;
     const MI = ((d.getMinutes()>9)) ? d.getMinutes() : `0${d.getMinutes()}`;
-    const SEC = ((d.getSeconds()>9)) ? d.getSeconds() : `0${d.getSeconds()}`;
-
-
-    return `${DD}.${MM}.${YYYY} ${HH}:${MI}:${SEC}`
+/*     const SEC = ((d.getSeconds()>9)) ? d.getSeconds() : `0${d.getSeconds()}`;
+ */
+    return `${DD}.${MM}.${YYYY} ${HH}:${MI}`
   }
 
   const submitChanges = ()=> {

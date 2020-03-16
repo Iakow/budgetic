@@ -8,7 +8,7 @@ class TransactionForm extends React.Component {
     super(props);
 
     this.state = {
-      date: Date.now(),
+      date: Date.now(), // обнулить секунды надо или брать дату из дейтпикера
       sum: '',
       comment: '', 
       tag: [],
@@ -17,6 +17,7 @@ class TransactionForm extends React.Component {
       moneyDirection: 'income'
     };
   }
+
 
   componentDidMount = ()=> {
     if (this.props.mode === 'edit') {
@@ -88,6 +89,7 @@ class TransactionForm extends React.Component {
           <DateInput
             className={`${styles.field} ${styles.date}`}
             name='date'
+            type='datetime-local'
             handler={this.handler}
             value={this.state.date} />
           <br/>

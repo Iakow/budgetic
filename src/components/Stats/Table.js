@@ -2,15 +2,12 @@ import React from 'react';
 import TransactionRow from './TransactionRow';
 import TransactionForm from '../Form/TransactionForm';
 
-/* Надо сюда всю логику из Stats переносить 
-   А кроме того тут нужен стейт для сортировки или же сортировать уровнем выше*/
 
 class Table extends React.Component { /* editDoc, db, transactions*/
   constructor(props) {
     super(props);
 
     this.state = {
-      editMode:false,
       editableTransaction: null,
       sortedTransactions: this.props.transactions,
       sortedByDateReverse: true,
@@ -47,7 +44,7 @@ class Table extends React.Component { /* editDoc, db, transactions*/
     .then(()=> {
       console.log("Document is updated");
       this.setState({
-        editMode:false,
+        editableTransaction: null,
         sortedTransactions: this.props.transactions
       })
     })
@@ -57,18 +54,19 @@ class Table extends React.Component { /* editDoc, db, transactions*/
   }
 
   cancelEditing = ()=> {
-    this.setState({editMode:false})
+    this.setState({
+      editableTransaction: null
+    })
   }
 
   startEditing = (doc)=> {
     this.setState({
-      editableTransaction: doc,
-      editMode: true
+      editableTransaction: doc
     })
   }
 
   render() {
-    if (!this.state.editMode) {
+    if (!this.state.editableTransaction) {
       return (
         <table>
           <thead>
