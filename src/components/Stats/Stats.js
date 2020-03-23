@@ -1,24 +1,34 @@
 import React from 'react';
-/* import { Link} from 'react-router-dom';
-import * as ROUTES from '../constants/routes'; 
-import TransactionRow from './TransactionRow';
-import TransactionForm from '../Form/TransactionForm';*/
 import Table from './Table';
 import Diagram from './Diagram';
 import Filter from './Filter';
 
 
+/* с новым пропсом массив надо бы отдать фильтру, чтобы тот вернул что надо. Как?
+А что, если состояние фильтра тоже держать здесь???*/
 class Stats extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { 
+    this.state = {
       tabIndex: 1,
-      filteredTransactions: this.props.statsTable
+      dateInterval: [
+        this.props.statsTable[this.props.statsTable.length - 1].date,
+        this.props.statsTable[0].date
+      ]
     }
   }
 
-  filter = (arr)=> {
-    this.setState({filteredTransactions: arr});
+  getFilteredTransactions = () => {
+    const startDate = this.state.dateInterval[0];
+    const endDate = this.state.dateInterval[1];
+
+    return this.props.statsTable.filter((transaction)=>{
+      return (startDate <= transaction.date && transaction.date <= endDate);
+    })
+  }
+
+  setDateInterval = (arr)=> {
+    this.setState({dateInterval: arr})
   }
 
   render() {
@@ -30,20 +40,22 @@ class Stats extends React.Component {
           <li className='tab' onClick={()=>{this.setState({tabIndex: 3})}}>Filter</li>
         </ul>
 
-        {(this.state.tabIndex === 1) ? 
-        <Table
-          db={this.props.db}
-          transactions={this.state.filteredTransactions}
-          tags={this.props.tags}
-          categories={this.props.categories} /> : null}
+        <div className='stats-content'>
+          <Table
+            className = {(this.state.tabIndex !== 1) ? 'hidden' : null}
+            db={this.props.db}
+            transactions={this.getFilteredTransactions()}
+            tags={this.props.tags}
+            categories={this.props.categories} /> 
 
-        {(this.state.tabIndex === 2) ? <Diagram/> : null}
-        
-        {(this.state.tabIndex === 3) ? 
-          <Filter 
-            handler={this.filter} 
-            /* хочется отдавать стейт для начальных велью, но пропс для фильтрации */
-            arr={this.props.statsTable} /> : null}
+          <Diagram
+            className = {(this.state.tabIndex !== 2) ? 'hidden' : null} />
+          
+          <Filter
+            className = {(this.state.tabIndex !== 3) ? 'hidden' : null}
+            upData = {this.setDateInterval}
+            dateInterval = {this.state.dateInterval} />
+        </div>
       </div> 
     )
   }

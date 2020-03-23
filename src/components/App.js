@@ -38,10 +38,9 @@ class App extends React.Component {
       transactions: [],
       tags: [],
       categories: [],
-      needLogin: false
+      needLogin: false // почему false?
     };
   }
-
 
   componentDidMount = ()=> {
     firebase.auth().onAuthStateChanged((user)=> {
@@ -60,18 +59,17 @@ class App extends React.Component {
     })
   }
 
-
-  getAndListenUserData = (user)=> {
+  getAndListenUserData = (user) => {
     const USER_DB = this.fireStore.collection("users").doc(user.email);
     const TRANSACTIONS = USER_DB.collection('transactions');
     const TAGS_OPTIONS = USER_DB.collection('settings').doc('tags');
     const CATEGORIES_OPTIONS = USER_DB.collection('settings').doc('categories');
 
-    TRANSACTIONS.orderBy("date", "desc").onSnapshot((querySnapshot)=> {
+    TRANSACTIONS.orderBy("date", "desc").onSnapshot((querySnapshot) => {
       const transactionsArr = [];
       let balanceCounter = null;
       
-      querySnapshot.forEach((doc)=> {
+      querySnapshot.forEach((doc) => {
         const transaction = doc.data();
         transaction.id = doc.id;
         
@@ -85,27 +83,26 @@ class App extends React.Component {
       })
     });
 
-    USER_DB.collection('settings').onSnapshot(()=>{
-      TAGS_OPTIONS.get().then((doc)=> {
+    USER_DB.collection('settings').onSnapshot(() => {
+      TAGS_OPTIONS.get().then((doc) => {
         this.setState({
           tags: doc.data()
         })
       })
-      .catch((error)=>{
+      .catch((error) => {
         console.log(error.message)
       })
 
-      CATEGORIES_OPTIONS.get().then((doc)=> {
+      CATEGORIES_OPTIONS.get().then((doc) => {
         this.setState({
           categories: doc.data()
         })
       })
-      .catch((error)=>{
+      .catch((error) => {
         console.log(error.message)
       })
     });
   }
-
 
   render() {
     // при таком подходе, кажется, при регистрации все зависнет с пустыми transactions
@@ -140,7 +137,7 @@ class App extends React.Component {
               <Settings
                 tags={this.state.tags}
                 categories={this.state.categories}
-                db={USER_DB} />
+                db={USER_DB}/>
             </Route>
   
             <Route path={ROUTES.STATS}>

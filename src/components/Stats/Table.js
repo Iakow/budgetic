@@ -66,9 +66,10 @@ class Table extends React.Component { /* editDoc, db, transactions*/
   }
 
   render() {
+    console.log('Таблица отрендерилась')
     if (!this.state.editableTransaction) {
       return (
-        <table>
+        <table className = {this.props.className}>
           <thead>
             <tr className="table-header">
               <th className='clickable' onClick={this.sortByDate}>Дата</th>
@@ -81,7 +82,8 @@ class Table extends React.Component { /* editDoc, db, transactions*/
           </thead>
 
           <tbody>
-            {this.state.sortedTransactions.map((doc)=> 
+            {/* {this.state.sortedTransactions.map((doc)=>  */}
+            {this.props.transactions.map((doc)=> 
               <TransactionRow 
                 editDoc={this.startEditing}
                 key={doc.id}

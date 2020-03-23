@@ -6,41 +6,30 @@ class Filter extends React.Component {
   constructor(props) {
     super(props);
 
-/* как вернуться к широкому интервалу, если я сюда передаю только уже отфильтрованный?
-   как мне сохранять стейт фильтра, если он не рендерится при переходе на другую вкладку? */
-
     this.state = {
-      startDate: this.props.arr[this.props.arr.length - 1].date,
-      endDate: this.props.arr[0].date
+      startDate: this.props.dateInterval[0],
+      endDate: this.props.dateInterval[1]
     }
   }
 
-  
-  handler = (name, value)=> {
-    this.setState ({[name]: value}, ()=> {
-      let array = this.props.arr.filter((transaction)=>{
-        return (this.state.startDate <= transaction.date && transaction.date <= this.state.endDate);
-      })
-      console.log(array);
-      this.props.handler(array);
+  dateInputsHandler = (name, value) => {
+    this.setState ({[name]: value}, () => {
+      this.props.upData([this.state.startDate, this.state.endDate]);
     });
-    
   }
-
 
   render () {
     return (
-      <div className="filter">
+      <div className={'filter ' + this.props.className}>
         <ul>
-          <li>доходы/расходы (тут как-то разделить логику диаграммы и таблицы)</li>
-          <li></li>
-        </ul>
-        <div className='dateRange'>
+          <li>за все время</li>
+          <li>этот месяц</li>
+          <li>диапазон:<div className='dateRange'>
           <DateInput
             className={`${styles.field} ${styles.date}`}
             name='startDate'
             type='date'
-            handler={this.handler}
+            handler={this.dateInputsHandler}
             value={this.state.startDate} />
 
           <span> ---- </span>
@@ -49,11 +38,20 @@ class Filter extends React.Component {
             className={`${styles.field} ${styles.date}`}
             name='endDate'
             type='date'
-            handler={this.handler}
+            handler={this.dateInputsHandler}
             value={this.state.endDate} />
+        </div></li>
+        </ul>
+        
 
-          <p>и нахуя мне тут время в инпутах?</p>
-        </div>
+        <ul>
+            <li>Доходы</li>
+            <li>Расходы</li>
+            <br></br>
+            <li>Выбрать категории</li>
+            <br></br>
+            <li>Выбрать теги</li>
+          </ul>
       </div>
     )
   }
