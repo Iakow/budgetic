@@ -28,6 +28,7 @@ const DateInput = (props)=> {
     const date = new Date();
 
     date.setFullYear(YYYY, MM, DD);
+    date.setHours('00');
 
     if(props.type === 'datetime-local') {
       date.setHours(HH, MI);

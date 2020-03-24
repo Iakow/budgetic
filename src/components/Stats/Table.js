@@ -66,7 +66,6 @@ class Table extends React.Component { /* editDoc, db, transactions*/
   }
 
   render() {
-    console.log('Таблица отрендерилась')
     if (!this.state.editableTransaction) {
       return (
         <table className = {this.props.className}>

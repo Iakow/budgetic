@@ -19,11 +19,11 @@ class Stats extends React.Component {
   }
 
   getFilteredTransactions = () => {
-    const startDate = this.state.dateInterval[0];
-    const endDate = this.state.dateInterval[1];
+    const firstDate = this.state.dateInterval[0];
+    const roundedLastDate = new Date(this.state.dateInterval[1]).setHours('23', '59');
 
     return this.props.statsTable.filter((transaction)=>{
-      return (startDate <= transaction.date && transaction.date <= endDate);
+      return (firstDate <= transaction.date && transaction.date <= roundedLastDate);
     })
   }
 

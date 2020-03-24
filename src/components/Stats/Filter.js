@@ -15,6 +15,7 @@ class Filter extends React.Component {
   dateInputsHandler = (name, value) => {
     this.setState ({[name]: value}, () => {
       this.props.upData([this.state.startDate, this.state.endDate]);
+      console.log(this.state.startDate,' ', this.state.endDate)
     });
   }
 
