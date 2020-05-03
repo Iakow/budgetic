@@ -10,27 +10,27 @@ class TransactionForm extends React.Component {
     this.state = {
       date: Date.now(), // обнулить секунды надо или брать дату из дейтпикера
       sum: '',
-      comment: '', 
+      comment: '',
       tag: [],
-      category: '', 
+      category: '',
       submit: false,
       moneyDirection: 'income'
     };
   }
 
 
-  componentDidMount = ()=> {
+  componentDidMount = () => {
     if (this.props.mode === 'edit') {
-      const {date, comment, tag, category} = this.props.transaction;
+      const { date, comment, tag, category } = this.props.transaction;
 
-      const moneyDirection = (this.props.transaction.sum>0) ? 'income' : 'spend';
+      const moneyDirection = (this.props.transaction.sum > 0) ? 'income' : 'spend';
       const sum = (Math.abs(this.props.transaction.sum)).toString(); // мож не надо приводить тут?
 
-      this.setState({date, sum, comment, tag, category, moneyDirection})
+      this.setState({ date, sum, comment, tag, category, moneyDirection })
     }
   }
 
-  toggleTransactionSign = (e)=> {
+  toggleTransactionSign = (e) => {
     e.preventDefault();
 
     this.setState({
@@ -41,32 +41,32 @@ class TransactionForm extends React.Component {
   }
 
   /* переделать все инпуты под этот метод */
-  handler = (name, value)=> this.setState({[name]: value})
+  handler = (name, value) => this.setState({ [name]: value })
 
-  handleInputChange = (e)=> {
-    if(e.target.type === 'select-multiple') {
-        const options = e.target.options;
-        const value = [];
+  handleInputChange = (e) => {
+    if (e.target.type === 'select-multiple') {
+      const options = e.target.options;
+      const value = [];
 
-        for (var i = 0, l = options.length; i < l; i++) {
-          if (options[i].selected) {
-            value.push(options[i].value);
-          }
+      for (var i = 0, l = options.length; i < l; i++) {
+        if (options[i].selected) {
+          value.push(options[i].value);
         }
+      }
 
-        this.setState({ [e.target.name]: value });
+      this.setState({ [e.target.name]: value });
     } else {
       this.setState({ [e.target.name]: e.target.value });
     }
   }
 
-  handleSubmit = (e)=> {
+  handleSubmit = (e) => {
     e.preventDefault();
 
-    const {date, comment, tag, category} = this.state;
+    const { date, comment, tag, category } = this.state;
     const sum = (this.state.moneyDirection === 'income') ? +this.state.sum : -this.state.sum;
 
-    const doc = {sum, date, comment, category, tag};
+    const doc = { sum, date, comment, category, tag };
 
     if (+this.state.sum) {
       this.props.handler(doc)
@@ -76,10 +76,10 @@ class TransactionForm extends React.Component {
   }
 
   render() {
-    const title = (this.state.moneyDirection === 'income')? 
-                  (<p className={styles.income}> Доходы</p>) : 
-                  (<p className={styles.spend}> Расходы</p>);
-    
+    const title = (this.state.moneyDirection === 'income') ?
+      (<p className={styles.income}> Доходы</p>) :
+      (<p className={styles.spend}> Расходы</p>);
+
 
     return (
       <div className={styles.transactionForm}>
@@ -92,64 +92,65 @@ class TransactionForm extends React.Component {
             type='datetime-local'
             handler={this.handler}
             value={this.state.date} />
-          <br/>
+          <br />
 
           <div className={`${styles.field} ${styles.flex}`}>
             <button onClick={this.toggleTransactionSign} className={styles.plus}>
-              {(this.state.moneyDirection === 'income')? "+" : "-"}
+              {(this.state.moneyDirection === 'income') ? "+" : "-"}
             </button>
 
-            <input 
+            <input
               className={styles.sum}
               type="number"
+              step="any"
               min='1'
-              placeholder="Сумма" 
-              autoComplete="off" 
+              placeholder="Сумма"
+              autoComplete="off"
               name='sum'
               value={this.state.sum}
               onChange={this.handleInputChange}
-              /* autoFocus  */
+            /* autoFocus  */
             />
 
           </div>
 
 
-          <br/>
+          <br />
 
           <Select
             name='category'
             value={this.state.category}
             handler={this.handleInputChange}
-            options= {this.props.categories[this.state.moneyDirection]} />
-          
-          <br/>
+            options={this.props.categories[this.state.moneyDirection]} />
+
+          <br />
 
           <Select
             name='tag'
             value={this.state.tag}
             handler={this.handleInputChange}
-            options= {this.props.tags[this.state.moneyDirection]}
+            options={this.props.tags[this.state.moneyDirection]}
             multiple={true} />
 
-          <br/>
+          <br />
 
           <textarea
             className={styles.field}
-            placeholder = 'Коммент:'
-            name='comment' 
+            placeholder='Коммент:'
+            name='comment'
             value={this.state.comment}
             onChange={this.handleInputChange}
           />
 
-          <br/>
+          <br />
 
           <div className={styles.buttons_block}>
             <input className={styles.button} type="submit" value="OK" />
-            <input className={styles.button} type="button" value="Отмена" onClick={this.props.cancel}/>
+            <input className={styles.button} type="button" value="Отмена" onClick={this.props.cancel} />
           </div>
-          
+
         </form>
-      </div> 
+      </div>
     )
   }
 }
