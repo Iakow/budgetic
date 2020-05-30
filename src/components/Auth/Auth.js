@@ -21,7 +21,7 @@ class Auth extends React.Component {
 
   render() {
 
-    const loginForm = (this.state.signin) ? <SignIn /> : <LogIn db = {this.props.db}/>
+    const loginForm = (this.state.signin) ? <SignIn /> : <LogIn db={this.props.db} />
 
     return (
       <div>
@@ -44,7 +44,7 @@ class Auth extends React.Component {
             /> LogIn
           </label>
         </form>
-        
+
         {loginForm}
       </div>
     )

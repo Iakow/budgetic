@@ -2,6 +2,8 @@ import React from 'react';
 import Select from './Select';
 import DateInput from "./DateInput";
 import styles from './form.module.css';
+import DatePicker from '../Inputs/DatePicker';
+
 
 class TransactionForm extends React.Component {
   constructor(props) {
@@ -93,6 +95,8 @@ class TransactionForm extends React.Component {
             handler={this.handler}
             value={this.state.date} />
           <br />
+
+          <DatePicker />
 
           <div className={`${styles.field} ${styles.flex}`}>
             <button onClick={this.toggleTransactionSign} className={styles.plus}>
