@@ -9,8 +9,8 @@ class TransactionForm extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      date: Date.now(), // обнулить секунды надо или брать дату из дейтпикера!!
+    this.state =  {
+      date: this.props.transaction ? this.props.transaction.date : Date.now(),
       sum: '',
       comment: '',
       tag: [],
@@ -28,7 +28,7 @@ class TransactionForm extends React.Component {
       const moneyDirection = (this.props.transaction.sum > 0) ? 'income' : 'spend';
       const sum = (Math.abs(this.props.transaction.sum)).toString(); // мож не надо приводить тут?
 
-      this.setState({ date, sum, comment, tag, category, moneyDirection })
+      this.setState({ date, sum, comment, tag, category, moneyDirection });
     }
   }
 
@@ -88,15 +88,12 @@ class TransactionForm extends React.Component {
         {title}
 
         <form onSubmit={this.handleSubmit} className={styles.formContainer}>
-          <DateInput
-            className={`${styles.field} ${styles.date}`}
-            name='date'
-            type='datetime-local'
-            handler={this.handler}
-            value={this.state.date} />
           <br />
 
-          <DatePicker />
+          <DatePicker
+            value={this.state.date}
+            handler={this.handler}
+          />
 
           <div className={`${styles.field} ${styles.flex}`}>
             <button onClick={this.toggleTransactionSign} className={styles.plus}>

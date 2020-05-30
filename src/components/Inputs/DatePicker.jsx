@@ -9,7 +9,7 @@ class DatePicker extends React.Component {
     super(props);
 
     this.state = {
-      date: Date.now(),
+      date: this.props.value,
       tempDate: null,
       isOpen: false
     }
@@ -65,6 +65,7 @@ class DatePicker extends React.Component {
     e.stopPropagation();
     this.setState((state) => ({ date: state.tempDate }));
     this.toogleIsOpen();
+    this.props.handler('date', this.state.tempDate)
   }
 
   autoClose = e => { if (e.target.className.includes('popupContainer')) this.toogleIsOpen() }
@@ -113,7 +114,7 @@ class DatePicker extends React.Component {
             />
 
             <span className={css.timeSeparator} >:</span>
-            
+
             <DateStrip
               mode={modes[4]}
               stripItemHeight={stripItemHeight}
