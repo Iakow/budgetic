@@ -58,7 +58,8 @@ class NumberInput extends React.Component {
       const valueNum = +value;
 
       if (valueNum > 0) {
-        this.setState({ value: valueNum.toString() })
+        //this.setState({ value: valueNum.toString() })
+        this.props.handler('sum', valueNum.toString())
         this.closeKeyboard();
       } else if (valueNum === 0) {
         this.setState({ value: '' });
@@ -85,11 +86,11 @@ class NumberInput extends React.Component {
 
 
   blinkError = () => {
-    this.setState({error: true});
+    this.setState({ error: true });
     navigator.vibrate(150);
 
     setTimeout(() => {
-      this.setState({error: false})
+      this.setState({ error: false })
     }, 300)
   }
 

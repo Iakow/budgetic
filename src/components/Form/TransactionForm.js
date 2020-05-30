@@ -1,17 +1,18 @@
 import React from 'react';
 import Select from './Select';
-import DateInput from "./DateInput";
+//import DateInput from "./DateInput";
 import styles from './form.module.css';
 import DatePicker from '../Inputs/DatePicker';
+import NumberInput from '../Inputs/NumberInput';
 
 
 class TransactionForm extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state =  {
+    this.state = {
       date: this.props.transaction ? this.props.transaction.date : Date.now(),
-      sum: '',
+      sum: this.props.transaction ? (Math.abs(this.props.transaction.sum)).toString() : '',
       comment: '',
       tag: [],
       category: '',
@@ -114,6 +115,11 @@ class TransactionForm extends React.Component {
             />
 
           </div>
+
+          <NumberInput
+            value={this.state.sum}
+            handler={this.handler}
+          />
 
 
           <br />
