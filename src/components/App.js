@@ -1,5 +1,5 @@
 import React from 'react';
-import {Switch, Route} from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import * as firebase from 'firebase/app';
 import "firebase/firestore";
 import "firebase/auth";
@@ -42,8 +42,8 @@ class App extends React.Component {
     };
   }
 
-  componentDidMount = ()=> {
-    firebase.auth().onAuthStateChanged((user)=> {
+  componentDidMount = () => {
+    firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.getAndListenUserData(user);
         this.setState({
@@ -53,7 +53,7 @@ class App extends React.Component {
       } else {
         this.setState({
           user: null,
-          needLogin:true
+          needLogin: true
         })
       }
     })
@@ -68,11 +68,11 @@ class App extends React.Component {
     TRANSACTIONS.orderBy("date", "desc").onSnapshot((querySnapshot) => {
       const transactionsArr = [];
       let balanceCounter = null;
-      
+
       querySnapshot.forEach((doc) => {
         const transaction = doc.data();
         transaction.id = doc.id;
-        
+
         transactionsArr.push(transaction);
         balanceCounter += transaction.sum;
       });
@@ -89,18 +89,18 @@ class App extends React.Component {
           tags: doc.data()
         })
       })
-      .catch((error) => {
-        console.log(error.message)
-      })
+        .catch((error) => {
+          console.log(error.message)
+        })
 
       CATEGORIES_OPTIONS.get().then((doc) => {
         this.setState({
           categories: doc.data()
         })
       })
-      .catch((error) => {
-        console.log(error.message)
-      })
+        .catch((error) => {
+          console.log(error.message)
+        })
     });
   }
 
@@ -109,7 +109,7 @@ class App extends React.Component {
     // надо опираться на ответ при чтении, наверное
 
     // и вынести все условия в один стейт, чтобы разгрузить render
-    
+
     const noHaveTransactions = this.state.transactions.length === 0;
     const noHaveSettings = this.state.tags.length === 0 || this.state.categories.length === 0;
     const needLogin = this.state.needLogin;
@@ -130,32 +130,35 @@ class App extends React.Component {
               <AddPurchase
                 tags={this.state.tags}
                 categories={this.state.categories}
-                db={USER_DB} />
+                db={USER_DB}
+              />
             </Route>
 
             <Route path={ROUTES.SETTINGS}>
               <Settings
                 tags={this.state.tags}
                 categories={this.state.categories}
-                db={USER_DB}/>
+                db={USER_DB}
+              />
             </Route>
-  
+
             <Route path={ROUTES.STATS}>
               <Stats
                 statsTable={this.state.transactions}
                 tags={this.state.tags}
                 categories={this.state.categories}
-                db={USER_DB} />
+                db={USER_DB}
+              />
             </Route>
 
             <Route path={ROUTES.MAIN} >
-              <Main sum={this.state.balance}/>
+              <Main sum={this.state.balance} />
             </Route>
           </Switch>
         </div>
       )
     } else {
-      return <Auth db={this.fireStore}/>
+      return <Auth db={this.fireStore} />
     }
   }
 }
