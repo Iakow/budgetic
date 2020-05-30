@@ -17,7 +17,10 @@ class Select extends React.Component {
   toogleIsOpen = () => this.setState((state) => ({ isOpen: !state.isOpen }))
 
 
-  handleSelect = e => this.setState({ value: e.target.name });
+  handleSelect = (e) => {
+    this.setState({ value: e.target.name })
+    this.props.handler('category', e.target.name)
+  }
 
 
   autoClose = e => { if (e.target.className.includes('popupContainer')) this.toogleIsOpen() }

@@ -1,9 +1,10 @@
 import React from 'react';
-import Select from './Select';
+//import Select from './Select';
 //import DateInput from "./DateInput";
 import styles from './form.module.css';
 import DatePicker from '../Inputs/DatePicker';
 import NumberInput from '../Inputs/NumberInput';
+import Select from '../Inputs/Select';
 
 
 class TransactionForm extends React.Component {
@@ -15,7 +16,7 @@ class TransactionForm extends React.Component {
       sum: this.props.transaction ? (Math.abs(this.props.transaction.sum)).toString() : '',
       comment: '',
       tag: [],
-      category: '',
+      category: this.props.transaction ? this.props.transaction.category : '',
       submit: false,
       moneyDirection: 'income'
     };
@@ -101,7 +102,7 @@ class TransactionForm extends React.Component {
               {(this.state.moneyDirection === 'income') ? "+" : "-"}
             </button>
 
-            <input
+            {/*   <input
               className={styles.sum}
               type="number"
               step="any"
@@ -111,8 +112,7 @@ class TransactionForm extends React.Component {
               name='sum'
               value={this.state.sum}
               onChange={this.handleInputChange}
-            /* autoFocus  */
-            />
+            /> */}
 
           </div>
 
@@ -124,20 +124,26 @@ class TransactionForm extends React.Component {
 
           <br />
 
-          <Select
+          {/* <Select
             name='category'
             value={this.state.category}
             handler={this.handleInputChange}
-            options={this.props.categories[this.state.moneyDirection]} />
+            options={this.props.categories[this.state.moneyDirection]} /> */}
+
+          <Select
+            value={this.state.category}
+            options={this.props.categories[this.state.moneyDirection]}
+            handler={this.handler}
+          />
 
           <br />
 
-          <Select
+          {/*  <Select
             name='tag'
             value={this.state.tag}
             handler={this.handleInputChange}
             options={this.props.tags[this.state.moneyDirection]}
-            multiple={true} />
+            multiple={true} /> */}
 
           <br />
 
