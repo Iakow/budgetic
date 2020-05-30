@@ -10,7 +10,7 @@ class TransactionForm extends React.Component {
     super(props);
 
     this.state = {
-      date: Date.now(), // обнулить секунды надо или брать дату из дейтпикера
+      date: Date.now(), // обнулить секунды надо или брать дату из дейтпикера!!
       sum: '',
       comment: '',
       tag: [],
