@@ -1,0 +1,174 @@
+.popupContainer {
+  color: white;
+  background-color: gray;
+  background: rgba(0, 0, 0, 0.8);
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  padding: 35px;
+  box-sizing: border-box;
+  z-index: 20;
+}
+
+.popup {
+  background-color: grey;
+  top: 20px;
+  left: 10px;
+  right: 10px;
+  padding: 20px;
+  z-index: 20;
+  border: 1px solid white;
+  border-radius: 20px;
+}
+
+.container li {
+  list-style-type: none;
+}
+
+.container ul {
+  padding: 0;
+}
+
+.container {
+  /* list-style-type: none; */
+}
+
+.button {
+  background-color: transparent;
+  border: none;
+}
+
+.buttonsBlock {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.inputField {
+  background-color: grey;
+  padding: 10px 20px;
+  font-size: 24px;
+  width: 100%;
+  height: 50px;
+  border: none;
+  box-sizing: border-box;
+}
+
+.dateBlock {
+  display: flex;
+  justify-content: center;
+  margin: 20px auto;
+}
+
+.timeBlock {
+  display: flex;
+  justify-content: center;
+  /* align-self: center; */
+}
+
+.content {
+  display: block;
+}
+
+.timeSeparator {
+  display: flex;
+  align-self: center;
+}
+
+.cropContainer {
+  border: 1px solid grey;
+  height: 78px;
+  width: 50px;
+  position: relative;
+  overflow: hidden;
+}
+
+.strip {
+  width: 50px;
+  background-color: grey;
+  position: absolute;
+  user-select: none;
+  padding: 0;
+  margin: 0;
+}
+
+.stripItem {
+  list-style-type: none;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.viewport {
+  position: absolute;
+  z-index: 10;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  width: 50px;
+  height: 26px;
+  pointer-events: none;
+  box-sizing: border-box;
+}
+
+.optionsItem:active {
+  background-color: red;
+}
+
+.optionsItem {
+  list-style-type: none;
+  display: flex;
+  height: 50px;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+  height: 80px;
+  font-size: 26px;
+  width: 100%;
+  border-bottom: 2px white solid;
+}
+
+.keyboard {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: 34vh;
+  display: flex;
+  flex-direction: column;
+  padding: 6px;
+}
+
+.keyboardRow {
+  display: flex;
+  flex-grow: 1;
+}
+
+.key {
+  outline:none;
+  flex-grow: 1;
+  margin: 4px;
+  border: none;
+  border-radius: 4px;
+  width: 15%;
+  font-size: 20px;
+}
+
+.key:active {
+  background-color: red;
+}
+
+.keyboardContainer {
+  background: rgba(0, 0, 0, 0.8);
+  position: absolute;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+}
+
+.activeInput {
+  position: relative;
+  z-index: 10;
+}
