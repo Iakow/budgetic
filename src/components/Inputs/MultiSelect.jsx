@@ -10,7 +10,7 @@ class MultiSelect extends React.Component {
 
     this.state = {
       valueMap: this.getValueMap(),
-      tempValueMap: this.getValueMap(),
+      valueMapBuffer: null,
       isOpen: false,
     }
   }
@@ -18,42 +18,47 @@ class MultiSelect extends React.Component {
 
   openPopup = () => {
     this.setState((state) => ({
-      tempValueMap: state.valueMap,
-      isOpen: !state.isOpen
+      valueMapBuffer: state.valueMap,
+      isOpen: !state.isOpen,
     }));
-  }
-
-
-  toogleIsOpen = () => {
-    this.setState((state) => ({
-      isOpen: !state.isOpen
-    }))
   }
 
 
   cancel = (e) => {
     e.stopPropagation();
-    this.toogleIsOpen();
+
+    this.setState((state) => ({
+      isOpen: false,
+      valueMap: state.valueMapBuffer,
+      valueMapBuffer: null,
+    }));
   }
 
 
   submit = (e) => {
     e.stopPropagation();
-    this.setState((state) => ({ valueMap: state.tempValueMap }));
-    this.toogleIsOpen();
+
+    this.setState({
+      valueMapBuffer: null,
+      isOpen: false,
+    });
+
+    this.props.handler('tag', this.getValue());
   }
 
-  
-  autoClose = e => { if (e.target.className.includes('popupContainer')) this.toogleIsOpen() }
+
+  autoClose = (e) => {
+    if (e.target.className.includes('popupContainer')) this.cancel(e);
+  }
 
 
   handleSelect = (e) => {
     const i = +e.target.name;
-    const newState = [...this.state.tempValueMap];
+    const newValueMap = [...this.state.valueMap];
 
-    newState[i] = !newState[i];
+    newValueMap[i] = !newValueMap[i];
 
-    this.setState({ tempValueMap: newState });
+    this.setState({ valueMap: newValueMap });
   }
 
 
@@ -64,7 +69,7 @@ class MultiSelect extends React.Component {
     const { value, options } = this.props;
 
     if (value) {
-      return options.map((option) => value.some(item => item === option));
+      return options.map((option) => value.some((item) => item === option));
     } else {
       return options.map(() => false);
     }
@@ -73,16 +78,15 @@ class MultiSelect extends React.Component {
 
   render() {
     const value = this.getValue();
-    const { tempValueMap, isOpen } = this.state;
+    const { valueMap, isOpen } = this.state;
     const { options } = this.props;
 
     const optionsRender = options.map((item, i) => (
       <li key={i}>
         <label className={css.optionsItem}>
           {item}
-          <input name={i} type="checkbox" checked={tempValueMap[i]} onChange={this.handleSelect} />
+          <input name={i} type="checkbox" checked={valueMap[i]} onChange={this.handleSelect} />
         </label>
-
       </li>
     ));
 

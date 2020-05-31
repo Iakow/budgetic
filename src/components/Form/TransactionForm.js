@@ -5,6 +5,7 @@ import styles from './form.module.css';
 import DatePicker from '../Inputs/DatePicker';
 import NumberInput from '../Inputs/NumberInput';
 import Select from '../Inputs/Select';
+import MultiSelect from '../Inputs/MultiSelect';
 
 
 class TransactionForm extends React.Component {
@@ -15,7 +16,7 @@ class TransactionForm extends React.Component {
       date: this.props.transaction ? this.props.transaction.date : Date.now(),
       sum: this.props.transaction ? (Math.abs(this.props.transaction.sum)).toString() : '',
       comment: '',
-      tag: [],
+      tag: this.props.transaction ? this.props.transaction.tag : [],
       category: this.props.transaction ? this.props.transaction.category : '',
       submit: false,
       moneyDirection: 'income'
@@ -144,6 +145,12 @@ class TransactionForm extends React.Component {
             handler={this.handleInputChange}
             options={this.props.tags[this.state.moneyDirection]}
             multiple={true} /> */}
+
+          <MultiSelect
+            value={this.state.tag}
+            options={this.props.tags[this.state.moneyDirection]}
+            handler={this.handler}
+          />
 
           <br />
 
