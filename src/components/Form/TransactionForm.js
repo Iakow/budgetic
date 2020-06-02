@@ -36,7 +36,7 @@ class TransactionForm extends React.Component {
   }
 
   toggleTransactionSign = (e) => {
-    e.preventDefault();
+    //e.preventDefault();
 
     this.setState({
       moneyDirection: (this.state.moneyDirection === 'income') ? 'spend' : 'income',
@@ -91,45 +91,14 @@ class TransactionForm extends React.Component {
         {title}
 
         <form onSubmit={this.handleSubmit} className={styles.formContainer}>
-          <br />
 
-          <DatePicker
-            value={this.state.date}
-            handler={this.handler}
-          />
-
-          <div className={`${styles.field} ${styles.flex}`}>
-            <button onClick={this.toggleTransactionSign} className={styles.plus}>
-              {(this.state.moneyDirection === 'income') ? "+" : "-"}
-            </button>
-
-            {/*   <input
-              className={styles.sum}
-              type="number"
-              step="any"
-              min='1'
-              placeholder="Сумма"
-              autoComplete="off"
-              name='sum'
-              value={this.state.sum}
-              onChange={this.handleInputChange}
-            /> */}
-
-          </div>
-
-          <NumberInput
-            value={this.state.sum}
-            handler={this.handler}
-          />
-
+          <DatePicker value={this.state.date} handler={this.handler} />
 
           <br />
 
-          {/* <Select
-            name='category'
-            value={this.state.category}
-            handler={this.handleInputChange}
-            options={this.props.categories[this.state.moneyDirection]} /> */}
+          <NumberInput value={this.state.sum} handler={this.handler} />
+
+          <br />
 
           <Select
             value={this.state.category}
@@ -139,13 +108,6 @@ class TransactionForm extends React.Component {
 
           <br />
 
-          {/*  <Select
-            name='tag'
-            value={this.state.tag}
-            handler={this.handleInputChange}
-            options={this.props.tags[this.state.moneyDirection]}
-            multiple={true} /> */}
-
           <MultiSelect
             value={this.state.tag}
             options={this.props.tags[this.state.moneyDirection]}
@@ -154,6 +116,34 @@ class TransactionForm extends React.Component {
 
           <br />
 
+          {/* <button onClick={this.toggleTransactionSign} className={styles.plus}>
+            {(this.state.moneyDirection === 'income') ? "+" : "-"}
+          </button> */}
+
+          <br />
+
+          <div>
+            <label>
+              <input
+                type="radio"
+                name="moneyDirection"
+                value="income"
+                checked={this.state.moneyDirection === 'income'}
+                onChange={this.toggleTransactionSign}
+              /> Доходы
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="moneyDirection"
+                value="spend"
+                checked={this.state.moneyDirection === 'spend'}
+                onChange={this.toggleTransactionSign}
+                 /> Расходы
+            </label>
+
+
+          </div>
           <textarea
             className={styles.field}
             placeholder='Коммент:'
@@ -168,6 +158,7 @@ class TransactionForm extends React.Component {
             <input className={styles.button} type="submit" value="OK" />
             <input className={styles.button} type="button" value="Отмена" onClick={this.props.cancel} />
           </div>
+
 
         </form>
       </div>
