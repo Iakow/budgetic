@@ -16,7 +16,10 @@ const InputField = (props) => {
       className={className}
       onClick={props.openPopup}
     >
-      {props.value}
+      <p>
+        {props.value}
+      </p>
+      
     </div>
   )
 }

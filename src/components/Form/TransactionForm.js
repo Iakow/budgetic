@@ -6,6 +6,7 @@ import DatePicker from '../Inputs/DatePicker';
 import NumberInput from '../Inputs/NumberInput';
 import Select from '../Inputs/Select';
 import MultiSelect from '../Inputs/MultiSelect';
+import TextArea from '../Inputs/TextArea';
 
 
 class TransactionForm extends React.Component {
@@ -81,24 +82,14 @@ class TransactionForm extends React.Component {
   }
 
   render() {
-    const title = (this.state.moneyDirection === 'income') ?
-      (<p className={styles.income}> Доходы</p>) :
-      (<p className={styles.spend}> Расходы</p>);
-
-
     return (
       <div className={styles.transactionForm}>
-        {title}
 
         <form onSubmit={this.handleSubmit} className={styles.formContainer}>
 
           <DatePicker value={this.state.date} handler={this.handler} />
 
-          <br />
-
           <NumberInput value={this.state.sum} handler={this.handler} />
-
-          <br />
 
           <Select
             value={this.state.category}
@@ -106,23 +97,13 @@ class TransactionForm extends React.Component {
             handler={this.handler}
           />
 
-          <br />
-
           <MultiSelect
             value={this.state.tag}
             options={this.props.tags[this.state.moneyDirection]}
             handler={this.handler}
           />
 
-          <br />
-
-          {/* <button onClick={this.toggleTransactionSign} className={styles.plus}>
-            {(this.state.moneyDirection === 'income') ? "+" : "-"}
-          </button> */}
-
-          <br />
-
-          <div>
+          <div className={styles.money_direction}>
             <label>
               <input
                 type="radio"
@@ -139,20 +120,11 @@ class TransactionForm extends React.Component {
                 value="spend"
                 checked={this.state.moneyDirection === 'spend'}
                 onChange={this.toggleTransactionSign}
-                 /> Расходы
+              /> Расходы
             </label>
-
-
           </div>
-          <textarea
-            className={styles.field}
-            placeholder='Коммент:'
-            name='comment'
-            value={this.state.comment}
-            onChange={this.handleInputChange}
-          />
 
-          <br />
+          <TextArea />
 
           <div className={styles.buttons_block}>
             <input className={styles.button} type="submit" value="OK" />
