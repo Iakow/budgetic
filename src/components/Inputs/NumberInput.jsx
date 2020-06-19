@@ -118,7 +118,7 @@ class NumberInput extends React.Component {
     const placeholder = 'Введите сумму';
 
     return (
-      <div className={css.container}>
+      <>
         <InputField
           error={error}
           type="number"
@@ -132,7 +132,7 @@ class NumberInput extends React.Component {
           visible={this.state.isOpen}
           sendValue={this.handleKeyboard}
         />
-      </div>
+      </>
     )
   }
 }

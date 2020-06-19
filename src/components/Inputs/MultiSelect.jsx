@@ -91,7 +91,7 @@ class MultiSelect extends React.Component {
     ));
 
     return (
-      <div className={css.container}>
+      <>
         <InputField openPopup={this.openPopup} value={"Выбрать теги: " + value} />
 
         <PopUp controlled visible={isOpen} submit={this.submit} cancel={this.cancel} autoClose={this.autoClose}>
@@ -99,7 +99,7 @@ class MultiSelect extends React.Component {
             {optionsRender}
           </ul>
         </PopUp>
-      </div>
+      </>
     )
   }
 }

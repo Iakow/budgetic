@@ -26,7 +26,7 @@ class DatePicker extends React.Component {
     const HH = ((d.getHours() > 9)) ? d.getHours() : `0${d.getHours()}`;
     const MI = ((d.getMinutes() > 9)) ? d.getMinutes() : `0${d.getMinutes()}`;
 
-    return `${DD}.${MM}.${YYYY} ${HH}:${MI}`
+    return `${DD}.${MM}.${YYYY} - ${HH}:${MI}`
   }
 
 
@@ -78,7 +78,7 @@ class DatePicker extends React.Component {
     const dateString = this.getDateString(this.state.date);
 
     return (
-      <div className={css.container} >
+      <>
         <InputField openPopup={this.openPopup} value={dateString} />
 
         <PopUp controlled visible={this.state.isOpen} submit={this.submit} cancel={this.cancel} autoClose={this.autoClose}>
@@ -123,7 +123,7 @@ class DatePicker extends React.Component {
             />
           </div>
         </PopUp>
-      </div>
+      </>
     )
   }
 }

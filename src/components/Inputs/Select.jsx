@@ -46,14 +46,14 @@ class Select extends React.Component {
     ))
 
     return (
-      <div className={css.container}>
+      <>
         <InputField openPopup={this.toogleIsOpen} value={value || 'Выбрать категори'} />
         <PopUp visible={this.state.isOpen} cancel={this.toogleIsOpen} autoClose={this.autoClose}>
           <ul>
             {optionsRender}
           </ul>
         </PopUp>
-      </div>
+      </>
     )
   }
 }
