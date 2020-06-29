@@ -8,6 +8,12 @@
   padding: 10px;
 }
 
+.money_direction {
+  display: flex;
+  justify-content: space-around;
+  padding: 0 30px;
+}
+
 .button {
   width: 110px;
   height: 40px;
@@ -19,7 +25,7 @@
   bottom: 10px;
   display: flex;
   justify-content: space-between;
-  flex-grow: 2;
+  /* flex-grow: 2; */
 }
 
 .field {
@@ -56,10 +62,12 @@
   padding: 20px;
   display: flex;
   flex-direction: column;
+  height: 100vh;
+  /* height: 600px; */
+  justify-content: space-between;
 }
 
 .transactionForm {
-  padding-top: 10px;
 }
 
 .transactionForm > p {
