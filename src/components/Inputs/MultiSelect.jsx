@@ -67,7 +67,7 @@ class MultiSelect extends React.Component {
 
   getValueMap = () => {
     const { value, options } = this.props;
-
+    
     if (value) {
       return options.map((option) => value.some((item) => item === option));
     } else {

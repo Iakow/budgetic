@@ -1,5 +1,4 @@
 import React from 'react';
-import css from './input.module.css';
 import InputField from './InputField';
 import KeyBoard from './KeyBoard';
 

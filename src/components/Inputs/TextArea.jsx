@@ -14,7 +14,7 @@ class TextArea extends React.Component {
   componentDidMount = () => {
     const viewport = document.querySelector('meta[name=viewport]');
     const viewheight = document.documentElement.clientHeight;
-    const attr = `height=${viewheight}px, width=device-width, initial-scale=1.0`;
+    const attr = `height=${viewheight}, width=device-width, initial-scale=1.0`;
 
     viewport.setAttribute('content', attr);
   }
