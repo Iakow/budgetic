@@ -8,7 +8,6 @@ class Select extends React.Component {
     super(props);
 
     this.state = {
-      value: this.props.value || null,
       isOpen: false
     }
   }
@@ -18,7 +17,6 @@ class Select extends React.Component {
 
 
   handleSelect = (e) => {
-    this.setState({ value: e.target.name })
     this.props.handler('category', e.target.name)
   }
 
@@ -27,8 +25,7 @@ class Select extends React.Component {
 
 
   render() {
-    const { value } = this.state;
-    const { options } = this.props;
+    const { options, value } = this.props;
 
     const optionsRender = options.map((option, i) => (
       <li key={i}>
