@@ -4,6 +4,7 @@ import PopUp from './PopUp';
 import css from './input.module.css';
 import InputField from './InputField';
 
+
 class DatePicker extends React.Component {
   constructor(props) {
     super(props);
@@ -31,6 +32,11 @@ class DatePicker extends React.Component {
 
 
   toogleIsOpen = () => {
+    this.state.isOpen ? 
+      document.body.classList.remove('noOverScroll') 
+      :
+      document.body.classList.add('noOverScroll');
+
     this.setState((state) => ({
       isOpen: !state.isOpen
     }))
@@ -55,8 +61,9 @@ class DatePicker extends React.Component {
     this.setState({ tempDate: date.getTime() })
   }
 
+
   cancel = (e) => {
-    e.stopPropagation();
+    e.stopPropagation(); //?
     this.toogleIsOpen();
   }
 
@@ -65,8 +72,9 @@ class DatePicker extends React.Component {
     e.stopPropagation();
     this.setState((state) => ({ date: state.tempDate }));
     this.toogleIsOpen();
-    this.props.handler('date', this.state.tempDate)
+    this.props.handler('date', this.state.tempDate);
   }
+
 
   autoClose = e => { if (e.target.className.includes('popupContainer')) this.toogleIsOpen() }
 
@@ -81,7 +89,13 @@ class DatePicker extends React.Component {
       <>
         <InputField openPopup={this.openPopup} value={dateString} />
 
-        <PopUp controlled visible={this.state.isOpen} submit={this.submit} cancel={this.cancel} autoClose={this.autoClose}>
+        <PopUp
+          controlled
+          visible={this.state.isOpen}
+          submit={this.submit}
+          cancel={this.cancel}
+          autoClose={this.autoClose}
+        >
           <div className={css.dateBlock}>
             <DateStrip
               mode={modes[2]}
