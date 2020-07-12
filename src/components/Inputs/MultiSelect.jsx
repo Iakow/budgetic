@@ -9,41 +9,37 @@ class MultiSelect extends React.Component {
     super(props);
 
     this.state = {
-      valueMap: this.getValueMap(),
-      valueMapBuffer: null,
+      valueBuffer: null,
       isOpen: false,
     }
   }
 
 
   openPopup = () => {
-    this.setState((state) => ({
-      valueMapBuffer: state.valueMap,
-      isOpen: !state.isOpen,
-    }));
+    this.setState({
+      valueBuffer: [...this.props.value],
+      isOpen: true,
+    });
   }
 
 
-  cancel = (e) => {
-    e.stopPropagation();
+  cancel = () => {
+    const { handler, name } = this.props;
 
-    this.setState((state) => ({
-      isOpen: false,
-      valueMap: state.valueMapBuffer,
-      valueMapBuffer: null,
-    }));
-  }
-
-
-  submit = (e) => {
-    e.stopPropagation();
+    handler(name, this.state.valueBuffer);
 
     this.setState({
-      valueMapBuffer: null,
+      isOpen: false,
+      valueBuffer: null,
+    });
+  }
+
+
+  submit = () => {
+    this.setState({
+      valueBuffer: null,
       isOpen: false,
     });
-
-    this.props.handler('tag', this.getValue());
   }
 
 
@@ -53,39 +49,36 @@ class MultiSelect extends React.Component {
 
 
   handleSelect = (e) => {
-    const i = +e.target.name;
-    const newValueMap = [...this.state.valueMap];
+    const { handler, name, value } = this.props;
+    const option = e.target.name;
+    let newValue = [...value];
 
-    newValueMap[i] = !newValueMap[i];
+    const isOptUnchecked = newValue.some((item) => item === option);
 
-    this.setState({ valueMap: newValueMap });
-  }
-
-
-  getValue = () => this.props.options.filter((item, i) => this.state.valueMap[i]);
-
-
-  getValueMap = () => {
-    const { value, options } = this.props;
-    
-    if (value) {
-      return options.map((option) => value.some((item) => item === option));
+    if (isOptUnchecked) {
+      newValue = newValue.filter((item) => item !== option)
     } else {
-      return options.map(() => false);
+      newValue.push(option);
     }
+
+    handler(name, newValue);
   }
 
 
   render() {
-    const value = this.getValue();
-    const { valueMap, isOpen } = this.state;
-    const { options } = this.props;
+    const { isOpen } = this.state;
+    const { options, value } = this.props;
 
-    const optionsRender = options.map((item, i) => (
+    const optionsRender = options.map((option, i) => (
       <li key={i}>
         <label className={css.optionsItem}>
-          {item}
-          <input name={i} type="checkbox" checked={valueMap[i]} onChange={this.handleSelect} />
+          {option}
+          <input
+            type="checkbox"
+            name={option}
+            checked={value.some((tag) => tag === option)}
+            onChange={this.handleSelect}
+          />
         </label>
       </li>
     ));
@@ -94,7 +87,13 @@ class MultiSelect extends React.Component {
       <>
         <InputField openPopup={this.openPopup} value={"Выбрать теги: " + value} />
 
-        <PopUp controlled visible={isOpen} submit={this.submit} cancel={this.cancel} autoClose={this.autoClose}>
+        <PopUp
+          controlled
+          visible={isOpen}
+          submit={this.submit}
+          cancel={this.cancel}
+          autoClose={this.autoClose}
+        >
           <ul>
             {optionsRender}
           </ul>

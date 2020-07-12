@@ -1,6 +1,4 @@
 import React from 'react';
-//import Select from './Select';
-//import DateInput from "./DateInput";
 import styles from './form.module.css';
 import DatePicker from '../Inputs/DatePicker';
 import NumberInput from '../Inputs/NumberInput';
@@ -13,66 +11,50 @@ class TransactionForm extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      date: this.props.transaction ? this.props.transaction.date : Date.now(),
-      sum: this.props.transaction ? (Math.abs(this.props.transaction.sum)).toString() : '',
-      comment: '',
-      tag: this.props.transaction ? this.props.transaction.tag : [],
-      category: this.props.transaction ? this.props.transaction.category : '',
-      submit: false,
-      moneyDirection: 'income'
-    };
+    const transaction = this.props.transaction;
+
+    this.state = transaction ?
+      {
+        date: transaction.date,
+        sum: (Math.abs(transaction.sum)).toString(),
+        comment: transaction.comment,
+        tag: transaction.tag,
+        category: transaction.category,
+        submit: false,
+        moneyDirection: (transaction.sum > 0) ? 'income' : 'spend',
+      }
+      :
+      {
+        date: Date.now(),
+        sum: '',
+        comment: '',
+        tag: [],
+        category: '',
+        submit: false,
+        moneyDirection: 'spend',
+      }
   }
 
-
-  componentDidMount = () => {
-    if (this.props.mode === 'edit') {
-      const { date, comment, tag, category } = this.props.transaction;
-
-      const moneyDirection = (this.props.transaction.sum > 0) ? 'income' : 'spend';
-      const sum = (Math.abs(this.props.transaction.sum)).toString(); // мож не надо приводить тут?
-
-      this.setState({ date, sum, comment, tag, category, moneyDirection });
-    }
-  }
 
   toggleTransactionSign = (e) => {
-    //e.preventDefault();
-
-    this.setState({
-      moneyDirection: (this.state.moneyDirection === 'income') ? 'spend' : 'income',
+    this.setState((state) => ({
+      moneyDirection: (state.moneyDirection === 'income') ? 'spend' : 'income',
       tag: [],
       category: ''
-    })
+    }))
   }
 
-  /* переделать все инпуты под этот метод */
+
   handler = (name, value) => this.setState({ [name]: value })
 
-  handleInputChange = (e) => {
-    if (e.target.type === 'select-multiple') {
-      const options = e.target.options;
-      const value = [];
-
-      for (var i = 0, l = options.length; i < l; i++) {
-        if (options[i].selected) {
-          value.push(options[i].value);
-        }
-      }
-
-      this.setState({ [e.target.name]: value });
-    } else {
-      this.setState({ [e.target.name]: e.target.value });
-    }
-  }
 
   handleSubmit = (e) => {
     e.preventDefault();
 
-    const { date, comment, tag, category } = this.state;
+    const { date, comment, tag, category } = this.state; // is posible more simple??? *
     const sum = (this.state.moneyDirection === 'income') ? +this.state.sum : -this.state.sum;
 
-    const doc = { sum, date, comment, category, tag };
+    const doc = { sum, date, comment, category, tag }; // *
 
     if (+this.state.sum) {
       this.props.handler(doc)
@@ -81,26 +63,30 @@ class TransactionForm extends React.Component {
     }
   }
 
+
   render() {
+    const { date, tag, category, sum, moneyDirection } = this.state;
+    const { categories, tags } = this.props;
+
     return (
       <div className={styles.transactionForm}>
-
         <form onSubmit={this.handleSubmit} className={styles.formContainer}>
+          <DatePicker value={date} handler={this.handler} />
 
-          <DatePicker value={this.state.date} handler={this.handler} />
-
-          <NumberInput value={this.state.sum} handler={this.handler} />
+          <NumberInput value={sum} handler={this.handler} />
 
           <Select
-            value={this.state.category}
-            options={this.props.categories[this.state.moneyDirection]}
+            options={categories[moneyDirection]}
+            value={category}
             handler={this.handler}
+            name="category"
           />
 
           <MultiSelect
-            value={this.state.tag}
-            options={this.props.tags[this.state.moneyDirection]}
+            options={tags[moneyDirection]}
+            value={tag}
             handler={this.handler}
+            name="tag"
           />
 
           <div className={styles.money_direction}>
@@ -109,16 +95,18 @@ class TransactionForm extends React.Component {
                 type="radio"
                 name="moneyDirection"
                 value="income"
-                checked={this.state.moneyDirection === 'income'}
+                checked={moneyDirection === 'income'}
                 onChange={this.toggleTransactionSign}
-              /> Доходы
+              />
+              Доходы
             </label>
+
             <label>
               <input
                 type="radio"
                 name="moneyDirection"
                 value="spend"
-                checked={this.state.moneyDirection === 'spend'}
+                checked={moneyDirection === 'spend'}
                 onChange={this.toggleTransactionSign}
               /> Расходы
             </label>
@@ -130,8 +118,6 @@ class TransactionForm extends React.Component {
             <input className={styles.button} type="submit" value="OK" />
             <input className={styles.button} type="button" value="Отмена" onClick={this.props.cancel} />
           </div>
-
-
         </form>
       </div>
     )

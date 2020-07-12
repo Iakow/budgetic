@@ -7,9 +7,7 @@ class Select extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      isOpen: false
-    }
+    this.state = { isOpen: false }
   }
 
 
@@ -17,7 +15,7 @@ class Select extends React.Component {
 
 
   handleSelect = (e) => {
-    this.props.handler('category', e.target.name)
+    this.props.handler(this.props.name, e.target.name)
   }
 
 
