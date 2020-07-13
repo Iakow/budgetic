@@ -35,6 +35,8 @@ class TransactionForm extends React.Component {
       }
   }
 
+  /* От moneyDirection зависит цвет суммы. Как? */
+
 
   toggleTransactionSign = (e) => {
     this.setState((state) => ({
@@ -71,9 +73,20 @@ class TransactionForm extends React.Component {
     return (
       <div className={styles.transactionForm}>
         <form onSubmit={this.handleSubmit} className={styles.formContainer}>
-          <DatePicker value={date} handler={this.handler} />
+          <DatePicker
+            value={date}
+            handler={this.handler}
+          />
 
-          <NumberInput value={sum} handler={this.handler} />
+          <NumberInput
+            value={sum}
+            handler={this.handler}
+            userStyle={{
+              color: moneyDirection === 'income' ? 'green' : 'red',
+              fontSize: '24px',
+              fontWeight: 900
+            }}
+          />
 
           <Select
             options={categories[moneyDirection]}

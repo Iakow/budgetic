@@ -6,9 +6,7 @@ const InputField = (props) => {
     `${css.inputField}  ${css.activeInput}`
     : css.inputField;
 
-  const cssError = (props.error) ?
-    { backgroundColor: 'red' }
-    : null
+  const cssError = (props.error) ? { backgroundColor: 'red' } : null;
 
   return (
     <div
@@ -16,10 +14,7 @@ const InputField = (props) => {
       className={className}
       onClick={props.openPopup}
     >
-      <p>
-        {props.value}
-      </p>
-      
+      <p style={props.userStyle}> {props.value} </p>
     </div>
   )
 }
