@@ -32,8 +32,8 @@ class DatePicker extends React.Component {
 
 
   toogleIsOpen = () => {
-    this.state.isOpen ? 
-      document.body.classList.remove('noOverScroll') 
+    this.state.isOpen ?
+      document.body.classList.remove('noOverScroll')
       :
       document.body.classList.add('noOverScroll');
 
@@ -87,7 +87,11 @@ class DatePicker extends React.Component {
 
     return (
       <>
-        <InputField openPopup={this.openPopup} value={dateString} />
+        <InputField
+          openPopup={this.openPopup}
+          value={dateString}
+          placeholder="Дата и время"
+        />
 
         <PopUp
           controlled

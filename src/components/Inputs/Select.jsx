@@ -42,7 +42,11 @@ class Select extends React.Component {
 
     return (
       <>
-        <InputField openPopup={this.toogleIsOpen} value={value || 'Выбрать категори'} />
+        <InputField
+          openPopup={this.toogleIsOpen}
+          value={value}
+          placeholder="Категория"
+        />
         <PopUp visible={this.state.isOpen} cancel={this.toogleIsOpen} autoClose={this.autoClose}>
           <ul>
             {optionsRender}

@@ -85,7 +85,16 @@ class MultiSelect extends React.Component {
 
     return (
       <>
-        <InputField openPopup={this.openPopup} value={"Выбрать теги: " + value} />
+        <InputField
+          openPopup={this.openPopup}
+          value={value}
+          placeholder="Теги"
+          bullet="# "
+          userStyle={{
+            fontSize: 15,
+            textTransform: "lowercase",
+          }}
+        />
 
         <PopUp
           controlled

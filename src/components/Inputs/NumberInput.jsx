@@ -114,8 +114,7 @@ class NumberInput extends React.Component {
 
   render() {
     const { value, showCursor, isOpen, error } = this.state;
-    const cursor = showCursor ? '|' : '';
-    const placeholder = 'Введите сумму';
+    const cursor = showCursor ? '|' : ' ';
 
     return (
       <>
@@ -123,8 +122,9 @@ class NumberInput extends React.Component {
           error={error}
           type="number"
           openPopup={this.openKeyboard}
-          value={isOpen ? value + cursor : value || placeholder}
+          value={isOpen ? value + cursor : value}
           userStyle={value ? this.props.userStyle : null}
+          placeholder="Сумма"
         />
 
         <KeyBoard
