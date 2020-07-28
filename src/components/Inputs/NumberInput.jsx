@@ -44,6 +44,7 @@ class NumberInput extends React.Component {
     if (key === '=') {
       try {
         this.setState({
+          // eslint-disable-next-line
           value: eval(value).toString(),
           isNeedCalculate: false,
         });
