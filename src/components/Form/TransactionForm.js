@@ -35,8 +35,6 @@ class TransactionForm extends React.Component {
       }
   }
 
-  /* От moneyDirection зависит цвет суммы. Как? */
-
 
   toggleTransactionSign = (e) => {
     this.setState((state) => ({
@@ -58,10 +56,10 @@ class TransactionForm extends React.Component {
 
     const doc = { sum, date, comment, category, tag }; // *
 
-    if (+this.state.sum) {
+    if (+this.state.sum && this.state.category) {
       this.props.handler(doc)
     } else {
-      alert('Надо ввести сумму')
+      alert('Надо ввести сумму и категорию')
     }
   }
 
@@ -125,7 +123,11 @@ class TransactionForm extends React.Component {
             </label>
           </div>
 
-          <TextArea />
+          <TextArea
+            value={this.state.comment}
+            handler={this.handler}
+            name="comment"
+          />
 
           <div className={styles.buttons_block}>
             <input className={styles.button} type="submit" value="OK" />
