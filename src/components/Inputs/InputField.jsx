@@ -3,7 +3,7 @@ import css from './input.module.css';
 
 const InputField = (props) => {
   const value = props.value;
-  console.log(props.value.length)
+
   const className = (props.type === 'number') ?
     `${css.inputField}  ${css.activeInput}`
     : css.inputField;
