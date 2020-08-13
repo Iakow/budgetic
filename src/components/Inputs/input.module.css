@@ -201,6 +201,11 @@
   flex-direction: column;
 }
 
+.comment_placeholder {
+  color: rgb(80, 80, 80);
+  font-size: 15px;
+}
+
 input[type="checkbox"] {
   width: 20px;
   height: 20px;

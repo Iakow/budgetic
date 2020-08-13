@@ -10,7 +10,7 @@ import TextArea from '../Inputs/TextArea';
 class TransactionForm extends React.Component {
   constructor(props) {
     super(props);
-
+    // инишиал стейт надо как-то облагородить
     const transaction = this.props.transaction;
 
     this.state = transaction ?
@@ -127,6 +127,7 @@ class TransactionForm extends React.Component {
             value={this.state.comment}
             handler={this.handler}
             name="comment"
+            placeholder="Комментарий"
           />
 
           <div className={styles.buttons_block}>
