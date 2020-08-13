@@ -22,41 +22,41 @@ class Stats extends React.Component {
     const firstDate = this.state.dateInterval[0];
     const roundedLastDate = new Date(this.state.dateInterval[1]).setHours('23', '59');
 
-    return this.props.statsTable.filter((transaction)=>{
+    return this.props.statsTable.filter((transaction) => {
       return (firstDate <= transaction.date && transaction.date <= roundedLastDate);
     })
   }
 
-  setDateInterval = (arr)=> {
-    this.setState({dateInterval: arr})
+  setDateInterval = (arr) => {
+    this.setState({ dateInterval: arr })
   }
 
   render() {
     return (
       <div className='stats'>
         <ul className='tabs'>
-          <li className='tab' onClick={()=>{this.setState({tabIndex: 1})}}>Table</li>
-          <li className='tab' onClick={()=>{this.setState({tabIndex: 2})}}>Diagram</li>
-          <li className='tab' onClick={()=>{this.setState({tabIndex: 3})}}>Filter</li>
+          <li className='tab' onClick={() => { this.setState({ tabIndex: 1 }) }}>Table</li>
+          <li className='tab' onClick={() => { this.setState({ tabIndex: 2 }) }}>Diagram</li>
+          <li className='tab' onClick={() => { this.setState({ tabIndex: 3 }) }}>Filter</li>
         </ul>
 
         <div className='stats-content'>
           <Table
-            className = {(this.state.tabIndex !== 1) ? 'hidden' : null}
+            className={(this.state.tabIndex !== 1) ? 'hidden' : null}
             db={this.props.db}
             transactions={this.getFilteredTransactions()}
             tags={this.props.tags}
-            categories={this.props.categories} /> 
+            categories={this.props.categories} />
 
           <Diagram
-            className = {(this.state.tabIndex !== 2) ? 'hidden' : null} />
-          
+            className={(this.state.tabIndex !== 2) ? 'hidden' : null} />
+
           <Filter
-            className = {(this.state.tabIndex !== 3) ? 'hidden' : null}
-            upData = {this.setDateInterval}
-            dateInterval = {this.state.dateInterval} />
+            className={(this.state.tabIndex !== 3) ? 'hidden' : null}
+            upData={this.setDateInterval}
+            dateInterval={this.state.dateInterval} />
         </div>
-      </div> 
+      </div>
     )
   }
 }

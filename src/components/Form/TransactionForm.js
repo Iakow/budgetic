@@ -131,8 +131,8 @@ class TransactionForm extends React.Component {
           />
 
           <div className={styles.buttons_block}>
-            <input className={styles.button} type="submit" value="OK" />
             <input className={styles.button} type="button" value="Отмена" onClick={this.props.cancel} />
+            <input className={styles.button} type="submit" value="OK" />
           </div>
         </form>
       </div>
