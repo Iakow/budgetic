@@ -123,8 +123,9 @@ class NumberInput extends React.Component {
           type="number"
           openPopup={this.openKeyboard}
           value={isOpen ? value + cursor : value}
-          userStyle={value ? this.props.userStyle : null}
+          textStyle={value ? error ? { backgroundColor: 'red' } : this.props.textStyle : null}
           placeholder="Сумма"
+          boxStyle={isOpen ? {zIndex: 11} : null}
         />
 
         <KeyBoard

@@ -79,7 +79,7 @@ class TransactionForm extends React.Component {
           <NumberInput
             value={sum}
             handler={this.handler}
-            userStyle={{
+            textStyle={{
               color: moneyDirection === 'income' ? 'green' : 'red',
               fontSize: '24px',
               fontWeight: 900
