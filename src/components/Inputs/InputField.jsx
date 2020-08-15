@@ -36,7 +36,8 @@ const InputField = (props) => {
 
   return (
     <div
-      style = {boxStyle}
+      tabIndex="0"
+      style={boxStyle}
       className={css.inputField}
       onClick={props.openPopup}
     >

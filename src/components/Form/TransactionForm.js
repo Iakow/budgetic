@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './form.module.css';
+import CSS from './form.module.css';
 import DatePicker from '../Inputs/DatePicker';
 import NumberInput from '../Inputs/NumberInput';
 import Select from '../Inputs/Select';
@@ -66,11 +66,11 @@ class TransactionForm extends React.Component {
 
   render() {
     const { date, tag, category, sum, moneyDirection } = this.state;
-    const { categories, tags } = this.props;
+    const { categories, tags, cancel } = this.props;
 
     return (
-      <div className={styles.transactionForm}>
-        <form onSubmit={this.handleSubmit} className={styles.formContainer}>
+      <div className={CSS.transactionForm}>
+        <form onSubmit={this.handleSubmit} className={CSS.formContainer}>
           <DatePicker
             value={date}
             handler={this.handler}
@@ -100,7 +100,7 @@ class TransactionForm extends React.Component {
             name="tag"
           />
 
-          <div className={styles.money_direction}>
+          <div className={CSS.money_direction}>
             <label>
               <input
                 type="radio"
@@ -119,7 +119,8 @@ class TransactionForm extends React.Component {
                 value="spend"
                 checked={moneyDirection === 'spend'}
                 onChange={this.toggleTransactionSign}
-              /> Расходы
+              />
+              Расходы
             </label>
           </div>
 
@@ -130,9 +131,9 @@ class TransactionForm extends React.Component {
             placeholder="Комментарий"
           />
 
-          <div className={styles.buttons_block}>
-            <input className={styles.button} type="button" value="Отмена" onClick={this.props.cancel} />
-            <input className={styles.button} type="submit" value="OK" />
+          <div className={CSS.buttons_block}>
+            <input className={CSS.button} type="button" value="Отмена" onClick={cancel} />
+            <input className={CSS.button} type="submit" value="OK" />
           </div>
         </form>
       </div>

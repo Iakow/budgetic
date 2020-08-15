@@ -90,7 +90,7 @@ class MultiSelect extends React.Component {
           value={value}
           placeholder="Теги"
           bullet="# "
-          userStyle={{
+          textStyle={{
             fontSize: 15,
             textTransform: "lowercase",
           }}

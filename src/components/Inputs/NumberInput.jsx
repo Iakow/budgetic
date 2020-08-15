@@ -18,7 +18,7 @@ class NumberInput extends React.Component {
 
 
   getInitialValue = () => {
-    return this.props.value ? `${this.props.value}` : '';
+    return this.props.value ? `${this.props.value}` : ''; // ???
   }
 
 
@@ -119,7 +119,6 @@ class NumberInput extends React.Component {
     return (
       <>
         <InputField
-          error={error}
           type="number"
           openPopup={this.openKeyboard}
           value={isOpen ? value + cursor : value}

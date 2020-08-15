@@ -176,7 +176,7 @@
 }
 
 .keyboardContainer {
-  background: rgba(0, 0, 0, 0.8);
+  /* background: rgba(0, 0, 0, 0.8); */
   position: absolute;
   height: 100%;
   width: 100%;
