@@ -9,93 +9,105 @@ class MultiSelect extends React.Component {
     super(props);
 
     this.state = {
-      valueMap: this.getValueMap(),
-      tempValueMap: this.getValueMap(),
+      valueBuffer: null,
       isOpen: false,
     }
   }
 
 
   openPopup = () => {
-    this.setState((state) => ({
-      tempValueMap: state.valueMap,
-      isOpen: !state.isOpen
-    }));
+    this.setState({
+      valueBuffer: [...this.props.value],
+      isOpen: true,
+    });
   }
 
 
-  toogleIsOpen = () => {
-    this.setState((state) => ({
-      isOpen: !state.isOpen
-    }))
+  cancel = () => {
+    const { handler, name } = this.props;
+
+    handler(name, this.state.valueBuffer);
+
+    this.setState({
+      isOpen: false,
+      valueBuffer: null,
+    });
   }
 
 
-  cancel = (e) => {
-    e.stopPropagation();
-    this.toogleIsOpen();
+  submit = () => {
+    this.setState({
+      valueBuffer: null,
+      isOpen: false,
+    });
   }
 
 
-  submit = (e) => {
-    e.stopPropagation();
-    this.setState((state) => ({ valueMap: state.tempValueMap }));
-    this.toogleIsOpen();
+  autoClose = (e) => {
+    if (e.target.className.includes('popupContainer')) this.cancel(e);
   }
-
-  
-  autoClose = e => { if (e.target.className.includes('popupContainer')) this.toogleIsOpen() }
 
 
   handleSelect = (e) => {
-    const i = +e.target.name;
-    const newState = [...this.state.tempValueMap];
+    const { handler, name, value } = this.props;
+    const option = e.target.name;
+    let newValue = [...value];
 
-    newState[i] = !newState[i];
+    const isOptUnchecked = newValue.some((item) => item === option);
 
-    this.setState({ tempValueMap: newState });
-  }
-
-
-  getValue = () => this.props.options.filter((item, i) => this.state.valueMap[i]);
-
-
-  getValueMap = () => {
-    const { value, options } = this.props;
-
-    if (value) {
-      return options.map((option) => value.some(item => item === option));
+    if (isOptUnchecked) {
+      newValue = newValue.filter((item) => item !== option)
     } else {
-      return options.map(() => false);
+      newValue.push(option);
     }
+
+    handler(name, newValue);
   }
 
 
   render() {
-    const value = this.getValue();
-    const { tempValueMap, isOpen } = this.state;
-    const { options } = this.props;
+    const { isOpen } = this.state;
+    const { options, value } = this.props;
 
-    const optionsRender = options.map((item, i) => (
+    const optionsRender = options.map((option, i) => (
       <li key={i}>
         <label className={css.optionsItem}>
-          {item}
-          <input name={i} type="checkbox" checked={tempValueMap[i]} onChange={this.handleSelect} />
+          {option}
+          <input
+            type="checkbox"
+            name={option}
+            checked={value.some((tag) => tag === option)}
+            onChange={this.handleSelect}
+          />
         </label>
-
       </li>
     ));
 
     return (
-      <div className={css.container}>
-        <InputField openPopup={this.openPopup} value={"Выбрать теги: " + value} />
+      <>
+        <InputField
+          openPopup={this.openPopup}
+          value={value}
+          placeholder="Теги"
+          bullet="# "
+          textStyle={{
+            fontSize: 15,
+            textTransform: "lowercase",
+          }}
+        />
 
-        <PopUp controlled visible={isOpen} submit={this.submit} cancel={this.cancel} autoClose={this.autoClose}>
+        <PopUp
+          controlled
+          visible={isOpen}
+          submit={this.submit}
+          cancel={this.cancel}
+          autoClose={this.autoClose}
+        >
           <ul>
             {optionsRender}
           </ul>
         </PopUp>
-      </div>
+      </>
     )
   }
 }

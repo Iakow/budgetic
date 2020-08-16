@@ -19,7 +19,7 @@
   right: 10px;
   padding: 20px;
   z-index: 20;
-  border: 1px solid white;
+  /* border: 1px solid white; */
   border-radius: 20px;
 }
 
@@ -46,13 +46,28 @@
 }
 
 .inputField {
-  background-color: grey;
-  padding: 10px 20px;
-  font-size: 24px;
+  position: relative;
+  border-bottom: 2px solid rgb(59, 59, 59);
+  padding-bottom: 5px;
+  font-size: 20px;
   width: 100%;
   height: 50px;
-  border: none;
   box-sizing: border-box;
+  color: gray;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+
+.inputField_item {
+  margin-right: 18px;
+  flex-shrink: 0;
+}
+
+.inputField_placeholder {
+  position: absolute;
+  top: 0;
+  font-size: 10px
 }
 
 .dateBlock {
@@ -126,7 +141,7 @@
   height: 80px;
   font-size: 26px;
   width: 100%;
-  border-bottom: 2px white solid;
+  border-bottom: 1px rgba(255, 255, 255, 0.308) solid;
 }
 
 .keyboard {
@@ -138,6 +153,7 @@
   display: flex;
   flex-direction: column;
   padding: 6px;
+  background-color: rgb(138 138 138);
 }
 
 .keyboardRow {
@@ -146,7 +162,7 @@
 }
 
 .key {
-  outline:none;
+  outline: none;
   flex-grow: 1;
   margin: 4px;
   border: none;
@@ -160,15 +176,39 @@
 }
 
 .keyboardContainer {
-  background: rgba(0, 0, 0, 0.8);
+  /* background: rgba(0, 0, 0, 0.8); */
   position: absolute;
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
   top: 0;
   left: 0;
+  z-index: 10;
 }
 
 .activeInput {
   position: relative;
   z-index: 10;
+}
+
+.comment {
+  background-color: rgb(31, 31, 31);
+  border: none;
+  height: 20vh;
+  text-align: center;
+  color: grey;
+  resize: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.comment_placeholder {
+  color: rgb(80, 80, 80);
+  font-size: 15px;
+}
+
+input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
 }

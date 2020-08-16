@@ -4,12 +4,13 @@ import PopUp from './PopUp';
 import css from './input.module.css';
 import InputField from './InputField';
 
+
 class DatePicker extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      date: Date.now(),
+      date: this.props.value,
       tempDate: null,
       isOpen: false
     }
@@ -26,11 +27,16 @@ class DatePicker extends React.Component {
     const HH = ((d.getHours() > 9)) ? d.getHours() : `0${d.getHours()}`;
     const MI = ((d.getMinutes() > 9)) ? d.getMinutes() : `0${d.getMinutes()}`;
 
-    return `${DD}.${MM}.${YYYY} ${HH}:${MI}`
+    return `${DD}.${MM}.${YYYY} - ${HH}:${MI}`
   }
 
 
   toogleIsOpen = () => {
+    this.state.isOpen ?
+      document.body.classList.remove('noOverScroll')
+      :
+      document.body.classList.add('noOverScroll');
+
     this.setState((state) => ({
       isOpen: !state.isOpen
     }))
@@ -55,8 +61,9 @@ class DatePicker extends React.Component {
     this.setState({ tempDate: date.getTime() })
   }
 
+
   cancel = (e) => {
-    e.stopPropagation();
+    e.stopPropagation(); //?
     this.toogleIsOpen();
   }
 
@@ -65,7 +72,9 @@ class DatePicker extends React.Component {
     e.stopPropagation();
     this.setState((state) => ({ date: state.tempDate }));
     this.toogleIsOpen();
+    this.props.handler('date', this.state.tempDate);
   }
+
 
   autoClose = e => { if (e.target.className.includes('popupContainer')) this.toogleIsOpen() }
 
@@ -77,10 +86,20 @@ class DatePicker extends React.Component {
     const dateString = this.getDateString(this.state.date);
 
     return (
-      <div className={css.container} >
-        <InputField openPopup={this.openPopup} value={dateString} />
+      <>
+        <InputField
+          openPopup={this.openPopup}
+          value={dateString}
+          placeholder="Дата и время"
+        />
 
-        <PopUp controlled visible={this.state.isOpen} submit={this.submit} cancel={this.cancel} autoClose={this.autoClose}>
+        <PopUp
+          controlled
+          visible={this.state.isOpen}
+          submit={this.submit}
+          cancel={this.cancel}
+          autoClose={this.autoClose}
+        >
           <div className={css.dateBlock}>
             <DateStrip
               mode={modes[2]}
@@ -113,7 +132,7 @@ class DatePicker extends React.Component {
             />
 
             <span className={css.timeSeparator} >:</span>
-            
+
             <DateStrip
               mode={modes[4]}
               stripItemHeight={stripItemHeight}
@@ -122,7 +141,7 @@ class DatePicker extends React.Component {
             />
           </div>
         </PopUp>
-      </div>
+      </>
     )
   }
 }

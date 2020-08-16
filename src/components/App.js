@@ -38,7 +38,7 @@ class App extends React.Component {
       transactions: [],
       tags: [],
       categories: [],
-      needLogin: false // почему false?
+      needLogin: false, // почему false?
     };
   }
 
@@ -46,10 +46,12 @@ class App extends React.Component {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.getAndListenUserData(user);
+        
         this.setState({
           user: user,
           needLogin: false
         })
+        
       } else {
         this.setState({
           user: null,

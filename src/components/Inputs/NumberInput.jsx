@@ -1,5 +1,4 @@
 import React from 'react';
-import css from './input.module.css';
 import InputField from './InputField';
 import KeyBoard from './KeyBoard';
 
@@ -19,7 +18,7 @@ class NumberInput extends React.Component {
 
 
   getInitialValue = () => {
-    return this.props.value ? `${this.props.value}` : '';
+    return this.props.value ? `${this.props.value}` : ''; // ???
   }
 
 
@@ -45,6 +44,7 @@ class NumberInput extends React.Component {
     if (key === '=') {
       try {
         this.setState({
+          // eslint-disable-next-line
           value: eval(value).toString(),
           isNeedCalculate: false,
         });
@@ -58,7 +58,8 @@ class NumberInput extends React.Component {
       const valueNum = +value;
 
       if (valueNum > 0) {
-        this.setState({ value: valueNum.toString() })
+        //this.setState({ value: valueNum.toString() })
+        this.props.handler('sum', valueNum.toString())
         this.closeKeyboard();
       } else if (valueNum === 0) {
         this.setState({ value: '' });
@@ -85,11 +86,11 @@ class NumberInput extends React.Component {
 
 
   blinkError = () => {
-    this.setState({error: true});
+    this.setState({ error: true });
     navigator.vibrate(150);
 
     setTimeout(() => {
-      this.setState({error: false})
+      this.setState({ error: false })
     }, 300)
   }
 
@@ -113,16 +114,17 @@ class NumberInput extends React.Component {
 
   render() {
     const { value, showCursor, isOpen, error } = this.state;
-    const cursor = showCursor ? '|' : '';
-    const placeholder = 'Введите сумму';
+    const cursor = showCursor ? '|' : ' ';
 
     return (
-      <div className={css.container}>
+      <>
         <InputField
-          error={error}
           type="number"
           openPopup={this.openKeyboard}
-          value={isOpen ? value + cursor : value || placeholder}
+          value={isOpen ? value + cursor : value}
+          textStyle={value ? error ? { backgroundColor: 'red' } : this.props.textStyle : null}
+          placeholder="Сумма"
+          boxStyle={isOpen ? {zIndex: 11} : null}
         />
 
         <KeyBoard
@@ -131,7 +133,7 @@ class NumberInput extends React.Component {
           visible={this.state.isOpen}
           sendValue={this.handleKeyboard}
         />
-      </div>
+      </>
     )
   }
 }

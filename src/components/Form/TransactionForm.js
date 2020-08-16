@@ -1,158 +1,140 @@
 import React from 'react';
-import Select from './Select';
-import DateInput from "./DateInput";
-import styles from './form.module.css';
+import CSS from './form.module.css';
 import DatePicker from '../Inputs/DatePicker';
+import NumberInput from '../Inputs/NumberInput';
+import Select from '../Inputs/Select';
+import MultiSelect from '../Inputs/MultiSelect';
+import TextArea from '../Inputs/TextArea';
 
 
 class TransactionForm extends React.Component {
   constructor(props) {
     super(props);
+    // инишиал стейт надо как-то облагородить
+    const transaction = this.props.transaction;
 
-    this.state = {
-      date: Date.now(), // обнулить секунды надо или брать дату из дейтпикера!!
-      sum: '',
-      comment: '',
-      tag: [],
-      category: '',
-      submit: false,
-      moneyDirection: 'income'
-    };
+    this.state = transaction ?
+      {
+        date: transaction.date,
+        sum: (Math.abs(transaction.sum)).toString(),
+        comment: transaction.comment,
+        tag: transaction.tag,
+        category: transaction.category,
+        submit: false,
+        moneyDirection: (transaction.sum > 0) ? 'income' : 'spend',
+      }
+      :
+      {
+        date: Date.now(),
+        sum: '',
+        comment: '',
+        tag: [],
+        category: '',
+        submit: false,
+        moneyDirection: 'spend',
+      }
   }
 
-
-  componentDidMount = () => {
-    if (this.props.mode === 'edit') {
-      const { date, comment, tag, category } = this.props.transaction;
-
-      const moneyDirection = (this.props.transaction.sum > 0) ? 'income' : 'spend';
-      const sum = (Math.abs(this.props.transaction.sum)).toString(); // мож не надо приводить тут?
-
-      this.setState({ date, sum, comment, tag, category, moneyDirection })
-    }
-  }
 
   toggleTransactionSign = (e) => {
-    e.preventDefault();
-
-    this.setState({
-      moneyDirection: (this.state.moneyDirection === 'income') ? 'spend' : 'income',
+    this.setState((state) => ({
+      moneyDirection: (state.moneyDirection === 'income') ? 'spend' : 'income',
       tag: [],
       category: ''
-    })
+    }))
   }
 
-  /* переделать все инпуты под этот метод */
+
   handler = (name, value) => this.setState({ [name]: value })
 
-  handleInputChange = (e) => {
-    if (e.target.type === 'select-multiple') {
-      const options = e.target.options;
-      const value = [];
-
-      for (var i = 0, l = options.length; i < l; i++) {
-        if (options[i].selected) {
-          value.push(options[i].value);
-        }
-      }
-
-      this.setState({ [e.target.name]: value });
-    } else {
-      this.setState({ [e.target.name]: e.target.value });
-    }
-  }
 
   handleSubmit = (e) => {
     e.preventDefault();
 
-    const { date, comment, tag, category } = this.state;
+    const { date, comment, tag, category } = this.state; // is posible more simple??? *
     const sum = (this.state.moneyDirection === 'income') ? +this.state.sum : -this.state.sum;
 
-    const doc = { sum, date, comment, category, tag };
+    const doc = { sum, date, comment, category, tag }; // *
 
-    if (+this.state.sum) {
+    if (+this.state.sum && this.state.category) {
       this.props.handler(doc)
     } else {
-      alert('Надо ввести сумму')
+      alert('Надо ввести сумму и категорию')
     }
   }
 
-  render() {
-    const title = (this.state.moneyDirection === 'income') ?
-      (<p className={styles.income}> Доходы</p>) :
-      (<p className={styles.spend}> Расходы</p>);
 
+  render() {
+    const { date, tag, category, sum, moneyDirection } = this.state;
+    const { categories, tags, cancel } = this.props;
 
     return (
-      <div className={styles.transactionForm}>
-        {title}
-
-        <form onSubmit={this.handleSubmit} className={styles.formContainer}>
-          <DateInput
-            className={`${styles.field} ${styles.date}`}
-            name='date'
-            type='datetime-local'
+      <div className={CSS.transactionForm}>
+        <form onSubmit={this.handleSubmit} className={CSS.formContainer}>
+          <DatePicker
+            value={date}
             handler={this.handler}
-            value={this.state.date} />
-          <br />
-
-          <DatePicker />
-
-          <div className={`${styles.field} ${styles.flex}`}>
-            <button onClick={this.toggleTransactionSign} className={styles.plus}>
-              {(this.state.moneyDirection === 'income') ? "+" : "-"}
-            </button>
-
-            <input
-              className={styles.sum}
-              type="number"
-              step="any"
-              min='1'
-              placeholder="Сумма"
-              autoComplete="off"
-              name='sum'
-              value={this.state.sum}
-              onChange={this.handleInputChange}
-            /* autoFocus  */
-            />
-
-          </div>
-
-
-          <br />
-
-          <Select
-            name='category'
-            value={this.state.category}
-            handler={this.handleInputChange}
-            options={this.props.categories[this.state.moneyDirection]} />
-
-          <br />
-
-          <Select
-            name='tag'
-            value={this.state.tag}
-            handler={this.handleInputChange}
-            options={this.props.tags[this.state.moneyDirection]}
-            multiple={true} />
-
-          <br />
-
-          <textarea
-            className={styles.field}
-            placeholder='Коммент:'
-            name='comment'
-            value={this.state.comment}
-            onChange={this.handleInputChange}
           />
 
-          <br />
+          <NumberInput
+            value={sum}
+            handler={this.handler}
+            textStyle={{
+              color: moneyDirection === 'income' ? 'green' : 'red',
+              fontSize: '24px',
+              fontWeight: 900
+            }}
+          />
 
-          <div className={styles.buttons_block}>
-            <input className={styles.button} type="submit" value="OK" />
-            <input className={styles.button} type="button" value="Отмена" onClick={this.props.cancel} />
+          <Select
+            options={categories[moneyDirection]}
+            value={category}
+            handler={this.handler}
+            name="category"
+          />
+
+          <MultiSelect
+            options={tags[moneyDirection]}
+            value={tag}
+            handler={this.handler}
+            name="tag"
+          />
+
+          <div className={CSS.money_direction}>
+            <label>
+              <input
+                type="radio"
+                name="moneyDirection"
+                value="income"
+                checked={moneyDirection === 'income'}
+                onChange={this.toggleTransactionSign}
+              />
+              Доходы
+            </label>
+
+            <label>
+              <input
+                type="radio"
+                name="moneyDirection"
+                value="spend"
+                checked={moneyDirection === 'spend'}
+                onChange={this.toggleTransactionSign}
+              />
+              Расходы
+            </label>
           </div>
 
+          <TextArea
+            value={this.state.comment}
+            handler={this.handler}
+            name="comment"
+            placeholder="Комментарий"
+          />
+
+          <div className={CSS.buttons_block}>
+            <input className={CSS.button} type="button" value="Отмена" onClick={cancel} />
+            <input className={CSS.button} type="submit" value="OK" />
+          </div>
         </form>
       </div>
     )

@@ -10,8 +10,20 @@ body {
   background-color: rgb(36, 36, 36);
 }
 
+li {
+  list-style: none;
+}
+
+ul {
+  padding: 0;
+}
+
 * {
   box-sizing: border-box;
+}
+
+.noOverScroll {
+  overscroll-behavior: none;
 }
 
 code {
@@ -39,14 +51,29 @@ code {
 
 .main-plus {
   border-radius: 50%;
+  border: none;
+  background-color: rgb(1, 158, 137);
+  color: white;
   width: 70px;
   height: 70px;
   font-size: 40px;
+  box-shadow: 2px 8px 26px rgba(0, 0, 0, 0.404);
+}
+
+.main-plus:active, .main-stats:active {
+  background-color: rgb(0, 77, 66);
 }
 
 .main-stats {
-  background-color: rgb(75, 74, 74);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
   border: none;
+  background-color: rgb(1, 158, 137);
+  font-size: 8px;
+  box-shadow: 2px 8px 26px rgba(0, 0, 0, 0.404);
+  color: white;
+  margin-top: 6vh;
 }
 
 @keyframes spinner {

@@ -7,25 +7,23 @@ class Select extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      value: this.props.value || null,
-      isOpen: false
-    }
+    this.state = { isOpen: false }
   }
 
 
   toogleIsOpen = () => this.setState((state) => ({ isOpen: !state.isOpen }))
 
 
-  handleSelect = e => this.setState({ value: e.target.name });
+  handleSelect = (e) => {
+    this.props.handler(this.props.name, e.target.name)
+  }
 
 
   autoClose = e => { if (e.target.className.includes('popupContainer')) this.toogleIsOpen() }
 
 
   render() {
-    const { value } = this.state;
-    const { options } = this.props;
+    const { options, value } = this.props;
 
     const optionsRender = options.map((option, i) => (
       <li key={i}>
@@ -43,14 +41,18 @@ class Select extends React.Component {
     ))
 
     return (
-      <div className={css.container}>
-        <InputField openPopup={this.toogleIsOpen} value={value || 'Выбрать категори'} />
+      <>
+        <InputField
+          openPopup={this.toogleIsOpen}
+          value={value}
+          placeholder="Категория"
+        />
         <PopUp visible={this.state.isOpen} cancel={this.toogleIsOpen} autoClose={this.autoClose}>
           <ul>
             {optionsRender}
           </ul>
         </PopUp>
-      </div>
+      </>
     )
   }
 }
