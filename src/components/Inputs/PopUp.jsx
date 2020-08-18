@@ -1,22 +1,20 @@
 import React from 'react';
-import css from './input.module.css';
+import CSS from './input.module.css';
 
 const PopUp = (props) => {
-  const controlBlock = (props.controlled === true) ? (
-    <div className={css.buttonsBlock} >
-      <button className={css.button} onClick={props.cancel}> ОТМЕНА </button>
-      <button className={css.button} onClick={props.submit}> УСТАНОВИТЬ </button>
+  const controlBlock = (
+    <div className={CSS.buttonsBlock} >
+      <button className={CSS.button} onClick={props.cancel}> ОТМЕНА </button>
+      <button className={CSS.button} onClick={props.submit}> OK </button>
     </div>
-  ) : null;
+  );
 
   return (props.visible) ? (
-    <div className={css.popupContainer} onMouseDown={props.autoClose} >
-      <div className={css.popup} >
-        <div className={css.content} >
-          {props.children}
-        </div>
+    <div className={CSS.popup_container} onMouseDown={props.autoClose} >
+      <div className={CSS.popup} >
+        {props.children}
 
-        {controlBlock}
+        {(props.controlled === true) ? controlBlock : null}
       </div>
     </div>
   ) : null

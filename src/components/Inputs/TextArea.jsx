@@ -1,5 +1,5 @@
 import React from 'react';
-import css from './input.module.css';
+import CSS from './input.module.css';
 
 
 class TextArea extends React.Component {
@@ -66,7 +66,7 @@ class TextArea extends React.Component {
     const placeholderText = this.props.placeholder;
 
     const placeholder = (
-      <span className={css.comment_placeholder}>
+      <span className={CSS.textarea_placeholder}>
         {placeholderText}
       </span>
     )
@@ -83,11 +83,11 @@ class TextArea extends React.Component {
 
     return (
       <div
+        className={CSS.textarea}
         contentEditable="true"
         onFocus={this.edit}
         onKeyDown={this.filterKeys}
         onBlur={this.submit}
-        className={css.comment}
         suppressContentEditableWarning={true}
       >
         {inner}

@@ -1,5 +1,5 @@
 import React from 'react';
-import css from './input.module.css';
+import CSS from './input.module.css';
 
 const InputField = (props) => {
   const { value, placeholder, bullet, textStyle, boxStyle } = props;
@@ -13,14 +13,14 @@ const InputField = (props) => {
     if (valueIsMultiple) {
       return (
         value.map((item) => (
-          <span key={item} className={css.inputField_item} style={textStyle}>
+          <span key={item} className={CSS.field_item} style={textStyle}>
             {bullet || null}{item}
           </span>
         ))
       )
     } else {
       return (
-        <span className={css.inputField_item} style={textStyle}>
+        <span className={CSS.field_item} style={textStyle}>
           {value}
         </span>
       )
@@ -29,7 +29,7 @@ const InputField = (props) => {
 
   const minimizedPlaceholder = placeholder ? isNoValue ? null :
     (
-      <span className={css.inputField_placeholder}>
+      <span className={CSS.field_placeholder}>
         {placeholder}
       </span>
     ) : null;
@@ -38,7 +38,7 @@ const InputField = (props) => {
     <div
       tabIndex="0"
       style={boxStyle}
-      className={css.inputField}
+      className={CSS.field}
       onClick={props.openPopup}
     >
       {minimizedPlaceholder}

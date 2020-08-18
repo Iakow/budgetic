@@ -44,7 +44,7 @@ class MultiSelect extends React.Component {
 
 
   autoClose = (e) => {
-    if (e.target.className.includes('popupContainer')) this.cancel(e);
+    if (e.target.className.includes('popup_container')) this.cancel(e);
   }
 
 
@@ -71,7 +71,7 @@ class MultiSelect extends React.Component {
 
     const optionsRender = options.map((option, i) => (
       <li key={i}>
-        <label className={css.optionsItem}>
+        <label className={css.option}>
           {option}
           <input
             type="checkbox"
@@ -103,7 +103,7 @@ class MultiSelect extends React.Component {
           cancel={this.cancel}
           autoClose={this.autoClose}
         >
-          <ul>
+          <ul className={css.options}>
             {optionsRender}
           </ul>
         </PopUp>

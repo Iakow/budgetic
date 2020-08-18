@@ -69,74 +69,72 @@ class TransactionForm extends React.Component {
     const { categories, tags, cancel } = this.props;
 
     return (
-      <div className={CSS.transactionForm}>
-        <form onSubmit={this.handleSubmit} className={CSS.formContainer}>
-          <DatePicker
-            value={date}
-            handler={this.handler}
-          />
+      <form onSubmit={this.handleSubmit} className={CSS.container}>
+        <DatePicker
+          value={date}
+          handler={this.handler}
+        />
 
-          <NumberInput
-            value={sum}
-            handler={this.handler}
-            textStyle={{
-              color: moneyDirection === 'income' ? 'green' : 'red',
-              fontSize: '24px',
-              fontWeight: 900
-            }}
-          />
+        <NumberInput
+          value={sum}
+          handler={this.handler}
+          textStyle={{
+            color: moneyDirection === 'income' ? 'green' : 'red',
+            fontSize: '24px',
+            fontWeight: 900
+          }}
+        />
 
-          <Select
-            options={categories[moneyDirection]}
-            value={category}
-            handler={this.handler}
-            name="category"
-          />
+        <Select
+          options={categories[moneyDirection]}
+          value={category}
+          handler={this.handler}
+          name="category"
+        />
 
-          <MultiSelect
-            options={tags[moneyDirection]}
-            value={tag}
-            handler={this.handler}
-            name="tag"
-          />
+        <MultiSelect
+          options={tags[moneyDirection]}
+          value={tag}
+          handler={this.handler}
+          name="tag"
+        />
 
-          <div className={CSS.money_direction}>
-            <label>
-              <input
-                type="radio"
-                name="moneyDirection"
-                value="income"
-                checked={moneyDirection === 'income'}
-                onChange={this.toggleTransactionSign}
-              />
+        <div className={CSS.money_direction}>
+          <label>
+            <input
+              type="radio"
+              name="moneyDirection"
+              value="income"
+              checked={moneyDirection === 'income'}
+              onChange={this.toggleTransactionSign}
+            />
               Доходы
             </label>
 
-            <label>
-              <input
-                type="radio"
-                name="moneyDirection"
-                value="spend"
-                checked={moneyDirection === 'spend'}
-                onChange={this.toggleTransactionSign}
-              />
+          <label>
+            <input
+              type="radio"
+              name="moneyDirection"
+              value="spend"
+              checked={moneyDirection === 'spend'}
+              onChange={this.toggleTransactionSign}
+            />
               Расходы
             </label>
-          </div>
+        </div>
 
-          <TextArea
-            value={this.state.comment}
-            handler={this.handler}
-            name="comment"
-            placeholder="Комментарий"
-          />
+        <TextArea
+          value={this.state.comment}
+          handler={this.handler}
+          name="comment"
+          placeholder="Комментарий"
+        />
 
-          <div className={CSS.buttons_block}>
-            <input className={CSS.button} type="button" value="Отмена" onClick={cancel} />
-            <input className={CSS.button} type="submit" value="OK" />
-          </div>
-        </form>
-      </div>
+        <div className={CSS.buttons_block}>
+          <input className={CSS.button} type="button" value="Отмена" onClick={cancel} />
+          <input className={CSS.button} type="submit" value="OK" />
+        </div>
+      </form>
     )
   }
 }

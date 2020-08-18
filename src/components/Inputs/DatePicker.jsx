@@ -76,7 +76,7 @@ class DatePicker extends React.Component {
   }
 
 
-  autoClose = e => { if (e.target.className.includes('popupContainer')) this.toogleIsOpen() }
+  autoClose = e => { if (e.target.className.includes('popup_container')) this.toogleIsOpen() }
 
 
   render() {

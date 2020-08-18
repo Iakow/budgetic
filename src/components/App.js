@@ -46,12 +46,12 @@ class App extends React.Component {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.getAndListenUserData(user);
-        
+
         this.setState({
           user: user,
           needLogin: false
         })
-        
+
       } else {
         this.setState({
           user: null,
@@ -123,10 +123,7 @@ class App extends React.Component {
       const USER_DB = this.fireStore.collection("users").doc(userName);
 
       return (
-        <div className='appContainer'>
-          {/* <span><small>{userName}</small></span>
-          <Logout/> */}
-
+        <>
           <Switch>
             <Route path={ROUTES.ADD}>
               <AddPurchase
@@ -157,7 +154,7 @@ class App extends React.Component {
               <Main sum={this.state.balance} />
             </Route>
           </Switch>
-        </div>
+        </>
       )
     } else {
       return <Auth db={this.fireStore} />

@@ -19,7 +19,7 @@ class Select extends React.Component {
   }
 
 
-  autoClose = e => { if (e.target.className.includes('popupContainer')) this.toogleIsOpen() }
+  autoClose = e => { if (e.target.className.includes('popup_container')) this.toogleIsOpen() }
 
 
   render() {
@@ -27,7 +27,7 @@ class Select extends React.Component {
 
     const optionsRender = options.map((option, i) => (
       <li key={i}>
-        <label className={css.optionsItem}>
+        <label className={css.option}>
           {option}
           <input
             name={option}
@@ -47,8 +47,13 @@ class Select extends React.Component {
           value={value}
           placeholder="Категория"
         />
-        <PopUp visible={this.state.isOpen} cancel={this.toogleIsOpen} autoClose={this.autoClose}>
-          <ul>
+
+        <PopUp
+          visible={this.state.isOpen}
+          cancel={this.toogleIsOpen}
+          autoClose={this.autoClose}
+        >
+          <ul className={css.options}>
             {optionsRender}
           </ul>
         </PopUp>
