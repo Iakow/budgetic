@@ -32,6 +32,34 @@ class Stats extends React.Component {
   }
 
   render() {
+    const { tabIndex } = this.state;
+
+    let tabRender = (
+      <Table
+        db={this.props.db}
+        transactions={this.getFilteredTransactions()}
+        tags={this.props.tags}
+        categories={this.props.categories}
+      />
+    )
+
+    if (tabIndex === 2) {
+      tabRender = (
+        <Diagram />
+      )
+    }
+
+    if (tabIndex === 3) {
+      tabRender = (
+        <Filter
+          className={(this.state.tabIndex !== 3) ? 'hidden' : null}
+          upData={this.setDateInterval}
+          dateInterval={this.state.dateInterval}
+        />
+      )
+    }
+
+
     return (
       <div className='stats'>
         <ul className='tabs'>
@@ -41,20 +69,7 @@ class Stats extends React.Component {
         </ul>
 
         <div className='stats-content'>
-          <Table
-            className={(this.state.tabIndex !== 1) ? 'hidden' : null}
-            db={this.props.db}
-            transactions={this.getFilteredTransactions()}
-            tags={this.props.tags}
-            categories={this.props.categories} />
-
-          <Diagram
-            className={(this.state.tabIndex !== 2) ? 'hidden' : null} />
-
-          <Filter
-            className={(this.state.tabIndex !== 3) ? 'hidden' : null}
-            upData={this.setDateInterval}
-            dateInterval={this.state.dateInterval} />
+          {tabRender}
         </div>
       </div>
     )

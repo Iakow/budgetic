@@ -32,14 +32,14 @@ const TransactionRow = (props)=> {
   const tags = props.doc.tag.map((tag, i)=> (<span key={i} className="tag">{tag}</span>))
 
   return (
-    <tr className = {(props.doc.sum > 0) ? 'incomeRow' : 'spendRow'}>
+    <tr className = {(props.doc.sum > 0) ? 'incomeRow' : 'spendRow'} onClick = {submitChanges} >
       <td>{formatDate(props.doc.date)}</td>
       <td>{props.doc.sum}</td>
       <td>{props.doc.category}</td>
       <td>{tags}</td>
       <td>{props.doc.comment}</td>
       <td>
-        <button 
+       {/*  <button 
           id = {props.doc.id} 
           onClick = {submitChanges} 
           className="rowButton" 
@@ -51,7 +51,7 @@ const TransactionRow = (props)=> {
           className="rowButton redButton"
         >
           {'del'}
-        </button>
+        </button> */}
       </td>
     </tr>
   )
