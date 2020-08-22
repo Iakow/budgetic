@@ -215,7 +215,7 @@ html {
   --thumbBG: #727272;
 }
 .stats-content::-webkit-scrollbar {
-  width: 0px;
+  width: 8px;
 }
 .stats-content {
   scrollbar-width: thin;

@@ -9,6 +9,7 @@ import Filter from './Filter';
 class Stats extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       tabIndex: 1,
       dateInterval: [
@@ -63,9 +64,26 @@ class Stats extends React.Component {
     return (
       <div className='stats'>
         <ul className='tabs'>
-          <li className='tab' onClick={() => { this.setState({ tabIndex: 1 }) }}>Table</li>
-          <li className='tab' onClick={() => { this.setState({ tabIndex: 2 }) }}>Diagram</li>
-          <li className='tab' onClick={() => { this.setState({ tabIndex: 3 }) }}>Filter</li>
+          <li
+            className='tab'
+            onClick={() => { this.setState({ tabIndex: 1 }) }}
+          >
+            Table
+          </li>
+
+          <li
+            className='tab'
+            onClick={() => { this.setState({ tabIndex: 2 }) }}
+          >
+            Diagram
+          </li>
+          
+          <li
+            className='tab'
+            onClick={() => { this.setState({ tabIndex: 3 }) }}
+          >
+            Filter
+          </li>
         </ul>
 
         <div className='stats-content'>

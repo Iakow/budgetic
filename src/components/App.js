@@ -38,20 +38,23 @@ class App extends React.Component {
       transactions: [],
       tags: [],
       categories: [],
-      needLogin: false, // почему false?
+      needLogin: false, // почему false??
     };
   }
 
   componentDidMount = () => {
+    this.checkAuth();
+  }
+  
+  checkAuth = () => {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.getAndListenUserData(user);
-
+  
         this.setState({
           user: user,
           needLogin: false
         })
-
       } else {
         this.setState({
           user: null,
@@ -64,6 +67,7 @@ class App extends React.Component {
   getAndListenUserData = (user) => {
     const USER_DB = this.fireStore.collection("users").doc(user.email);
     const TRANSACTIONS = USER_DB.collection('transactions');
+
     const TAGS_OPTIONS = USER_DB.collection('settings').doc('tags');
     const CATEGORIES_OPTIONS = USER_DB.collection('settings').doc('categories');
 
@@ -107,19 +111,18 @@ class App extends React.Component {
   }
 
   render() {
+    const { transactions, tags, categories, needLogin, user } = this.state;
+    
     // при таком подходе, кажется, при регистрации все зависнет с пустыми transactions
     // надо опираться на ответ при чтении, наверное
 
-    // и вынести все условия в один стейт, чтобы разгрузить render
-
-    const noHaveTransactions = this.state.transactions.length === 0;
-    const noHaveSettings = this.state.tags.length === 0 || this.state.categories.length === 0;
-    const needLogin = this.state.needLogin;
+    const noHaveTransactions = transactions.length === 0;
+    const noHaveSettings = tags.length === 0 || categories.length === 0;
 
     if (!needLogin && (noHaveSettings || noHaveTransactions)) return <div className="async-spinner"></div>
 
-    if (this.state.user) {
-      const userName = this.state.user.email;
+    if (user) {
+      const userName = user.email;
       const USER_DB = this.fireStore.collection("users").doc(userName);
 
       return (
