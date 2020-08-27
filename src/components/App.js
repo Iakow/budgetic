@@ -111,7 +111,7 @@ class App extends React.Component {
   }
 
   render() {
-    const { transactions, tags, categories, needLogin, user } = this.state;
+    const { transactions, tags, categories, needLogin, user, balance } = this.state;
     
     // при таком подходе, кажется, при регистрации все зависнет с пустыми transactions
     // надо опираться на ответ при чтении, наверное
@@ -130,31 +130,31 @@ class App extends React.Component {
           <Switch>
             <Route path={ROUTES.ADD}>
               <AddPurchase
-                tags={this.state.tags}
-                categories={this.state.categories}
+                tags={tags}
+                categories={categories}
                 db={USER_DB}
               />
             </Route>
 
             <Route path={ROUTES.SETTINGS}>
               <Settings
-                tags={this.state.tags}
-                categories={this.state.categories}
+                tags={tags}
+                categories={categories}
                 db={USER_DB}
               />
             </Route>
 
             <Route path={ROUTES.STATS}>
               <Stats
-                statsTable={this.state.transactions}
-                tags={this.state.tags}
-                categories={this.state.categories}
+                transactions={transactions}
+                tags={tags}
+                categories={categories}
                 db={USER_DB}
               />
             </Route>
 
             <Route path={ROUTES.MAIN} >
-              <Main sum={this.state.balance} />
+              <Main sum={balance} />
             </Route>
           </Switch>
         </>
