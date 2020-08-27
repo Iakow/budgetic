@@ -1,13 +1,16 @@
 import React from 'react';
 import DatePicker from '../Inputs/DatePicker';
+import Table from './Table';
 
-class Filter extends React.Component {
+class TransactionFilter extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       dateStart: this.props.dateInterval[0],
       dateEnd: this.props.dateInterval[1],
+
+      filteredTransactions: this.props.transactions,
 
       sortSum: 'off',
       sortTime: 'off',
@@ -36,9 +39,20 @@ class Filter extends React.Component {
     this.setState({ [name]: switchValue(this.state[name]) });
   }
 
-  
+
   setDateFilter = (name, value) => {
     this.setState({ [name]: value })
+  }
+
+  getFilteredByDateTransactions = () => {
+    const {dateStart, dateEnd} = this.state;
+    const currentTransactions = [...this.state.filteredTransactions];
+
+    let newTransactions = currentTransactions.filter((item) => (
+      item.date >= dateStart && item.date <= dateEnd
+    ));
+
+    return newTransactions;
   }
 
 
@@ -51,10 +65,12 @@ class Filter extends React.Component {
           <DatePicker
             value={dateStart}
             handler={this.setDateFilter}
+            handleName="dateStart"
           /> -
           <DatePicker
             value={dateEnd}
             handler={this.setDateFilter}
+            handleName="dateEnd"
           />
         </div>
         <div className="body">
@@ -64,10 +80,15 @@ class Filter extends React.Component {
           <button onClick={this.setSorting} name="sortTag">{`sortTag: ${sortTag}`}</button>
         </div>
 
-        {this.props.children}
+        <Table
+          db={this.props.db}
+          transactions={this.getFilteredByDateTransactions()}
+          tags={this.props.tags}
+          categories={this.props.categories}
+        />
       </>
     )
   }
 }
 
-export default Filter;
+export default TransactionFilter;

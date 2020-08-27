@@ -2,7 +2,7 @@ import React from 'react';
 import Table from './Table';
 import Diagram from './Diagram';
 //import Filter from './Filter';
-import Filter from './newFilter'
+import TransactionFilter from './TransactionFilter'
 
 
 /* с новым пропсом массив надо бы отдать фильтру, чтобы тот вернул что надо. Как?
@@ -37,7 +37,7 @@ class Stats extends React.Component {
     })
   }
 
-  
+
   setDateInterval = (arr) => {
     this.setState({ dateInterval: arr })
   }
@@ -46,7 +46,18 @@ class Stats extends React.Component {
   render() {
     const startFiltersDate = this.props.transactions[this.props.transactions.length - 1].date;
     const endFiltersDate = this.props.transactions[0].date;
-    return <Filter dateInterval={[startFiltersDate, endFiltersDate]} />
+
+    return (
+      <TransactionFilter
+        dateInterval={[startFiltersDate, endFiltersDate]}
+        db={this.props.db}
+        transactions={this.getFilteredTransactions()}
+        tags={this.props.tags}
+        categories={this.props.categories}
+      >
+
+      </TransactionFilter>
+    )
   }
 
   /* render() {
