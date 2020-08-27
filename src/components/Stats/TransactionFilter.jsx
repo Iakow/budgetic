@@ -9,9 +9,6 @@ class TransactionFilter extends React.Component {
     this.state = {
       dateStart: this.props.dateInterval[0],
       dateEnd: this.props.dateInterval[1],
-
-      filteredTransactions: this.props.transactions,
-
       sortSum: 'off',
       sortTime: 'off',
       sortCat: 'off',
@@ -21,6 +18,9 @@ class TransactionFilter extends React.Component {
 
 
   setSorting = (e) => {
+    const name = e.target.name;
+
+    //возвращает строку на основе входящей строки, состояние переключателя
     const switchValue = (current) => {
       const opts = ['off', 'up', 'down'];
 
@@ -29,14 +29,22 @@ class TransactionFilter extends React.Component {
       return opts[newIndexInOpts + 1] || opts[0];
     };
 
-    const name = e.target.name;
-
+    // сбрасываем взаимоисключающие настройки
     if (name === 'sortSum') this.setState({ sortTime: 'off' });
     if (name === 'sortTime') this.setState({ sortSum: 'off' });
     if (name === 'sortCat') this.setState({ sortTag: 'off' });
     if (name === 'sortTag') this.setState({ sortCat: 'off' });
 
+    // надо функцией
     this.setState({ [name]: switchValue(this.state[name]) });
+  }
+
+  getSortedByDate = () => {
+    const sortTime = this.state.sortTime;
+
+    if(sortTime === 'off') return this.getFilteredByDateTransactions();
+    if(sortTime === 'up') return [...this.getFilteredByDateTransactions()].sort((a, b) => a.date - b.date);
+    if(sortTime === 'down') return [...this.getFilteredByDateTransactions()].sort((a, b) => b.date - a.date);
   }
 
 
@@ -46,7 +54,7 @@ class TransactionFilter extends React.Component {
 
   getFilteredByDateTransactions = () => {
     const {dateStart, dateEnd} = this.state;
-    const currentTransactions = [...this.state.filteredTransactions];
+    const currentTransactions = [...this.props.transactions];
 
     let newTransactions = currentTransactions.filter((item) => (
       item.date >= dateStart && item.date <= dateEnd
@@ -54,6 +62,10 @@ class TransactionFilter extends React.Component {
 
     return newTransactions;
   }
+
+  /* Сортировки берут отфильтрованный по времени массив и сортируют
+     Сортировки должны срабатывать по клику на кнопку, поэтому должны находиться в ее хендлере
+       */
 
 
   render() {
@@ -82,7 +94,7 @@ class TransactionFilter extends React.Component {
 
         <Table
           db={this.props.db}
-          transactions={this.getFilteredByDateTransactions()}
+          transactions={this.getSortedByDate()}
           tags={this.props.tags}
           categories={this.props.categories}
         />
