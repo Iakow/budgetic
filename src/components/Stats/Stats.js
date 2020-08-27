@@ -10,12 +10,19 @@ class Stats extends React.Component {
   constructor(props) {
     super(props);
 
+    /* 
+      transactions={transactions} [{}, {}, {}]
+      tags={tags} ['','','']
+      categories={categories} ['','','']
+      db={USER_DB} 
+    */
+
+    const startFiltersDate = this.props.transactions[this.props.transactions.length - 1].date;
+    const endFiltersDate = this.props.transactions[0].date;
+
     this.state = {
-      tabIndex: 1,
-      dateInterval: [
-        this.props.statsTable[this.props.statsTable.length - 1].date,
-        this.props.statsTable[0].date
-      ]
+      tab: 1,
+      dateInterval: [startFiltersDate, endFiltersDate]
     }
   }
 
@@ -23,7 +30,7 @@ class Stats extends React.Component {
     const firstDate = this.state.dateInterval[0];
     const roundedLastDate = new Date(this.state.dateInterval[1]).setHours('23', '59');
 
-    return this.props.statsTable.filter((transaction) => {
+    return this.props.transactions.filter((transaction) => {
       return (firstDate <= transaction.date && transaction.date <= roundedLastDate);
     })
   }
@@ -33,7 +40,7 @@ class Stats extends React.Component {
   }
 
   render() {
-    const { tabIndex } = this.state;
+    const { tab } = this.state;
 
     let tabRender = (
       <Table
@@ -44,19 +51,19 @@ class Stats extends React.Component {
       />
     )
 
-    if (tabIndex === 2) {
+    if (tab === 2) {
       tabRender = (
         <Diagram />
       )
     }
 
-    if (tabIndex === 3) {
+    if (tab === 3) {
       tabRender = (
         <Filter
-          className={(this.state.tabIndex !== 3) ? 'hidden' : null}
+          className={(this.state.tab !== 3) ? 'hidden' : null}
           upData={this.setDateInterval}
           dateInterval={this.state.dateInterval}
-        />
+        /> 
       )
     }
 
@@ -66,21 +73,21 @@ class Stats extends React.Component {
         <ul className='tabs'>
           <li
             className='tab'
-            onClick={() => { this.setState({ tabIndex: 1 }) }}
+            onClick={() => { this.setState({ tab: 1 }) }}
           >
             Table
           </li>
 
           <li
             className='tab'
-            onClick={() => { this.setState({ tabIndex: 2 }) }}
+            onClick={() => { this.setState({ tab: 2 }) }}
           >
             Diagram
           </li>
-          
+
           <li
             className='tab'
-            onClick={() => { this.setState({ tabIndex: 3 }) }}
+            onClick={() => { this.setState({ tab: 3 }) }}
           >
             Filter
           </li>
