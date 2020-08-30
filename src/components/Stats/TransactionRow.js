@@ -55,21 +55,6 @@ const TransactionRow = (props) => {
       <td>{props.doc.category}</td>
       <td>{tags}</td>
       <td>{props.doc.comment}</td>
-      <td>
-        {/*  <button 
-          id = {props.doc.id} 
-          onClick = {submitChanges} 
-          className="rowButton" 
-        >
-          {'edit'}
-        </button>
-        <button 
-          onClick = {delTransaction} 
-          className="rowButton redButton"
-        >
-          {'del'}
-        </button> */}
-      </td>
     </tr>
   )
 }

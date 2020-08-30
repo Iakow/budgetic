@@ -1,6 +1,7 @@
 import React from 'react';
 import Table from './Table';
 import DatePicker from '../Inputs/DatePicker';
+import Tabs from './Tabs'
 
 
 class Stats extends React.Component {
@@ -69,7 +70,7 @@ class Stats extends React.Component {
       if (a[prop] > b[prop]) return -1;
       return 0;
     }
-    
+
 
     if (this.state[switcher] === 'off') {
       return list;
@@ -84,7 +85,6 @@ class Stats extends React.Component {
     }
   }
 
-  /* Если я сортирю по категории или тегу, нужно сортировать два отдельных массива - для доходов и расходов */
 
   getSortedList = () => {
     let sortedList = this.getSelectedByPeriod();
@@ -109,20 +109,8 @@ class Stats extends React.Component {
 
     const listByDate = this.getSortedList();
 
-    return (
+    const tab1 = (
       <>
-        <div className="panel">
-          <DatePicker
-            value={firstDate}
-            handler={this.handleDateFilter}
-            handleName="firstDate"
-          /> -
-          <DatePicker
-            value={lastDate}
-            handler={this.handleDateFilter}
-            handleName="lastDate"
-          />
-        </div>
         <div className="sortings">
           <button
             onClick={this.handleSorting}
@@ -159,6 +147,30 @@ class Stats extends React.Component {
           tags={this.props.tags}
           categories={this.props.categories}
         />
+      </>
+    )
+
+    return (
+      <>
+        <div className="panel">
+          <DatePicker
+            value={firstDate}
+            handler={this.handleDateFilter}
+            handleName="firstDate"
+          /> -
+          <DatePicker
+            value={lastDate}
+            handler={this.handleDateFilter}
+            handleName="lastDate"
+          />
+        </div>
+
+        <Tabs
+          tabs={[tab1, "Diagramm"]}
+          titles={["Table", "Diagramm"]}
+        />
+
+        {/* {tab1} */}
       </>
     )
   }

@@ -16,50 +16,52 @@ class Table extends React.Component { /* editDoc, db, transactions*/
     }
   }
 
-  sortByDate = ()=> {
-    const array = this.props.transactions.sort((a, b)=> {
-      return (this.state.sortedByDateReverse) ? (a.date - b.date) : (b.date - a.date)});
-    
+  sortByDate = () => {
+    const array = this.props.transactions.sort((a, b) => {
+      return (this.state.sortedByDateReverse) ? (a.date - b.date) : (b.date - a.date)
+    });
+
     this.setState({
       sortedTransactions: array,
       sortedByDateReverse: !this.state.sortedByDateReverse
     })
   }
 
-  sortBySum = ()=> {
-    const array = this.props.transactions.sort((a, b)=> {
-      return (this.state.sortedBySum) ? (a.sum - b.sum) : (b.sum - a.sum)});
-    
+  sortBySum = () => {
+    const array = this.props.transactions.sort((a, b) => {
+      return (this.state.sortedBySum) ? (a.sum - b.sum) : (b.sum - a.sum)
+    });
+
     this.setState({
       sortedTransactions: array,
       sortedBySum: !this.state.sortedBySum
     })
   }
 
-  editTransaction = (doc)=> {
+  editTransaction = (doc) => {
     const id = this.state.editableTransaction.id;
     const TRANSACTION_REF = this.props.db.collection('transactions').doc(id);
 
     TRANSACTION_REF.set(doc)
-    .then(()=> {
-      console.log("Document is updated");
-      this.setState({
-        editableTransaction: null,
-        sortedTransactions: this.props.transactions
+      .then(() => {
+        console.log("Document is updated");
+        this.setState({
+          editableTransaction: null,
+          sortedTransactions: this.props.transactions
+        })
       })
-    })
-    .catch((error)=> {
+      .catch((error) => {
         console.error("Error editing document: ", error);
-    });
+      });
   }
 
-  cancelEditing = ()=> {
+  cancelEditing = () => {
     this.setState({
       editableTransaction: null
     })
   }
 
-  startEditing = (doc)=> {
+  startEditing = (doc) => {
     this.setState({
       editableTransaction: doc
     })
@@ -68,22 +70,11 @@ class Table extends React.Component { /* editDoc, db, transactions*/
   render() {
     if (!this.state.editableTransaction) {
       return (
-        <table className = {this.props.className}>
-          <thead>
-            <tr className="table-header">
-              <th className='clickable' onClick={this.sortByDate}>Дата</th>
-              <th className='clickable' onClick={this.sortBySum}>Сумма</th>
-              <th>Категория</th>
-              <th>Теги</th>
-              <th>Коммент</th>
-              <th>...</th>
-            </tr>
-          </thead>
+        <table className={this.props.className}>
 
           <tbody>
-            {/* {this.state.sortedTransactions.map((doc)=>  */}
-            {this.props.transactions.map((doc)=> 
-              <TransactionRow 
+            {this.props.transactions.map((doc) =>
+              <TransactionRow
                 editDoc={this.startEditing}
                 key={doc.id}
                 doc={doc}
