@@ -1,125 +1,171 @@
 import React from 'react';
 import Table from './Table';
-import Diagram from './Diagram';
-//import Filter from './Filter';
-import TransactionFilter from './TransactionFilter'
+import DatePicker from '../Inputs/DatePicker';
 
 
-/* с новым пропсом массив надо бы отдать фильтру, чтобы тот вернул что надо. Как?
-А что, если состояние фильтра тоже держать здесь???*/
 class Stats extends React.Component {
   constructor(props) {
     super(props);
 
-    /* 
-      transactions={transactions} [{}, {}, {}]
-      tags={tags} ['','','']
-      categories={categories} ['','','']
-      db={USER_DB} 
-    */
-
-    const startFiltersDate = this.props.transactions[this.props.transactions.length - 1].date;
-    const endFiltersDate = this.props.transactions[0].date;
+    const { transactions } = this.props;
 
     this.state = {
-      tab: 1,
-      dateInterval: [startFiltersDate, endFiltersDate]
+      selectedTransactions: this.props.transactions,
+      firstDate: transactions[transactions.length - 1].date,
+      lastDate: transactions[0].date,
+
+      sortingBySum: 'off',
+      sortingByDate: 'off',
+      sortingByCategory: 'off',
+      sortingByTags: 'off'
     }
   }
 
+  handleSorting = (e) => {
+    const name = e.target.name;
 
-  getFilteredTransactions = () => {
-    const firstDate = this.state.dateInterval[0];
-    const roundedLastDate = new Date(this.state.dateInterval[1]).setHours('23', '59');
+    //возвращает строку на основе входящей строки, состояние переключателя
+    const switchValue = (current) => {
+      const opts = ['off', 'up', 'down'];
 
-    return this.props.transactions.filter((transaction) => {
-      return (firstDate <= transaction.date && transaction.date <= roundedLastDate);
-    })
+      const newIndexInOpts = opts.findIndex((item) => item === current);
+
+      return opts[newIndexInOpts + 1] || opts[0];
+    };
+
+    // сбрасываем взаимоисключающие настройки
+    if (name === 'sortingBySum') this.setState({ sortingByDate: 'off' });
+    if (name === 'sortingByDate') this.setState({ sortingBySum: 'off' });
+    if (name === 'sortingByCategory') this.setState({ sortingByTags: 'off' });
+    if (name === 'sortingByTags') this.setState({ sortingByCategory: 'off' });
+
+    // надо функцией
+    this.setState({ [name]: switchValue(this.state[name]) });
+    this.sortByDate().sortBySum();
+
+    // проблема с чейнингом в том, что в каждом вызове сетСейт - а это перерендеринг
+    // вариант - не через стейт, а через простое св-во
+    // вариант - просто вложенные 4 функции, но это пиздец
+    // вариант - отказаться от чейнинга и просто поочередно вызвать четыре функции внутри одного метода на локальной переменной, а в конце сетСтейт - ОК.
   }
 
 
-  setDateInterval = (arr) => {
-    this.setState({ dateInterval: arr })
+  handleDateFilter = (name, value) => {
+    this.setState({ [name]: value });
+    this.getSelectedByPeriod();
+  }
+
+
+  sortByDate = () => {
+    const { sortingByDate, selectedTransactions } = this.state;
+
+    if (sortingByDate === 'off') { };
+
+    if (sortingByDate === 'up') {
+      this.setState({
+        selectedTransactions: [...selectedTransactions].sort((a, b) => a.date - b.date)
+      })
+    }
+
+    if (sortingByDate === 'down') {
+      this.setState({
+        selectedTransactions: [...selectedTransactions].sort((a, b) => b.date - a.date)
+      })
+    }
+
+    return this;
+  }
+
+  sortBySum = () => {
+    const { sortingBySum, selectedTransactions } = this.state;
+
+    if (sortingBySum === 'off') { };
+
+    if (sortingBySum === 'up') {
+      this.setState({
+        selectedTransactions: [...selectedTransactions].sort((a, b) => a.sum - b.sum)
+      })
+    }
+
+    if (sortingBySum === 'down') {
+      this.setState({
+        selectedTransactions: [...selectedTransactions].sort((a, b) => b.sum - a.sum)
+      })
+    }
+
+    return this;
+  }
+
+
+  getSelectedByPeriod = () => {
+    const { firstDate, lastDate } = this.state;
+
+    const newTransactions = [...this.props.transactions].filter((item) => (
+      item.date >= firstDate && item.date <= lastDate
+    ));
+
+    this.setState({ selectedTransactions: newTransactions })
+
+    return this;
   }
 
 
   render() {
-    const startFiltersDate = this.props.transactions[this.props.transactions.length - 1].date;
-    const endFiltersDate = this.props.transactions[0].date;
+    const { firstDate, lastDate, sortingBySum, sortingByDate, sortingByCategory, sortingByTags } = this.state;
 
     return (
-      <TransactionFilter
-        dateInterval={[startFiltersDate, endFiltersDate]}
-        db={this.props.db}
-        transactions={this.getFilteredTransactions()}
-        tags={this.props.tags}
-        categories={this.props.categories}
-      >
+      <>
+        <div className="panel">
+          <DatePicker
+            value={firstDate}
+            handler={this.handleDateFilter}
+            handleName="firstDate"
+          /> -
+          <DatePicker
+            value={lastDate}
+            handler={this.handleDateFilter}
+            handleName="lastDate"
+          />
+        </div>
+        <div className="body">
+          <button
+            onClick={this.handleSorting}
+            name="sortingBySum"
+          >
+            {`Sum: ${sortingBySum}`}
+          </button>
 
-      </TransactionFilter>
+          <button
+            onClick={this.handleSorting}
+            name="sortingByDate"
+          >
+            {`Date: ${sortingByDate}`}
+          </button>
+
+          <button
+            onClick={this.handleSorting}
+            name="sortingByCategory"
+          >
+            {`Category: ${sortingByCategory}`}
+          </button>
+
+          <button
+            onClick={this.handleSorting}
+            name="sortingByTags"
+          >
+            {`Tags: ${sortingByTags}`}
+          </button>
+        </div>
+
+        <Table
+          db={this.props.db}
+          transactions={this.state.selectedTransactions}
+          tags={this.props.tags}
+          categories={this.props.categories}
+        />
+      </>
     )
   }
-
-  /* render() {
-    const { tab } = this.state;
-
-    let tabRender = (
-      <Table
-        db={this.props.db}
-        transactions={this.getFilteredTransactions()}
-        tags={this.props.tags}
-        categories={this.props.categories}
-      />
-    )
-
-    if (tab === 2) {
-      tabRender = (
-        <Diagram />
-      )
-    }
-
-    if (tab === 3) {
-      tabRender = (
-        <Filter
-          className={(this.state.tab !== 3) ? 'hidden' : null}
-          upData={this.setDateInterval}
-          dateInterval={this.state.dateInterval}
-        /> 
-      )
-    }
-
-
-    return (
-      <div className='stats'>
-        <ul className='tabs'>
-          <li
-            className='tab'
-            onClick={() => { this.setState({ tab: 1 }) }}
-          >
-            Table
-          </li>
-
-          <li
-            className='tab'
-            onClick={() => { this.setState({ tab: 2 }) }}
-          >
-            Diagram
-          </li>
-
-          <li
-            className='tab'
-            onClick={() => { this.setState({ tab: 3 }) }}
-          >
-            Filter
-          </li>
-        </ul>
-
-        <div className='stats-content'>
-          {tabRender}
-        </div>
-      </div>
-    )
-  } */
 }
 
 export default Stats; 
