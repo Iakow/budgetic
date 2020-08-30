@@ -72,6 +72,7 @@ class TransactionForm extends React.Component {
       <form onSubmit={this.handleSubmit} className={CSS.container}>
         <DatePicker
           value={date}
+          handleName="date"
           handler={this.handler}
         />
 

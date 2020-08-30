@@ -1,102 +1,165 @@
 import React from 'react';
 import Table from './Table';
-import Diagram from './Diagram';
-import Filter from './Filter';
+import DatePicker from '../Inputs/DatePicker';
 
 
-/* с новым пропсом массив надо бы отдать фильтру, чтобы тот вернул что надо. Как?
-А что, если состояние фильтра тоже держать здесь???*/
 class Stats extends React.Component {
   constructor(props) {
     super(props);
 
-    /* 
-      transactions={transactions} [{}, {}, {}]
-      tags={tags} ['','','']
-      categories={categories} ['','','']
-      db={USER_DB} 
-    */
-
-    const startFiltersDate = this.props.transactions[this.props.transactions.length - 1].date;
-    const endFiltersDate = this.props.transactions[0].date;
+    const { transactions } = this.props;
 
     this.state = {
-      tab: 1,
-      dateInterval: [startFiltersDate, endFiltersDate]
+      firstDate: transactions[transactions.length - 1].date,
+      lastDate: transactions[0].date,
+
+      sortingBySum: 'off',
+      sortingByDate: 'off',
+      sortingByCategory: 'off',
+      sortingByTags: 'off'
     }
   }
 
-  getFilteredTransactions = () => {
-    const firstDate = this.state.dateInterval[0];
-    const roundedLastDate = new Date(this.state.dateInterval[1]).setHours('23', '59');
+  handleSorting = (e) => {
+    const name = e.target.name;
 
-    return this.props.transactions.filter((transaction) => {
-      return (firstDate <= transaction.date && transaction.date <= roundedLastDate);
-    })
+    //возвращает строку на основе входящей строки, состояние переключателя
+    const getNextSwitchValue = (current) => {
+      const opts = ['off', 'up', 'down'];
+
+      const newIndexInOpts = opts.findIndex((item) => item === current);
+
+      return opts[newIndexInOpts + 1] || opts[0];
+    };
+
+    // сбрасываем взаимоисключающие настройки
+    if (name === 'sortingBySum') this.setState({ sortingByDate: 'off' });
+    if (name === 'sortingByDate') this.setState({ sortingBySum: 'off' });
+    if (name === 'sortingByCategory') this.setState({ sortingByTags: 'off' });
+    if (name === 'sortingByTags') this.setState({ sortingByCategory: 'off' });
+
+    this.setState((state) => ({ [name]: getNextSwitchValue(state[name]) }));
   }
 
-  setDateInterval = (arr) => {
-    this.setState({ dateInterval: arr })
+
+  handleDateFilter = (name, value) => {
+    this.setState({ [name]: value });
   }
+
+  getSelectedByPeriod = () => {
+    const { firstDate, lastDate } = this.state;
+
+    const newTransactions = [...this.props.transactions].filter((item) => (
+      item.date >= firstDate && item.date <= lastDate
+    ));
+
+    return newTransactions;
+  }
+
+
+  sortBy = (list, prop, switcher) => {
+    const sortUp = (a, b) => {
+      if (a[prop] > b[prop]) return 1;
+      if (a[prop] < b[prop]) return -1;
+      return 0;
+    }
+
+    const sortDown = (a, b) => {
+      if (a[prop] < b[prop]) return 1;
+      if (a[prop] > b[prop]) return -1;
+      return 0;
+    }
+    
+
+    if (this.state[switcher] === 'off') {
+      return list;
+    }
+
+    if (this.state[switcher] === 'up') {
+      return list.sort(sortUp)
+    }
+
+    if (this.state[switcher] === 'down') {
+      return list.sort(sortDown)
+    }
+  }
+
+  /* Если я сортирю по категории или тегу, нужно сортировать два отдельных массива - для доходов и расходов */
+
+  getSortedList = () => {
+    let sortedList = this.getSelectedByPeriod();
+
+    sortedList = this.sortBy(sortedList, 'sum', 'sortingBySum');
+    sortedList = this.sortBy(sortedList, 'date', 'sortingByDate');
+    sortedList = this.sortBy(sortedList, 'category', 'sortingByCategory');
+
+    return sortedList;
+  }
+
 
   render() {
-    const { tab } = this.state;
+    const {
+      firstDate,
+      lastDate,
+      sortingBySum,
+      sortingByDate,
+      sortingByCategory,
+      sortingByTags
+    } = this.state;
 
-    let tabRender = (
-      <Table
-        db={this.props.db}
-        transactions={this.getFilteredTransactions()}
-        tags={this.props.tags}
-        categories={this.props.categories}
-      />
-    )
-
-    if (tab === 2) {
-      tabRender = (
-        <Diagram />
-      )
-    }
-
-    if (tab === 3) {
-      tabRender = (
-        <Filter
-          className={(this.state.tab !== 3) ? 'hidden' : null}
-          upData={this.setDateInterval}
-          dateInterval={this.state.dateInterval}
-        /> 
-      )
-    }
-
+    const listByDate = this.getSortedList();
 
     return (
-      <div className='stats'>
-        <ul className='tabs'>
-          <li
-            className='tab'
-            onClick={() => { this.setState({ tab: 1 }) }}
-          >
-            Table
-          </li>
-
-          <li
-            className='tab'
-            onClick={() => { this.setState({ tab: 2 }) }}
-          >
-            Diagram
-          </li>
-
-          <li
-            className='tab'
-            onClick={() => { this.setState({ tab: 3 }) }}
-          >
-            Filter
-          </li>
-        </ul>
-
-        <div className='stats-content'>
-          {tabRender}
+      <>
+        <div className="panel">
+          <DatePicker
+            value={firstDate}
+            handler={this.handleDateFilter}
+            handleName="firstDate"
+          /> -
+          <DatePicker
+            value={lastDate}
+            handler={this.handleDateFilter}
+            handleName="lastDate"
+          />
         </div>
-      </div>
+        <div className="sortings">
+          <button
+            onClick={this.handleSorting}
+            name="sortingBySum"
+          >
+            {`Sum: ${sortingBySum}`}
+          </button>
+
+          <button
+            onClick={this.handleSorting}
+            name="sortingByDate"
+          >
+            {`Date: ${sortingByDate}`}
+          </button>
+
+          <button
+            onClick={this.handleSorting}
+            name="sortingByCategory"
+          >
+            {`Category: ${sortingByCategory}`}
+          </button>
+
+          <button
+            onClick={this.handleSorting}
+            name="sortingByTags"
+          >
+            {`Tags: ${sortingByTags}`}
+          </button>
+        </div>
+
+        <Table
+          db={this.props.db}
+          transactions={listByDate}
+          tags={this.props.tags}
+          categories={this.props.categories}
+        />
+      </>
     )
   }
 }

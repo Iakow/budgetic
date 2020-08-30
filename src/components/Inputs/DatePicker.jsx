@@ -72,7 +72,8 @@ class DatePicker extends React.Component {
     e.stopPropagation();
     this.setState((state) => ({ date: state.tempDate }));
     this.toogleIsOpen();
-    this.props.handler('date', this.state.tempDate);
+
+    this.props.handler(this.props.handleName, this.state.tempDate);
   }
 
 
