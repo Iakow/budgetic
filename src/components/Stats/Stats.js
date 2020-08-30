@@ -10,7 +10,6 @@ class Stats extends React.Component {
     const { transactions } = this.props;
 
     this.state = {
-      selectedTransactions: this.props.transactions,
       firstDate: transactions[transactions.length - 1].date,
       lastDate: transactions[0].date,
 
@@ -25,7 +24,7 @@ class Stats extends React.Component {
     const name = e.target.name;
 
     //возвращает строку на основе входящей строки, состояние переключателя
-    const switchValue = (current) => {
+    const getNextSwitchValue = (current) => {
       const opts = ['off', 'up', 'down'];
 
       const newIndexInOpts = opts.findIndex((item) => item === current);
@@ -39,63 +38,13 @@ class Stats extends React.Component {
     if (name === 'sortingByCategory') this.setState({ sortingByTags: 'off' });
     if (name === 'sortingByTags') this.setState({ sortingByCategory: 'off' });
 
-    // надо функцией
-    this.setState({ [name]: switchValue(this.state[name]) });
-    this.sortByDate().sortBySum();
-
-    // проблема с чейнингом в том, что в каждом вызове сетСейт - а это перерендеринг
-    // вариант - не через стейт, а через простое св-во
-    // вариант - просто вложенные 4 функции, но это пиздец
-    // вариант - отказаться от чейнинга и просто поочередно вызвать четыре функции внутри одного метода на локальной переменной, а в конце сетСтейт - ОК.
+    this.setState((state) => ({ [name]: getNextSwitchValue(state[name]) }));
   }
 
 
   handleDateFilter = (name, value) => {
     this.setState({ [name]: value });
-    this.getSelectedByPeriod();
   }
-
-
-  sortByDate = () => {
-    const { sortingByDate, selectedTransactions } = this.state;
-
-    if (sortingByDate === 'off') { };
-
-    if (sortingByDate === 'up') {
-      this.setState({
-        selectedTransactions: [...selectedTransactions].sort((a, b) => a.date - b.date)
-      })
-    }
-
-    if (sortingByDate === 'down') {
-      this.setState({
-        selectedTransactions: [...selectedTransactions].sort((a, b) => b.date - a.date)
-      })
-    }
-
-    return this;
-  }
-
-  sortBySum = () => {
-    const { sortingBySum, selectedTransactions } = this.state;
-
-    if (sortingBySum === 'off') { };
-
-    if (sortingBySum === 'up') {
-      this.setState({
-        selectedTransactions: [...selectedTransactions].sort((a, b) => a.sum - b.sum)
-      })
-    }
-
-    if (sortingBySum === 'down') {
-      this.setState({
-        selectedTransactions: [...selectedTransactions].sort((a, b) => b.sum - a.sum)
-      })
-    }
-
-    return this;
-  }
-
 
   getSelectedByPeriod = () => {
     const { firstDate, lastDate } = this.state;
@@ -104,14 +53,61 @@ class Stats extends React.Component {
       item.date >= firstDate && item.date <= lastDate
     ));
 
-    this.setState({ selectedTransactions: newTransactions })
+    return newTransactions;
+  }
 
-    return this;
+
+  sortBy = (list, prop, switcher) => {
+    const sortUp = (a, b) => {
+      if (a[prop] > b[prop]) return 1;
+      if (a[prop] < b[prop]) return -1;
+      return 0;
+    }
+
+    const sortDown = (a, b) => {
+      if (a[prop] < b[prop]) return 1;
+      if (a[prop] > b[prop]) return -1;
+      return 0;
+    }
+    
+
+    if (this.state[switcher] === 'off') {
+      return list;
+    }
+
+    if (this.state[switcher] === 'up') {
+      return list.sort(sortUp)
+    }
+
+    if (this.state[switcher] === 'down') {
+      return list.sort(sortDown)
+    }
+  }
+
+  /* Если я сортирю по категории или тегу, нужно сортировать два отдельных массива - для доходов и расходов */
+
+  getSortedList = () => {
+    let sortedList = this.getSelectedByPeriod();
+
+    sortedList = this.sortBy(sortedList, 'sum', 'sortingBySum');
+    sortedList = this.sortBy(sortedList, 'date', 'sortingByDate');
+    sortedList = this.sortBy(sortedList, 'category', 'sortingByCategory');
+
+    return sortedList;
   }
 
 
   render() {
-    const { firstDate, lastDate, sortingBySum, sortingByDate, sortingByCategory, sortingByTags } = this.state;
+    const {
+      firstDate,
+      lastDate,
+      sortingBySum,
+      sortingByDate,
+      sortingByCategory,
+      sortingByTags
+    } = this.state;
+
+    const listByDate = this.getSortedList();
 
     return (
       <>
@@ -127,7 +123,7 @@ class Stats extends React.Component {
             handleName="lastDate"
           />
         </div>
-        <div className="body">
+        <div className="sortings">
           <button
             onClick={this.handleSorting}
             name="sortingBySum"
@@ -159,7 +155,7 @@ class Stats extends React.Component {
 
         <Table
           db={this.props.db}
-          transactions={this.state.selectedTransactions}
+          transactions={listByDate}
           tags={this.props.tags}
           categories={this.props.categories}
         />
