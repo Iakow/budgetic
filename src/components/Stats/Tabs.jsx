@@ -10,8 +10,6 @@ class Tabs extends React.Component {
   }
  
   handleTab = (e)=> {
-    console.log(e.target.getAttribute('name'));
-
     this.setState({tab: e.target.getAttribute('name')})
   }
 
@@ -26,11 +24,9 @@ class Tabs extends React.Component {
           className="tabs"
         >
           {this.props.titles.map((item, i) => (
-            <span name={i} onClick={this.handleTab}>{item}</span>
+            <span key={i} name={i} onClick={this.handleTab}>{item}</span>
           ))}
         </div>
-
-
       </div>
     );
   }

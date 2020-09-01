@@ -2,6 +2,7 @@ import React from 'react';
 import Table from './Table';
 import DatePicker from '../Inputs/DatePicker';
 import Tabs from './Tabs'
+import DateFilter from './DateFilter';
 
 
 class Stats extends React.Component {
@@ -24,7 +25,6 @@ class Stats extends React.Component {
   handleSorting = (e) => {
     const name = e.target.name;
 
-    //возвращает строку на основе входящей строки, состояние переключателя
     const getNextSwitchValue = (current) => {
       const opts = ['off', 'up', 'down'];
 
@@ -33,7 +33,6 @@ class Stats extends React.Component {
       return opts[newIndexInOpts + 1] || opts[0];
     };
 
-    // сбрасываем взаимоисключающие настройки
     if (name === 'sortingBySum') this.setState({ sortingByDate: 'off' });
     if (name === 'sortingByDate') this.setState({ sortingBySum: 'off' });
     if (name === 'sortingByCategory') this.setState({ sortingByTags: 'off' });
@@ -107,7 +106,7 @@ class Stats extends React.Component {
       sortingByTags
     } = this.state;
 
-    const listByDate = this.getSortedList();
+    const sortedList = this.getSortedList();
 
     const tab1 = (
       <>
@@ -143,7 +142,7 @@ class Stats extends React.Component {
 
         <Table
           db={this.props.db}
-          transactions={listByDate}
+          transactions={sortedList}
           tags={this.props.tags}
           categories={this.props.categories}
         />
@@ -152,25 +151,16 @@ class Stats extends React.Component {
 
     return (
       <>
-        <div className="panel">
-          <DatePicker
-            value={firstDate}
-            handler={this.handleDateFilter}
-            handleName="firstDate"
-          /> -
-          <DatePicker
-            value={lastDate}
-            handler={this.handleDateFilter}
-            handleName="lastDate"
-          />
-        </div>
+        <DateFilter
+          firstDate={firstDate}
+          lastDate={lastDate}
+          handler={this.handleDateFilter}
+        />
 
         <Tabs
           tabs={[tab1, "Diagramm"]}
           titles={["Table", "Diagramm"]}
         />
-
-        {/* {tab1} */}
       </>
     )
   }
