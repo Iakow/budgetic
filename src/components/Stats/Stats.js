@@ -1,8 +1,8 @@
 import React from 'react';
 import Table from './Table';
-import DatePicker from '../Inputs/DatePicker';
 import Tabs from './Tabs'
 import DateFilter from './DateFilter';
+import SortingBlock from './SortingBlock'
 
 
 class Stats extends React.Component {
@@ -110,35 +110,13 @@ class Stats extends React.Component {
 
     const tab1 = (
       <>
-        <div className="sortings">
-          <button
-            onClick={this.handleSorting}
-            name="sortingBySum"
-          >
-            {`Sum: ${sortingBySum}`}
-          </button>
-
-          <button
-            onClick={this.handleSorting}
-            name="sortingByDate"
-          >
-            {`Date: ${sortingByDate}`}
-          </button>
-
-          <button
-            onClick={this.handleSorting}
-            name="sortingByCategory"
-          >
-            {`Category: ${sortingByCategory}`}
-          </button>
-
-          <button
-            onClick={this.handleSorting}
-            name="sortingByTags"
-          >
-            {`Tags: ${sortingByTags}`}
-          </button>
-        </div>
+        <SortingBlock
+          bySum={sortingBySum}
+          byDate={sortingByDate}
+          byCategory={sortingByCategory}
+          byTags={sortingByTags}
+          handler={this.handleSorting}
+        />
 
         <Table
           db={this.props.db}
