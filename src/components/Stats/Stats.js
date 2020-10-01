@@ -33,6 +33,15 @@ class Stats extends React.Component {
   render() {
     const { firstDate, lastDate } = this.state;
 
+    const tab1 = (
+      <ActionsList
+        db={this.props.db}
+        transactions={this.getDateFilteredTransactions()}
+        tags={this.props.tags}
+        categories={this.props.categories}
+      />
+    );
+
     return (
       <>
         <DateFilter
@@ -42,7 +51,7 @@ class Stats extends React.Component {
         />
 
         <Tabs
-          tabs={[<ActionsList />, "Diagramm"]}
+          tabs={[tab1, "Diagramm"]}
           titles={["Table", "Diagramm"]}
         />
       </>
