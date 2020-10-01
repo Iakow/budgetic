@@ -4,6 +4,7 @@ import Tabs from './Tabs'
 import DateFilter from './DateFilter';
 import SortingBlock from './SortingBlock'
 
+/* !!! ПО ХОРОШЕМУ СОРТИРОВКА ДОЛЖНА ПРОИСХОДИТЬ В САМОМ СПИСКЕ */
 
 class Stats extends React.Component {
   constructor(props) {
@@ -22,15 +23,30 @@ class Stats extends React.Component {
     }
   }
 
+
+  handleDateFilter = (name, value) => {
+    this.setState({ [name]: value });
+  }
+
+
+  getDateFilteredTransactions = () => {
+    const { firstDate, lastDate } = this.state;
+
+    return [...this.props.transactions].filter((item) => (
+      item.date >= firstDate && item.date <= lastDate
+    ));
+  }
+
+
   handleSorting = (e) => {
     const name = e.target.name;
 
-    const getNextSwitchValue = (current) => {
+    const getNextSwitchValue = (currentValue) => {
       const opts = ['off', 'up', 'down'];
 
-      const newIndexInOpts = opts.findIndex((item) => item === current);
+      const currentIndex = opts.findIndex((item) => item === currentValue);
 
-      return opts[newIndexInOpts + 1] || opts[0];
+      return opts[currentIndex + 1] || opts[0];
     };
 
     if (name === 'sortingBySum') this.setState({ sortingByDate: 'off' });
@@ -42,57 +58,36 @@ class Stats extends React.Component {
   }
 
 
-  handleDateFilter = (name, value) => {
-    this.setState({ [name]: value });
-  }
-
-  getSelectedByPeriod = () => {
-    const { firstDate, lastDate } = this.state;
-
-    const newTransactions = [...this.props.transactions].filter((item) => (
-      item.date >= firstDate && item.date <= lastDate
-    ));
-
-    return newTransactions;
-  }
-
-
-  sortBy = (list, prop, switcher) => {
-    const sortUp = (a, b) => {
-      if (a[prop] > b[prop]) return 1;
-      if (a[prop] < b[prop]) return -1;
-      return 0;
-    }
-
-    const sortDown = (a, b) => {
-      if (a[prop] < b[prop]) return 1;
-      if (a[prop] > b[prop]) return -1;
-      return 0;
-    }
-
-
-    if (this.state[switcher] === 'off') {
-      return list;
-    }
-
-    if (this.state[switcher] === 'up') {
-      return list.sort(sortUp)
-    }
-
-    if (this.state[switcher] === 'down') {
-      return list.sort(sortDown)
-    }
-  }
-
-
   getSortedList = () => {
-    let sortedList = this.getSelectedByPeriod();
+    let list = this.getDateFilteredTransactions();
 
-    sortedList = this.sortBy(sortedList, 'sum', 'sortingBySum');
-    sortedList = this.sortBy(sortedList, 'date', 'sortingByDate');
-    sortedList = this.sortBy(sortedList, 'category', 'sortingByCategory');
+    const sortBy = (list, prop, switcher) => {
+      if (this.state[switcher] === 'off') {
+        return list;
+      }
+  
+      if (this.state[switcher] === 'up') {
+        return list.sort((a, b) => {
+          if (a[prop] > b[prop]) return 1;
+          if (a[prop] < b[prop]) return -1;
+          return 0;
+        })
+      }
+  
+      if (this.state[switcher] === 'down') {
+        return list.sort((a, b) => {
+          if (a[prop] < b[prop]) return 1;
+          if (a[prop] > b[prop]) return -1;
+          return 0;
+        })
+      }
+    }
 
-    return sortedList;
+    list = sortBy(list, 'sum', 'sortingBySum');
+    list = sortBy(list, 'date', 'sortingByDate');
+    list = sortBy(list, 'category', 'sortingByCategory');
+
+    return list;
   }
 
 
@@ -106,7 +101,7 @@ class Stats extends React.Component {
       sortingByTags
     } = this.state;
 
-    const sortedList = this.getSortedList();
+    const list = this.getSortedList();
 
     const tab1 = (
       <>
@@ -120,7 +115,7 @@ class Stats extends React.Component {
 
         <Table
           db={this.props.db}
-          transactions={sortedList}
+          transactions={list}
           tags={this.props.tags}
           categories={this.props.categories}
         />
