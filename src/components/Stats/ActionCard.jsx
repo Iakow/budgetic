@@ -1,4 +1,6 @@
 import React from 'react';
+import CSS from './actioncard.module.css';
+
 
 export default class ActionCard extends React.Component {
 
@@ -31,15 +33,9 @@ export default class ActionCard extends React.Component {
 
   render() {
     const { sum, category, date, tags } = this.props.transaction;
+
     return (
-      <div
-        className='card'
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          margin: 10,
-          justifyContent: 'space-between'
-        }}>
+      <div className={CSS.card}>
         <div>
           <div>{category}</div>
           <div>{this.formatDate(date)}</div>
