@@ -32,16 +32,20 @@ export default class ActionCard extends React.Component {
   }
 
   render() {
-    const { sum, category, date, tags } = this.props.transaction;
+    const { sum, category, date, tag } = this.props.transaction;
 
     return (
       <div className={CSS.card}>
-        <div>
-          <div>{category}</div>
-          <div>{this.formatDate(date)}</div>
+        <div className={category&sum}>
+          <div className={CSS.category}>{category}</div>
+          <div className={CSS.date}>{this.formatDate(date)}</div>
         </div>
-        <div>{tags}</div>
-        <div>{sum}</div>
+        <div className={CSS.tags}>
+          {tag.map((tag) => <div className={CSS.tag}>{tag}</div>)}
+        </div>
+        <div className={((sum >= 0)) ? CSS.sum : `${CSS.sum_red} ${CSS.sum}`}> 
+          {(sum >= 0) ? `+${sum}` : `${sum}`}
+        </div>
       </div>
     )
   }
