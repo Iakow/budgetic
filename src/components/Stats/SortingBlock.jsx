@@ -1,9 +1,11 @@
 import React from 'react';
+import CSS from './sortingblock.module.css';
 
 const SortingBlock = (props) => {
   return (
-    < div className="sortings" >
+    < div className={CSS.sorting_block} >
       <button
+        className={CSS.button}
         onClick={props.handler}
         name="sortingBySum"
       >
@@ -11,6 +13,7 @@ const SortingBlock = (props) => {
       </button>
 
       <button
+        className={CSS.button}
         onClick={props.handler}
         name="sortingByDate"
       >
@@ -18,6 +21,7 @@ const SortingBlock = (props) => {
       </button>
 
       <button
+        className={CSS.button}
         onClick={props.handler}
         name="sortingByCategory"
       >
@@ -25,6 +29,7 @@ const SortingBlock = (props) => {
       </button>
 
       <button
+        className={CSS.button}
         onClick={props.handler}
         name="sortingByTags"
       >

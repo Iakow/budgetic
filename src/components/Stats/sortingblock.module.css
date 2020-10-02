@@ -1,0 +1,20 @@
+.sorting_block {
+  display: flex;
+  justify-content: space-between;
+}
+
+.button {
+  margin: 10px;
+  background: #3F3F3F;
+  border-radius: 30px;
+  border: none;
+  height: 32px;
+  padding: 10px;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+  /* identical to box height, or 143% */
+  letter-spacing: 0.25px;
+  color: #E4E4E4;
+}
